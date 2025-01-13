@@ -12,7 +12,7 @@ export interface Testimonial {
     social?: string;
     image?: string;
   };
-  author_photo?: string | null;
+  author_photo?: string | { _type: string; value: string } | null;
   rating: number;
   text: string;
   date: string;
@@ -39,9 +39,18 @@ export const TestimonialCard = ({
     day: "numeric",
   });
 
-  // The photo data should be a complete data URL
-  const photoUrl = testimonial.author_photo || null;
-  console.log("Raw photo data:", testimonial.author_photo?.substring(0, 100));
+  // Handle both string and object formats for photo data
+  const getPhotoUrl = () => {
+    if (!testimonial.author_photo) return null;
+    if (typeof testimonial.author_photo === 'string') return testimonial.author_photo;
+    if (typeof testimonial.author_photo === 'object' && testimonial.author_photo.value) {
+      return testimonial.author_photo.value;
+    }
+    return null;
+  };
+
+  const photoUrl = getPhotoUrl();
+  console.log("Processed photo URL:", photoUrl?.substring(0, 100));
 
   return (
     <Card>
