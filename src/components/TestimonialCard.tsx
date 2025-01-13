@@ -11,6 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Heart } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { formatDate } from "@/utils/dateUtils";
 
 export interface Testimonial {
   id: string;
@@ -106,7 +107,7 @@ export const TestimonialCard = ({
           ))}
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-500">{testimonial.date}</span>
+          <span className="text-sm text-gray-500">{formatDate(testimonial.date)}</span>
           {isAdmin && (
             <>
               <Button
