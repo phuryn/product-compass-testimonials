@@ -32,15 +32,13 @@ const Admin = () => {
       const { data, error } = await supabase
         .from("testimonials")
         .select("*")
-        .order("date", { ascending: false })
-        .single();
+        .order("date", { ascending: false });
 
       if (error) {
         console.error("Supabase error:", error);
         throw error;
       }
 
-      // If we get here, we have data
       console.log("Fetched testimonials:", data);
       return data || [];
     },
