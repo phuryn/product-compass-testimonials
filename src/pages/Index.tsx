@@ -37,13 +37,14 @@ const Index = () => {
     mutationFn: async (formData: any) => {
       const testimonialData = {
         author: {
-          name: formData.name,
-          email: formData.email,
-          social: formData.social,
+          name: formData.author.name,
+          email: formData.author.email,
+          social: formData.author.social,
         },
         rating: formData.rating || 5,
         text: formData.text,
-        tags: ["FS2O"],
+        tags: formData.tags,
+        author_photo: formData.author_photo,
       };
 
       const { data, error } = await supabase
