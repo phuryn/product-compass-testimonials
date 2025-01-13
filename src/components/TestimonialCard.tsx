@@ -39,8 +39,15 @@ export const TestimonialCard = ({
     day: "numeric",
   });
 
-  // Debug log to check the image data
-  console.log("Author photo data:", testimonial.author_photo?.substring(0, 100));
+  // Debug log to check the image data structure
+  console.log("Raw author photo data:", testimonial.author_photo);
+  
+  // Extract the actual base64 string if it's wrapped in an object
+  const photoData = testimonial.author_photo && typeof testimonial.author_photo === 'object' 
+    ? (testimonial.author_photo as any).value 
+    : testimonial.author_photo;
+    
+  console.log("Processed photo data:", photoData?.substring(0, 100));
 
   return (
     <Card>
@@ -48,9 +55,9 @@ export const TestimonialCard = ({
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-4">
             <Avatar className="h-12 w-12">
-              {testimonial.author_photo ? (
+              {photoData ? (
                 <AvatarImage
-                  src={testimonial.author_photo}
+                  src={photoData}
                   alt={testimonial.author.name}
                   className="object-cover"
                   onError={(e) => {
