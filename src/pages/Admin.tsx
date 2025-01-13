@@ -12,7 +12,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { TestimonialForm } from "@/components/TestimonialForm";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const Admin = () => {
@@ -25,7 +25,7 @@ const Admin = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  const { data: testimonials = [], isLoading, error } = useQuery({
+  const { data: testimonials = [], isLoading } = useQuery({
     queryKey: ["testimonials", "admin"],
     queryFn: async () => {
       console.log("Fetching testimonials...");
@@ -42,7 +42,6 @@ const Admin = () => {
       console.log("Fetched testimonials:", data);
       return data || [];
     },
-    retry: 1,
   });
 
   const updateTestimonialMutation = useMutation({
@@ -100,7 +99,7 @@ const Admin = () => {
     }
   };
 
-  const filteredTestimonials = testimonials.filter((testimonial) => {
+  const filteredTestimonials = testimonials.filter((testimonial: Testimonial) => {
     const matchesSearch =
       testimonial.text.toLowerCase().includes(searchTerm.toLowerCase()) ||
       testimonial.author.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -114,10 +113,6 @@ const Admin = () => {
 
   if (isLoading) {
     return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error loading testimonials: {error.message}</div>;
   }
 
   return (
@@ -142,7 +137,7 @@ const Admin = () => {
       </div>
 
       <div className="grid gap-6">
-        {Array.isArray(testimonials) && testimonials.map((testimonial) => (
+        {filteredTestimonials.map((testimonial: Testimonial) => (
           <TestimonialCard
             key={testimonial.id}
             testimonial={testimonial}

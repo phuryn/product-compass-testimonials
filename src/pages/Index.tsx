@@ -4,39 +4,76 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { TestimonialCard, type Testimonial } from "@/components/TestimonialCard";
 import { TestimonialForm } from "@/components/TestimonialForm";
 import { useToast } from "@/components/ui/use-toast";
-
-// Temporary mock data
-const mockTestimonials: Testimonial[] = [
-  {
-    id: "1",
-    author: {
-      name: "Illia",
-      email: "iliadyga98@gmail.com",
-      social: "www.linkedin.com/in/illia-ladyha?trk=contact-info",
-    },
-    rating: 5,
-    text: "Amazing course, a great addition to Pawel's Substack",
-    date: "Dec 31, 2024",
-    tags: ["FS2O"],
-    approved: true,
-  },
-  // Add more mock testimonials as needed
-];
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const Index = () => {
-  const [testimonials] = useState<Testimonial[]>(mockTestimonials);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-  const handleSubmitTestimonial = (data: any) => {
-    // Here you would typically send the data to your backend
-    console.log("Submitted testimonial:", data);
-    setIsFormOpen(false);
-    toast({
-      title: "Thank you for your testimonial!",
-      description: "We'll review it and publish it soon.",
-    });
-  };
+  const { data: testimonials = [], isLoading } = useQuery({
+    queryKey: ["testimonials", "public"],
+    queryFn: async () => {
+      console.log("Fetching public testimonials...");
+      const { data, error } = await supabase
+        .from("testimonials")
+        .select("*")
+        .order("date", { ascending: false });
+
+      if (error) {
+        console.error("Supabase error:", error);
+        throw error;
+      }
+
+      console.log("Fetched testimonials:", data);
+      return data || [];
+    },
+  });
+
+  const submitTestimonialMutation = useMutation({
+    mutationFn: async (formData: any) => {
+      const testimonialData = {
+        author: {
+          name: formData.name,
+          email: formData.email,
+          social: formData.social,
+        },
+        rating: formData.rating,
+        text: formData.text,
+        tags: ["FS2O"], // Default tag, could be made dynamic
+      };
+
+      const { data, error } = await supabase
+        .from("testimonials")
+        .insert([testimonialData])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["testimonials"] });
+      setIsFormOpen(false);
+      toast({
+        title: "Thank you for your testimonial!",
+        description: "We'll review it and publish it soon.",
+      });
+    },
+    onError: (error) => {
+      console.error("Error submitting testimonial:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to submit testimonial. Please try again.",
+      });
+    },
+  });
+
+  if (isLoading) {
+    return <div>Loading testimonials...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -64,7 +101,7 @@ const Index = () => {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px]">
               <TestimonialForm
-                onSubmit={handleSubmitTestimonial}
+                onSubmit={(data) => submitTestimonialMutation.mutate(data)}
                 onCancel={() => setIsFormOpen(false)}
               />
             </DialogContent>
@@ -73,8 +110,8 @@ const Index = () => {
 
         <div className="grid gap-6">
           {testimonials
-            .filter((t) => t.approved)
-            .map((testimonial) => (
+            .filter((t: Testimonial) => t.approved)
+            .map((testimonial: Testimonial) => (
               <TestimonialCard
                 key={testimonial.id}
                 testimonial={testimonial}
