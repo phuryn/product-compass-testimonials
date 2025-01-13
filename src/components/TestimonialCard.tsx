@@ -39,6 +39,9 @@ export const TestimonialCard = ({
     day: "numeric",
   });
 
+  // Debug log to check the image data
+  console.log("Author photo data:", testimonial.author_photo?.substring(0, 100));
+
   return (
     <Card>
       <CardContent className="p-6">
@@ -50,6 +53,11 @@ export const TestimonialCard = ({
                   src={testimonial.author_photo}
                   alt={testimonial.author.name}
                   className="object-cover"
+                  onError={(e) => {
+                    console.error("Error loading image:", e);
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                  }}
                 />
               ) : (
                 <AvatarFallback>
