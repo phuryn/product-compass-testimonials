@@ -40,9 +40,11 @@ export const TestimonialCard = ({
   });
 
   const getPhotoUrl = () => {
-    if (testimonial.author_photo) {
+    // If author_photo exists and starts with 'data:', it's a base64 image
+    if (testimonial.author_photo && testimonial.author_photo.startsWith('data:')) {
       return testimonial.author_photo;
     }
+    // Fallback to author.image if available
     return testimonial.author.image || '';
   };
 
