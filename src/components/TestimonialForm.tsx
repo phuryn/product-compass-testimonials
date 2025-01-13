@@ -71,7 +71,6 @@ export const TestimonialForm = ({
       const reader = new FileReader();
       reader.onload = () => {
         if (typeof reader.result === 'string') {
-          // Keep the full data URL including the prefix
           resolve(reader.result);
         }
       };
@@ -87,8 +86,6 @@ export const TestimonialForm = ({
     if (imageFile) {
       try {
         photoData = await convertImageToBase64(imageFile);
-        console.log('Photo data length:', photoData.length);
-        console.log('Photo data type:', typeof photoData);
       } catch (error) {
         toast({
           title: "Error",
@@ -110,7 +107,6 @@ export const TestimonialForm = ({
       tags: [formData.tag],
     };
 
-    console.log('Submitting testimonial with photo data length:', photoData?.length || 0);
     onSubmit(submissionData);
   };
 

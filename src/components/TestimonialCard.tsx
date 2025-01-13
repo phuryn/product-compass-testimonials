@@ -40,22 +40,10 @@ export const TestimonialCard = ({
   });
 
   const getPhotoUrl = () => {
-    if (!testimonial) return '';
-    
-    console.log('Processing photo for testimonial:', testimonial.id);
-    console.log('Author photo exists:', !!testimonial.author_photo);
-    console.log('Author photo type:', typeof testimonial.author_photo);
-    console.log('Author photo length:', testimonial.author_photo?.length || 0);
-    
     if (testimonial.author_photo) {
       return testimonial.author_photo;
     }
-    
-    if (testimonial.author.image) {
-      return testimonial.author.image;
-    }
-    
-    return '';
+    return testimonial.author.image || '';
   };
 
   const photoUrl = getPhotoUrl();
@@ -71,10 +59,6 @@ export const TestimonialCard = ({
                   src={photoUrl}
                   alt={testimonial.author.name}
                   className="object-cover"
-                  onError={(e) => {
-                    console.error('Error loading avatar image:', e);
-                    e.currentTarget.style.display = 'none';
-                  }}
                 />
               ) : (
                 <AvatarFallback>
@@ -142,5 +126,3 @@ export const TestimonialCard = ({
         <div className="mt-4 text-sm text-gray-500">{formattedDate}</div>
       </CardContent>
     </Card>
-  );
-};
