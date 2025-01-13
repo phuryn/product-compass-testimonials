@@ -39,26 +39,15 @@ export const TestimonialCard = ({
     day: "numeric",
   });
 
-  const getPhotoUrl = () => {
-    // If author_photo exists and starts with 'data:', it's a base64 image
-    if (testimonial.author_photo && testimonial.author_photo.startsWith('data:')) {
-      return testimonial.author_photo;
-    }
-    // Fallback to author.image if available
-    return testimonial.author.image || '';
-  };
-
-  const photoUrl = getPhotoUrl();
-
   return (
     <Card>
       <CardContent className="p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-4">
             <Avatar className="h-12 w-12">
-              {photoUrl ? (
+              {testimonial.author_photo ? (
                 <AvatarImage
-                  src={photoUrl}
+                  src={testimonial.author_photo}
                   alt={testimonial.author.name}
                   className="object-cover"
                 />
