@@ -11,7 +11,7 @@ export interface Testimonial {
     social?: string;
     image?: string;
   };
-  author_photo?: string;
+  author_photo?: string | null;  // Added this field to match the database schema
   rating: number;
   text: string;
   date: string;
