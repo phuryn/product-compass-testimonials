@@ -39,13 +39,16 @@ export const TestimonialCard = ({
     day: "numeric",
   });
 
+  // Check if the photo is a base64 string and starts with the correct prefix
+  const isValidBase64Photo = testimonial.author_photo?.startsWith('data:image');
+
   return (
     <Card>
       <CardContent className="p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-4">
             <Avatar className="h-12 w-12">
-              {testimonial.author_photo ? (
+              {isValidBase64Photo ? (
                 <AvatarImage
                   src={testimonial.author_photo}
                   alt={testimonial.author.name}
