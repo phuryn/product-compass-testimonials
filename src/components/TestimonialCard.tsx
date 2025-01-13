@@ -49,6 +49,22 @@ export const TestimonialCard = ({
     ? `${testimonial.text.slice(0, maxLength)}...`
     : testimonial.text;
 
+  const AuthorName = () => {
+    if (testimonial.author.social) {
+      return (
+        <a
+          href={testimonial.author.social}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:underline"
+        >
+          {testimonial.author.name}
+        </a>
+      );
+    }
+    return <span>{testimonial.author.name}</span>;
+  };
+
   return (
     <Card className="w-full">
       <CardHeader className="flex flex-row items-center gap-4">
@@ -59,7 +75,9 @@ export const TestimonialCard = ({
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
-          <h3 className="font-semibold">{testimonial.author.name}</h3>
+          <h3 className="font-semibold">
+            <AuthorName />
+          </h3>
           <StarRating rating={testimonial.rating} readonly />
         </div>
       </CardHeader>
@@ -87,7 +105,9 @@ export const TestimonialCard = ({
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <h3 className="font-semibold">{testimonial.author.name}</h3>
+                      <h3 className="font-semibold">
+                        <AuthorName />
+                      </h3>
                       <StarRating rating={testimonial.rating} readonly />
                     </div>
                   </div>

@@ -40,9 +40,9 @@ const Index = () => {
           email: formData.email,
           social: formData.social,
         },
-        rating: formData.rating,
+        rating: formData.rating || 5, // Default to 5 stars
         text: formData.text,
-        tags: ["FS2O"], // Default tag, could be made dynamic
+        tags: ["FS2O"], // Default tag
       };
 
       const { data, error } = await supabase
@@ -109,7 +109,7 @@ const Index = () => {
           </Dialog>
         </div>
 
-        <div className="grid gap-6">
+        <div className="grid gap-6 md:grid-cols-2">
           {testimonials
             .filter((t: Testimonial) => t.approved)
             .map((testimonial: Testimonial) => (
