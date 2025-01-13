@@ -41,9 +41,14 @@ export const TestimonialCard = ({
 
   // Handle all possible photo cases
   const getPhotoUrl = () => {
-    if (testimonial.author_photo) {
-      // If we have a base64 photo from the database
-      return `data:image/jpeg;base64,${testimonial.author_photo}`;
+    console.log('Raw author_photo:', testimonial.author_photo); // Debug log
+    
+    if (testimonial.author_photo && typeof testimonial.author_photo === 'string') {
+      // If we have a base64 photo from the database, make sure it's properly formatted
+      if (!testimonial.author_photo.startsWith('data:image')) {
+        return `data:image/jpeg;base64,${testimonial.author_photo}`;
+      }
+      return testimonial.author_photo;
     } else if (testimonial.author.image) {
       // If we have a URL from the author profile
       return testimonial.author.image;
@@ -52,8 +57,7 @@ export const TestimonialCard = ({
   };
 
   const photoUrl = getPhotoUrl();
-  console.log('Author photo from DB:', testimonial.author_photo?.slice(0, 50)); // Debug log first 50 chars
-  console.log('Final photo URL:', photoUrl?.slice(0, 50)); // Debug log first 50 chars
+  console.log('Final photo URL:', photoUrl); // Debug log
 
   return (
     <Card>
