@@ -51,13 +51,18 @@ const Admin = () => {
       id: string;
       data: Partial<Testimonial>;
     }) => {
+      // Convert the author_photo to the correct format if it's an object
+      const author_photo = typeof data.author_photo === 'object' && data.author_photo?.value
+        ? data.author_photo.value
+        : data.author_photo;
+
       const { error } = await supabase
         .from("testimonials")
         .update({
           text: data.text,
           rating: data.rating,
           author: data.author,
-          author_photo: data.author_photo,
+          author_photo,
           approved: data.approved,
           tags: data.tags,
         })
