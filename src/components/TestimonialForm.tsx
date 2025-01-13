@@ -6,6 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { StarRating } from "./StarRating";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface TestimonialFormProps {
   onSubmit: (data: any) => void;
@@ -26,10 +28,67 @@ export const TestimonialForm = ({
     social: initialData?.author?.social || "",
     permission: initialData?.permission || false,
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>(
+    initialData?.author?.image || ""
+  );
+  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: "Error",
+          description: "Image size should be less than 5MB",
+          variant: "destructive",
+        });
+        return;
+      }
+      setImageFile(file);
+      const preview = URL.createObjectURL(file);
+      setImagePreview(preview);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    let imageUrl = initialData?.author?.image || "";
+
+    if (imageFile) {
+      const fileExt = imageFile.name.split(".").pop();
+      const fileName = `${crypto.randomUUID()}.${fileExt}`;
+
+      const { error: uploadError, data } = await supabase.storage
+        .from("author-photos")
+        .upload(fileName, imageFile);
+
+      if (uploadError) {
+        toast({
+          title: "Error",
+          description: "Failed to upload image",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("author-photos").getPublicUrl(fileName);
+      imageUrl = publicUrl;
+    }
+
+    const submissionData = {
+      ...formData,
+      author: {
+        name: formData.name,
+        email: formData.email,
+        social: formData.social,
+        image: imageUrl,
+      },
+    };
+
+    onSubmit(submissionData);
   };
 
   return (
@@ -83,6 +142,25 @@ export const TestimonialForm = ({
             value={formData.social}
             onChange={(e) => setFormData({ ...formData, social: e.target.value })}
           />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="photo">Your Photo</Label>
+          <div className="flex items-center gap-4">
+            <Avatar className="h-16 w-16">
+              <AvatarImage src={imagePreview} />
+              <AvatarFallback>
+                {formData.name.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <Input
+              id="photo"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="max-w-[300px]"
+            />
+          </div>
         </div>
 
         <div className="flex items-center space-x-2">

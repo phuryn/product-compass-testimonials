@@ -10,7 +10,7 @@ import {
 import { TestimonialCard, type Testimonial } from "@/components/TestimonialCard";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { TestimonialForm } from "@/components/TestimonialForm";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -29,7 +29,6 @@ const Admin = () => {
   const { data: testimonials = [], isLoading } = useQuery({
     queryKey: ["testimonials", "admin"],
     queryFn: async () => {
-      console.log("Fetching testimonials...");
       const { data, error } = await supabase
         .from("testimonials")
         .select("*")
@@ -40,27 +39,29 @@ const Admin = () => {
         throw error;
       }
 
-      console.log("Fetched testimonials:", data);
       return data?.map(convertDbTestimonialToTestimonial) || [];
     },
   });
 
   const updateTestimonialMutation = useMutation({
-    mutationFn: async (testimonial: Partial<Testimonial>) => {
-      const { data, error } = await supabase
+    mutationFn: async ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: Partial<Testimonial>;
+    }) => {
+      const { error } = await supabase
         .from("testimonials")
         .update({
-          text: testimonial.text,
-          rating: testimonial.rating,
-          author: testimonial.author,
-          approved: testimonial.approved,
+          text: data.text,
+          rating: data.rating,
+          author: data.author,
+          approved: data.approved,
         })
-        .eq("id", testimonial.id)
-        .select()
-        .single();
+        .eq("id", id);
 
       if (error) throw error;
-      return convertDbTestimonialToTestimonial(data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["testimonials"] });
@@ -68,6 +69,7 @@ const Admin = () => {
         title: "Success",
         description: "Testimonial updated successfully",
       });
+      setEditingTestimonial(null);
     },
     onError: (error) => {
       toast({
@@ -84,7 +86,7 @@ const Admin = () => {
     if (testimonial) {
       updateTestimonialMutation.mutate({
         id,
-        approved: !testimonial.approved,
+        data: { approved: !testimonial.approved },
       });
     }
   };
@@ -93,15 +95,12 @@ const Admin = () => {
     if (editingTestimonial) {
       updateTestimonialMutation.mutate({
         id: editingTestimonial.id,
-        text: data.text,
-        rating: data.rating,
-        author: {
-          name: data.name,
-          email: data.email,
-          social: data.social,
+        data: {
+          text: data.text,
+          rating: data.rating,
+          author: data.author,
         },
       });
-      setEditingTestimonial(null);
     }
   };
 
