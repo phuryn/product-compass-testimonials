@@ -39,15 +39,27 @@ export const TestimonialCard = ({
     day: "numeric",
   });
 
-  // Debug log to check the image data structure
-  console.log("Raw author photo data:", testimonial.author_photo);
-  
-  // Extract the actual base64 string if it's wrapped in an object
-  const photoData = testimonial.author_photo && typeof testimonial.author_photo === 'object' 
-    ? (testimonial.author_photo as any).value 
-    : testimonial.author_photo;
+  // Extract the base64 string from the photo data
+  const getPhotoData = (photoData: any) => {
+    console.log("Processing photo data:", photoData);
     
-  console.log("Processed photo data:", photoData?.substring(0, 100));
+    if (!photoData) return null;
+    
+    // If it's a string (direct base64), return it
+    if (typeof photoData === 'string') {
+      return photoData;
+    }
+    
+    // If it's an object with a value property (from database)
+    if (typeof photoData === 'object' && photoData._type === 'String' && photoData.value) {
+      return photoData.value;
+    }
+    
+    return null;
+  };
+
+  const photoUrl = getPhotoData(testimonial.author_photo);
+  console.log("Final photo URL:", photoUrl?.substring(0, 100));
 
   return (
     <Card>
@@ -55,9 +67,9 @@ export const TestimonialCard = ({
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-4">
             <Avatar className="h-12 w-12">
-              {photoData ? (
+              {photoUrl ? (
                 <AvatarImage
-                  src={photoData}
+                  src={photoUrl}
                   alt={testimonial.author.name}
                   className="object-cover"
                   onError={(e) => {
