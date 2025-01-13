@@ -39,25 +39,47 @@ export const TestimonialCard = ({
     day: "numeric",
   });
 
-  // Simplified photo URL handling - the photo is already a complete data URL
-  const photoUrl = testimonial.author_photo || testimonial.author.image || '';
-  
-  console.log('Testimonial author:', testimonial.author.name);
-  console.log('Photo URL first 100 chars:', photoUrl?.substring(0, 100));
+  // Enhanced photo URL handling with detailed logging
+  const getPhotoUrl = () => {
+    console.log('Processing photo for:', testimonial.author.name);
+    
+    if (testimonial.author_photo) {
+      console.log('Author photo exists:', testimonial.author_photo.substring(0, 50));
+      return testimonial.author_photo;
+    }
+    
+    if (testimonial.author.image) {
+      console.log('Using author profile image:', testimonial.author.image);
+      return testimonial.author.image;
+    }
+    
+    console.log('No photo available for:', testimonial.author.name);
+    return '';
+  };
+
+  const photoUrl = getPhotoUrl();
 
   return (
     <Card>
       <CardContent className="p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-4">
-            <Avatar>
-              <AvatarImage
-                src={photoUrl}
-                alt={testimonial.author.name}
-              />
-              <AvatarFallback>
-                {testimonial.author.name.charAt(0).toUpperCase()}
-              </AvatarFallback>
+            <Avatar className="h-12 w-12">
+              {photoUrl ? (
+                <AvatarImage
+                  src={photoUrl}
+                  alt={testimonial.author.name}
+                  className="object-cover"
+                  onError={(e) => {
+                    console.error('Error loading avatar image:', e);
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              ) : (
+                <AvatarFallback>
+                  {testimonial.author.name.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              )}
             </Avatar>
             <div>
               <div className="font-semibold">{testimonial.author.name}</div>
