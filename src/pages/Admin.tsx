@@ -25,9 +25,6 @@ const Admin = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  // Add console.log to check Supabase connection
-  console.log("Supabase client:", supabase);
-
   const { data: testimonials = [], isLoading, error } = useQuery({
     queryKey: ["testimonials", "admin"],
     queryFn: async () => {
@@ -35,15 +32,19 @@ const Admin = () => {
       const { data, error } = await supabase
         .from("testimonials")
         .select("*")
-        .order("date", { ascending: false });
+        .order("date", { ascending: false })
+        .single();
 
       if (error) {
         console.error("Supabase error:", error);
         throw error;
       }
+
+      // If we get here, we have data
       console.log("Fetched testimonials:", data);
-      return data as Testimonial[];
+      return data || [];
     },
+    retry: 1,
   });
 
   const updateTestimonialMutation = useMutation({
@@ -117,6 +118,10 @@ const Admin = () => {
     return <div>Loading...</div>;
   }
 
+  if (error) {
+    return <div>Error loading testimonials: {error.message}</div>;
+  }
+
   return (
     <div className="container py-8">
       <div className="mb-8 flex items-center gap-4">
@@ -139,7 +144,7 @@ const Admin = () => {
       </div>
 
       <div className="grid gap-6">
-        {filteredTestimonials.map((testimonial) => (
+        {Array.isArray(testimonials) && testimonials.map((testimonial) => (
           <TestimonialCard
             key={testimonial.id}
             testimonial={testimonial}
