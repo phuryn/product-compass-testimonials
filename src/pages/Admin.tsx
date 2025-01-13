@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TestimonialCard, type Testimonial } from "@/components/TestimonialCard";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { TestimonialForm } from "@/components/TestimonialForm";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
@@ -57,7 +57,9 @@ const Admin = () => {
           text: data.text,
           rating: data.rating,
           author: data.author,
+          author_photo: data.author_photo,
           approved: data.approved,
+          tags: data.tags,
         })
         .eq("id", id);
 
@@ -99,6 +101,8 @@ const Admin = () => {
           text: data.text,
           rating: data.rating,
           author: data.author,
+          author_photo: data.author_photo,
+          tags: data.tags,
         },
       });
     }
@@ -163,6 +167,7 @@ const Admin = () => {
         onOpenChange={() => setEditingTestimonial(null)}
       >
         <DialogContent className="sm:max-w-[600px]">
+          <DialogTitle>Edit Testimonial</DialogTitle>
           {editingTestimonial && (
             <TestimonialForm
               initialData={editingTestimonial}
