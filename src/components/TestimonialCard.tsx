@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { StarRating } from "./StarRating";
-import { Heart, HeartOff } from "lucide-react";
+import { Heart } from "lucide-react";
 
 export interface Testimonial {
   id: string;
@@ -12,7 +12,7 @@ export interface Testimonial {
     social?: string;
     image?: string;
   };
-  author_photo?: string | null;  // Added this field to match the database schema
+  author_photo?: string | null;
   rating: number;
   text: string;
   date: string;
@@ -39,10 +39,12 @@ export const TestimonialCard = ({
     day: "numeric",
   });
 
-  // Convert base64 to data URL if author_photo exists
+  // Convert base64 to data URL if author_photo exists and is not null
   const photoUrl = testimonial.author_photo
     ? `data:image/jpeg;base64,${testimonial.author_photo}`
-    : testimonial.author.image;
+    : testimonial.author.image || '';
+
+  console.log('Photo URL:', photoUrl); // Debug log
 
   return (
     <Card>
@@ -78,13 +80,14 @@ export const TestimonialCard = ({
                 variant="ghost"
                 size="icon"
                 onClick={() => onApprove?.(testimonial.id)}
-                className={testimonial.approved ? "text-red-500" : "text-gray-400"}
               >
-                {testimonial.approved ? (
-                  <Heart className="h-5 w-5 fill-current" />
-                ) : (
-                  <HeartOff className="h-5 w-5" />
-                )}
+                <Heart 
+                  className={`h-5 w-5 ${
+                    testimonial.approved 
+                      ? "text-red-500 fill-current" 
+                      : "text-gray-300"
+                  }`}
+                />
               </Button>
               <Button
                 variant="outline"
