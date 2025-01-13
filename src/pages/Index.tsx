@@ -6,6 +6,7 @@ import { TestimonialForm } from "@/components/TestimonialForm";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { convertDbTestimonialToTestimonial } from "@/utils/testimonialUtils";
 
 const Index = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -27,7 +28,7 @@ const Index = () => {
       }
 
       console.log("Fetched testimonials:", data);
-      return data || [];
+      return data?.map(convertDbTestimonialToTestimonial) || [];
     },
   });
 
@@ -51,7 +52,7 @@ const Index = () => {
         .single();
 
       if (error) throw error;
-      return data;
+      return convertDbTestimonialToTestimonial(data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["testimonials"] });

@@ -14,6 +14,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { convertDbTestimonialToTestimonial } from "@/utils/testimonialUtils";
 
 const Admin = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -40,7 +41,7 @@ const Admin = () => {
       }
 
       console.log("Fetched testimonials:", data);
-      return data || [];
+      return data?.map(convertDbTestimonialToTestimonial) || [];
     },
   });
 
@@ -48,13 +49,18 @@ const Admin = () => {
     mutationFn: async (testimonial: Partial<Testimonial>) => {
       const { data, error } = await supabase
         .from("testimonials")
-        .update(testimonial)
+        .update({
+          text: testimonial.text,
+          rating: testimonial.rating,
+          author: testimonial.author,
+          approved: testimonial.approved,
+        })
         .eq("id", testimonial.id)
         .select()
         .single();
 
       if (error) throw error;
-      return data;
+      return convertDbTestimonialToTestimonial(data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["testimonials"] });
