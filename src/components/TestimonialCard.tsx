@@ -39,9 +39,9 @@ export const TestimonialCard = ({
     day: "numeric",
   });
 
-  // The photo data should already be a complete data URL
+  // The photo data should be a complete data URL
   const photoUrl = testimonial.author_photo || null;
-  console.log("Photo URL:", photoUrl);
+  console.log("Raw photo data:", testimonial.author_photo?.substring(0, 100));
 
   return (
     <Card>
