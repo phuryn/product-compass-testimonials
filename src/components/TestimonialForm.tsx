@@ -66,34 +66,36 @@ export const TestimonialForm = ({
     }
   };
 
+  const convertImageToBase64 = async (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          // Remove the data URL prefix to get just the base64 string
+          const base64String = reader.result.split(',')[1];
+          resolve(base64String);
+        }
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    let imageUrl = initialData?.author?.image || "";
+    let base64Image = null;
 
     if (imageFile) {
-      const fileExt = imageFile.name.split(".").pop();
-      const fileName = `${crypto.randomUUID()}.${fileExt}`;
-
-      const { error: uploadError, data } = await supabase.storage
-        .from("author-photos")
-        .upload(fileName, imageFile, {
-          cacheControl: "3600",
-          upsert: false,
-        });
-
-      if (uploadError) {
+      try {
+        base64Image = await convertImageToBase64(imageFile);
+      } catch (error) {
         toast({
           title: "Error",
-          description: "Failed to upload image",
+          description: "Failed to process image",
           variant: "destructive",
         });
         return;
       }
-
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from("author-photos").getPublicUrl(fileName);
-      imageUrl = publicUrl;
     }
 
     const submissionData = {
@@ -102,8 +104,8 @@ export const TestimonialForm = ({
         name: formData.name,
         email: formData.email,
         social: formData.social,
-        image: imageUrl,
       },
+      author_photo: base64Image,
       tags: [formData.tag],
     };
 
