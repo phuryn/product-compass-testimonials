@@ -119,26 +119,16 @@ export const TestimonialForm = ({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="testimonial">Your Testimonial</Label>
-          <Textarea
-            id="testimonial"
-            value={formData.text}
-            onChange={(e) => setFormData({ ...formData, text: e.target.value })}
-            placeholder="Share your experience..."
-            className="min-h-[150px]"
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="tag">Category</Label>
+          <Label htmlFor="tag" className="after:content-['*'] after:ml-0.5 after:text-red-500">
+            What Do You Recommend?
+          </Label>
           <Select
             value={formData.tag}
             onValueChange={(value) => setFormData({ ...formData, tag: value })}
             required
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select a category" />
+              <SelectValue placeholder="Select what you recommend" />
             </SelectTrigger>
             <SelectContent>
               {AVAILABLE_TAGS.map((tag) => (
@@ -151,7 +141,23 @@ export const TestimonialForm = ({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="name">Your Name</Label>
+          <Label htmlFor="testimonial" className="after:content-['*'] after:ml-0.5 after:text-red-500">
+            Your Testimonial
+          </Label>
+          <Textarea
+            id="testimonial"
+            value={formData.text}
+            onChange={(e) => setFormData({ ...formData, text: e.target.value })}
+            placeholder="Share your experience..."
+            className="min-h-[150px]"
+            required
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="name" className="after:content-['*'] after:ml-0.5 after:text-red-500">
+            Your Name
+          </Label>
           <Input
             id="name"
             value={formData.name}
@@ -161,7 +167,9 @@ export const TestimonialForm = ({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="email">Your Email</Label>
+          <Label htmlFor="email" className="after:content-['*'] after:ml-0.5 after:text-red-500">
+            Your Email
+          </Label>
           <Input
             id="email"
             type="email"
