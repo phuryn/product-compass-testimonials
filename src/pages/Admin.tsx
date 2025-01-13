@@ -11,77 +11,85 @@ import { TestimonialCard, type Testimonial } from "@/components/TestimonialCard"
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { TestimonialForm } from "@/components/TestimonialForm";
 import { useToast } from "@/components/ui/use-toast";
-
-// Temporary mock data - same as in Index.tsx
-const mockTestimonials: Testimonial[] = [
-  {
-    id: "1",
-    author: {
-      name: "Illia",
-      email: "iliadyga98@gmail.com",
-      social: "www.linkedin.com/in/illia-ladyha?trk=contact-info",
-    },
-    rating: 5,
-    text: "Amazing course, a great addition to Pawel's Substack",
-    date: "Dec 31, 2024",
-    tags: ["FS2O"],
-    approved: true,
-  },
-  // Add more mock testimonials as needed
-];
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/lib/supabase";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const Admin = () => {
-  const [testimonials, setTestimonials] = useState<Testimonial[]>(mockTestimonials);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTag, setSelectedTag] = useState<string>("all");
   const [editingTestimonial, setEditingTestimonial] = useState<Testimonial | null>(
     null
   );
   const { toast } = useToast();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  const { data: testimonials = [], isLoading } = useQuery({
+    queryKey: ["testimonials", "admin"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("testimonials")
+        .select("*")
+        .order("date", { ascending: false });
+
+      if (error) throw error;
+      return data as Testimonial[];
+    },
+  });
+
+  const updateTestimonialMutation = useMutation({
+    mutationFn: async (testimonial: Partial<Testimonial>) => {
+      const { data, error } = await supabase
+        .from("testimonials")
+        .update(testimonial)
+        .eq("id", testimonial.id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["testimonials"] });
+      toast({
+        title: "Success",
+        description: "Testimonial updated successfully",
+      });
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update testimonial",
+      });
+      console.error("Error updating testimonial:", error);
+    },
+  });
 
   const handleApprove = (id: string) => {
-    setTestimonials((prev) =>
-      prev.map((t) =>
-        t.id === id ? { ...t, approved: !t.approved } : t
-      )
-    );
-    toast({
-      title: "Testimonial updated",
-      description: "The testimonial approval status has been updated.",
-    });
-  };
-
-  const handleEdit = (id: string) => {
     const testimonial = testimonials.find((t) => t.id === id);
     if (testimonial) {
-      setEditingTestimonial(testimonial);
+      updateTestimonialMutation.mutate({
+        id,
+        approved: !testimonial.approved,
+      });
     }
   };
 
   const handleUpdateTestimonial = (data: any) => {
     if (editingTestimonial) {
-      setTestimonials((prev) =>
-        prev.map((t) =>
-          t.id === editingTestimonial.id
-            ? {
-                ...t,
-                text: data.text,
-                rating: data.rating,
-                author: {
-                  ...t.author,
-                  name: data.name,
-                  email: data.email,
-                  social: data.social,
-                },
-              }
-            : t
-        )
-      );
-      setEditingTestimonial(null);
-      toast({
-        title: "Testimonial updated",
-        description: "The testimonial has been successfully updated.",
+      updateTestimonialMutation.mutate({
+        id: editingTestimonial.id,
+        text: data.text,
+        rating: data.rating,
+        author: {
+          name: data.name,
+          email: data.email,
+          social: data.social,
+        },
       });
+      setEditingTestimonial(null);
     }
   };
 
@@ -96,6 +104,10 @@ const Admin = () => {
 
     return matchesSearch && matchesTag;
   });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="container py-8">
@@ -125,7 +137,12 @@ const Admin = () => {
             testimonial={testimonial}
             isAdmin
             onApprove={handleApprove}
-            onEdit={handleEdit}
+            onEdit={(id) => {
+              const testimonial = testimonials.find((t) => t.id === id);
+              if (testimonial) {
+                setEditingTestimonial(testimonial);
+              }
+            }}
           />
         ))}
       </div>
