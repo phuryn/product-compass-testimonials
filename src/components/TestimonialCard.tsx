@@ -39,12 +39,21 @@ export const TestimonialCard = ({
     day: "numeric",
   });
 
-  // Convert base64 to data URL if author_photo exists and is not null
-  const photoUrl = testimonial.author_photo
-    ? `data:image/jpeg;base64,${testimonial.author_photo}`
-    : testimonial.author.image || '';
+  // Handle all possible photo cases
+  const getPhotoUrl = () => {
+    if (testimonial.author_photo) {
+      // If we have a base64 photo from the database
+      return `data:image/jpeg;base64,${testimonial.author_photo}`;
+    } else if (testimonial.author.image) {
+      // If we have a URL from the author profile
+      return testimonial.author.image;
+    }
+    return ''; // Return empty string if no photo available
+  };
 
-  console.log('Photo URL:', photoUrl); // Debug log
+  const photoUrl = getPhotoUrl();
+  console.log('Author photo from DB:', testimonial.author_photo?.slice(0, 50)); // Debug log first 50 chars
+  console.log('Final photo URL:', photoUrl?.slice(0, 50)); // Debug log first 50 chars
 
   return (
     <Card>
