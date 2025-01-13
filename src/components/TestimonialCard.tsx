@@ -39,25 +39,11 @@ export const TestimonialCard = ({
     day: "numeric",
   });
 
-  // Simplified photo URL handling
-  const getPhotoUrl = () => {
-    console.log('Processing photo for:', testimonial.author.name);
-    
-    if (testimonial.author_photo) {
-      console.log('Photo data exists, first 50 chars:', testimonial.author_photo.substring(0, 50) + '...');
-      // The photo is already a complete data URL
-      return testimonial.author_photo;
-    } else if (testimonial.author.image) {
-      console.log('Using author profile image');
-      return testimonial.author.image;
-    }
-    console.log('No photo available');
-    return '';
-  };
-
-  const photoUrl = getPhotoUrl();
-
-  console.log('Final photo URL:', photoUrl); // Debug log
+  // Simplified photo URL handling - the photo is already a complete data URL
+  const photoUrl = testimonial.author_photo || testimonial.author.image || '';
+  
+  console.log('Testimonial author:', testimonial.author.name);
+  console.log('Photo URL first 100 chars:', photoUrl?.substring(0, 100));
 
   return (
     <Card>
