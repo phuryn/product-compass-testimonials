@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { StarRating } from "./StarRating";
+import { Heart, HeartOff } from "lucide-react";
 
 export interface Testimonial {
   id: string;
@@ -38,6 +39,11 @@ export const TestimonialCard = ({
     day: "numeric",
   });
 
+  // Convert base64 to data URL if author_photo exists
+  const photoUrl = testimonial.author_photo
+    ? `data:image/jpeg;base64,${testimonial.author_photo}`
+    : testimonial.author.image;
+
   return (
     <Card>
       <CardContent className="p-6">
@@ -45,7 +51,7 @@ export const TestimonialCard = ({
           <div className="flex items-center gap-4">
             <Avatar>
               <AvatarImage
-                src={testimonial.author_photo || testimonial.author.image}
+                src={photoUrl}
                 alt={testimonial.author.name}
               />
               <AvatarFallback>
@@ -69,11 +75,16 @@ export const TestimonialCard = ({
           {isAdmin && (
             <div className="flex gap-2">
               <Button
-                variant="outline"
-                size="sm"
+                variant="ghost"
+                size="icon"
                 onClick={() => onApprove?.(testimonial.id)}
+                className={testimonial.approved ? "text-red-500" : "text-gray-400"}
               >
-                {testimonial.approved ? "Unapprove" : "Approve"}
+                {testimonial.approved ? (
+                  <Heart className="h-5 w-5 fill-current" />
+                ) : (
+                  <HeartOff className="h-5 w-5" />
+                )}
               </Button>
               <Button
                 variant="outline"

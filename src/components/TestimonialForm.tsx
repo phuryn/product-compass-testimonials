@@ -223,8 +223,9 @@ export const TestimonialForm = ({
             onCheckedChange={(checked) =>
               setFormData({ ...formData, permission: checked as boolean })
             }
+            required
           />
-          <Label htmlFor="permission" className="text-sm">
+          <Label htmlFor="permission" className="text-sm after:content-['*'] after:ml-0.5 after:text-red-500">
             I give permission to use this testimonial across social channels and
             other marketing efforts
           </Label>
