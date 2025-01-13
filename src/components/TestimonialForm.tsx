@@ -76,7 +76,10 @@ export const TestimonialForm = ({
 
       const { error: uploadError, data } = await supabase.storage
         .from("author-photos")
-        .upload(fileName, imageFile);
+        .upload(fileName, imageFile, {
+          cacheControl: "3600",
+          upsert: false,
+        });
 
       if (uploadError) {
         toast({
@@ -192,7 +195,11 @@ export const TestimonialForm = ({
           <Label htmlFor="photo">Your Photo</Label>
           <div className="flex items-center gap-4">
             <Avatar className="h-16 w-16">
-              <AvatarImage src={imagePreview} alt={formData.name} />
+              <AvatarImage 
+                src={imagePreview} 
+                alt={formData.name} 
+                className="object-cover"
+              />
               <AvatarFallback>
                 {formData.name.charAt(0).toUpperCase()}
               </AvatarFallback>
@@ -212,7 +219,7 @@ export const TestimonialForm = ({
             id="permission"
             checked={formData.permission}
             onCheckedChange={(checked) =>
-              setFormData({ ...formData, permission: checked })
+              setFormData({ ...formData, permission: checked as boolean })
             }
           />
           <Label htmlFor="permission" className="text-sm">
