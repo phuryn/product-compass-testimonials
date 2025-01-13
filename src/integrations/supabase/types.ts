@@ -42,6 +42,39 @@ export type Database = {
         }
         Relationships: []
       }
+      testimonials_backup: {
+        Row: {
+          approved: boolean | null
+          author: Json | null
+          author_photo: string | null
+          date: string | null
+          id: string | null
+          rating: number | null
+          tags: string[] | null
+          text: string | null
+        }
+        Insert: {
+          approved?: boolean | null
+          author?: Json | null
+          author_photo?: string | null
+          date?: string | null
+          id?: string | null
+          rating?: number | null
+          tags?: string[] | null
+          text?: string | null
+        }
+        Update: {
+          approved?: boolean | null
+          author?: Json | null
+          author_photo?: string | null
+          date?: string | null
+          id?: string | null
+          rating?: number | null
+          tags?: string[] | null
+          text?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -71,9 +71,8 @@ export const TestimonialForm = ({
       const reader = new FileReader();
       reader.onload = () => {
         if (typeof reader.result === 'string') {
-          // Remove the data URL prefix to get just the base64 string
-          const base64String = reader.result.split(',')[1];
-          resolve(base64String);
+          // Keep the full data URL including the prefix
+          resolve(reader.result);
         }
       };
       reader.onerror = reject;
@@ -83,11 +82,12 @@ export const TestimonialForm = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    let base64Image = null;
+    let photoData = null;
 
     if (imageFile) {
       try {
-        base64Image = await convertImageToBase64(imageFile);
+        photoData = await convertImageToBase64(imageFile);
+        console.log('Converted image to base64:', photoData.substring(0, 50) + '...');
       } catch (error) {
         toast({
           title: "Error",
@@ -105,10 +105,11 @@ export const TestimonialForm = ({
         email: formData.email,
         social: formData.social,
       },
-      author_photo: base64Image,
+      author_photo: photoData,
       tags: [formData.tag],
     };
 
+    console.log('Submitting testimonial with photo:', photoData ? 'present' : 'not present');
     onSubmit(submissionData);
   };
 
@@ -240,4 +241,3 @@ export const TestimonialForm = ({
       </div>
     </form>
   );
-};
