@@ -12,7 +12,7 @@ export interface Testimonial {
     social?: string;
     image?: string;
   };
-  author_photo?: string | { _type: string; value: string } | null;
+  author_photo?: string;
   rating: number;
   text: string;
   date: string;
@@ -39,28 +39,15 @@ export const TestimonialCard = ({
     day: "numeric",
   });
 
-  // Handle both string and object formats for photo data
-  const getPhotoUrl = () => {
-    if (!testimonial.author_photo) return null;
-    if (typeof testimonial.author_photo === 'string') return testimonial.author_photo;
-    if (typeof testimonial.author_photo === 'object' && testimonial.author_photo.value) {
-      return testimonial.author_photo.value;
-    }
-    return null;
-  };
-
-  const photoUrl = getPhotoUrl();
-  console.log("Processed photo URL:", photoUrl?.substring(0, 100));
-
   return (
     <Card>
       <CardContent className="p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-4">
             <Avatar className="h-12 w-12">
-              {photoUrl ? (
+              {testimonial.author_photo ? (
                 <AvatarImage
-                  src={photoUrl}
+                  src={testimonial.author_photo}
                   alt={testimonial.author.name}
                   className="object-cover"
                   onError={(e) => {

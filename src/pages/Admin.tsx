@@ -51,10 +51,8 @@ const Admin = () => {
       id: string;
       data: Partial<Testimonial>;
     }) => {
-      // Convert the author_photo to the correct format if it's an object
-      const author_photo = typeof data.author_photo === 'object' && data.author_photo?.value
-        ? data.author_photo.value
-        : data.author_photo;
+      // Ensure author_photo is a string before sending to Supabase
+      const photoData = data.author_photo || null;
 
       const { error } = await supabase
         .from("testimonials")
@@ -62,7 +60,7 @@ const Admin = () => {
           text: data.text,
           rating: data.rating,
           author: data.author,
-          author_photo,
+          author_photo: photoData,
           approved: data.approved,
           tags: data.tags,
         })
