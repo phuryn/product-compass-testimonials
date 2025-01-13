@@ -25,15 +25,23 @@ const Admin = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  const { data: testimonials = [], isLoading } = useQuery({
+  // Add console.log to check Supabase connection
+  console.log("Supabase client:", supabase);
+
+  const { data: testimonials = [], isLoading, error } = useQuery({
     queryKey: ["testimonials", "admin"],
     queryFn: async () => {
+      console.log("Fetching testimonials...");
       const { data, error } = await supabase
         .from("testimonials")
         .select("*")
         .order("date", { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase error:", error);
+        throw error;
+      }
+      console.log("Fetched testimonials:", data);
       return data as Testimonial[];
     },
   });
