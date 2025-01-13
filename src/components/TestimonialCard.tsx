@@ -39,27 +39,9 @@ export const TestimonialCard = ({
     day: "numeric",
   });
 
-  // Extract the base64 string from the photo data
-  const getPhotoData = (photoData: any) => {
-    console.log("Processing photo data:", photoData);
-    
-    if (!photoData) return null;
-    
-    // If it's a string (direct base64), return it
-    if (typeof photoData === 'string') {
-      return photoData;
-    }
-    
-    // If it's an object with a value property (from database)
-    if (typeof photoData === 'object' && photoData._type === 'String' && photoData.value) {
-      return photoData.value;
-    }
-    
-    return null;
-  };
-
-  const photoUrl = getPhotoData(testimonial.author_photo);
-  console.log("Final photo URL:", photoUrl?.substring(0, 100));
+  // The photo data should already be a complete data URL
+  const photoUrl = testimonial.author_photo || null;
+  console.log("Photo URL:", photoUrl);
 
   return (
     <Card>
