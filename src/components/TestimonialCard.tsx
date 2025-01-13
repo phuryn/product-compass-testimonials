@@ -69,7 +69,11 @@ export const TestimonialCard = ({
     <Card className="w-full">
       <CardHeader className="flex flex-row items-center gap-4">
         <Avatar className="h-12 w-12">
-          <AvatarImage src={testimonial.author.image} alt={testimonial.author.name} />
+          <AvatarImage 
+            src={testimonial.author.image} 
+            alt={testimonial.author.name}
+            className="object-cover"
+          />
           <AvatarFallback>
             {testimonial.author.name.charAt(0).toUpperCase()}
           </AvatarFallback>
@@ -99,7 +103,11 @@ export const TestimonialCard = ({
                 <div className="flex flex-col gap-4 p-4">
                   <div className="flex items-center gap-4">
                     <Avatar className="h-12 w-12">
-                      <AvatarImage src={testimonial.author.image} alt={testimonial.author.name} />
+                      <AvatarImage 
+                        src={testimonial.author.image} 
+                        alt={testimonial.author.name}
+                        className="object-cover"
+                      />
                       <AvatarFallback>
                         {testimonial.author.name.charAt(0).toUpperCase()}
                       </AvatarFallback>
@@ -137,7 +145,7 @@ export const TestimonialCard = ({
               >
                 <Heart
                   className={`h-5 w-5 ${
-                    testimonial.approved ? "fill-red-500 text-red-500" : ""
+                    testimonial.approved ? "fill-destructive text-destructive" : ""
                   }`}
                 />
               </Button>

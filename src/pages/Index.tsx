@@ -7,6 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { convertDbTestimonialToTestimonial } from "@/utils/testimonialUtils";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const Index = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -40,9 +41,9 @@ const Index = () => {
           email: formData.email,
           social: formData.social,
         },
-        rating: formData.rating || 5, // Default to 5 stars
+        rating: formData.rating || 5,
         text: formData.text,
-        tags: ["FS2O"], // Default tag
+        tags: ["FS2O"],
       };
 
       const { data, error } = await supabase
@@ -80,12 +81,15 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <div className="container py-8">
         <div className="mb-12 text-center">
-          <div className="mx-auto mb-6 h-24 w-24 overflow-hidden rounded-full">
-            <img
-              src="/lovable-uploads/b3f29f81-e76c-4a95-8ef7-e90a5987df1d.png"
-              alt="Profile"
-              className="h-full w-full object-cover"
-            />
+          <div className="mx-auto mb-6">
+            <Avatar className="h-24 w-24 mx-auto">
+              <AvatarImage
+                src="/lovable-uploads/38757e69-417d-4b2f-8d5a-6ff4a1d96c6b.png"
+                alt="Profile"
+                className="object-cover"
+              />
+              <AvatarFallback>JD</AvatarFallback>
+            </Avatar>
           </div>
           <h1 className="mb-4 text-4xl font-bold">
             Would you like to recommend my content?
