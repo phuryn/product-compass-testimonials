@@ -87,7 +87,8 @@ export const TestimonialForm = ({
     if (imageFile) {
       try {
         photoData = await convertImageToBase64(imageFile);
-        console.log('Converted image to base64:', photoData.substring(0, 50) + '...');
+        console.log('Photo data length:', photoData.length);
+        console.log('Photo data type:', typeof photoData);
       } catch (error) {
         toast({
           title: "Error",
@@ -109,7 +110,7 @@ export const TestimonialForm = ({
       tags: [formData.tag],
     };
 
-    console.log('Submitting testimonial with photo:', photoData ? 'present' : 'not present');
+    console.log('Submitting testimonial with photo data length:', photoData?.length || 0);
     onSubmit(submissionData);
   };
 

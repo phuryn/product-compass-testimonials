@@ -39,21 +39,22 @@ export const TestimonialCard = ({
     day: "numeric",
   });
 
-  // Enhanced photo URL handling with detailed logging
   const getPhotoUrl = () => {
-    console.log('Processing photo for:', testimonial.author.name);
+    if (!testimonial) return '';
+    
+    console.log('Processing photo for testimonial:', testimonial.id);
+    console.log('Author photo exists:', !!testimonial.author_photo);
+    console.log('Author photo type:', typeof testimonial.author_photo);
+    console.log('Author photo length:', testimonial.author_photo?.length || 0);
     
     if (testimonial.author_photo) {
-      console.log('Author photo exists:', testimonial.author_photo.substring(0, 50));
       return testimonial.author_photo;
     }
     
     if (testimonial.author.image) {
-      console.log('Using author profile image:', testimonial.author.image);
       return testimonial.author.image;
     }
     
-    console.log('No photo available for:', testimonial.author.name);
     return '';
   };
 
