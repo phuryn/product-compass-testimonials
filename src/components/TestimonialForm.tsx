@@ -6,6 +6,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { StarRating } from "./StarRating";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -14,6 +21,13 @@ interface TestimonialFormProps {
   onCancel: () => void;
   initialData?: any;
 }
+
+const AVAILABLE_TAGS = [
+  "Continuous Product Discovery",
+  "From Strategy to Objectives",
+  "Product Innovation",
+  "Other",
+] as const;
 
 export const TestimonialForm = ({
   onSubmit,
@@ -27,6 +41,7 @@ export const TestimonialForm = ({
     email: initialData?.author?.email || "",
     social: initialData?.author?.social || "",
     permission: initialData?.permission || false,
+    tag: initialData?.tags?.[0] || AVAILABLE_TAGS[0],
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>(
@@ -86,6 +101,7 @@ export const TestimonialForm = ({
         social: formData.social,
         image: imageUrl,
       },
+      tags: [formData.tag],
     };
 
     onSubmit(submissionData);
@@ -112,6 +128,26 @@ export const TestimonialForm = ({
             className="min-h-[150px]"
             required
           />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="tag">Category</Label>
+          <Select
+            value={formData.tag}
+            onValueChange={(value) => setFormData({ ...formData, tag: value })}
+            required
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select a category" />
+            </SelectTrigger>
+            <SelectContent>
+              {AVAILABLE_TAGS.map((tag) => (
+                <SelectItem key={tag} value={tag}>
+                  {tag}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="space-y-2">
