@@ -21,7 +21,7 @@ export const TestimonialForm = ({
   initialData,
 }: TestimonialFormProps) => {
   const [formData, setFormData] = useState({
-    rating: initialData?.rating || 0,
+    rating: initialData?.rating || 5,
     text: initialData?.text || "",
     name: initialData?.author?.name || "",
     email: initialData?.author?.email || "",
@@ -148,7 +148,7 @@ export const TestimonialForm = ({
           <Label htmlFor="photo">Your Photo</Label>
           <div className="flex items-center gap-4">
             <Avatar className="h-16 w-16">
-              <AvatarImage src={imagePreview} />
+              <AvatarImage src={imagePreview} alt={formData.name} />
               <AvatarFallback>
                 {formData.name.charAt(0).toUpperCase()}
               </AvatarFallback>

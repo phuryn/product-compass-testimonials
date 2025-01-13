@@ -69,7 +69,7 @@ export const TestimonialCard = ({
     <Card className="w-full">
       <CardHeader className="flex flex-row items-center gap-4">
         <Avatar className="h-12 w-12">
-          <AvatarImage src={testimonial.author.image} />
+          <AvatarImage src={testimonial.author.image} alt={testimonial.author.name} />
           <AvatarFallback>
             {testimonial.author.name.charAt(0).toUpperCase()}
           </AvatarFallback>
@@ -99,7 +99,7 @@ export const TestimonialCard = ({
                 <div className="flex flex-col gap-4 p-4">
                   <div className="flex items-center gap-4">
                     <Avatar className="h-12 w-12">
-                      <AvatarImage src={testimonial.author.image} />
+                      <AvatarImage src={testimonial.author.image} alt={testimonial.author.name} />
                       <AvatarFallback>
                         {testimonial.author.name.charAt(0).toUpperCase()}
                       </AvatarFallback>
