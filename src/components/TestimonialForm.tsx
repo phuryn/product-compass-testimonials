@@ -131,12 +131,12 @@ export const TestimonialForm = ({
     const fileName = `${crypto.randomUUID()}.${fileExt}`;
     const sanitizedFile = new File([file], fileName, { type: 'image/jpeg' });
     
-    const { data, error } = await supabase.storage
+    const { error: uploadError } = await supabase.storage
       .from('author-photos')
       .upload(fileName, sanitizedFile);
 
-    if (error) {
-      console.error('Error uploading image:', error);
+    if (uploadError) {
+      console.error('Error uploading image:', uploadError);
       toast({
         title: "Error",
         description: "Failed to upload image",
