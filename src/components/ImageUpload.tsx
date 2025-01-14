@@ -165,10 +165,12 @@ export const ImageUpload = ({ initialImage, onImageChange, userName }: ImageUplo
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-            className="w-full cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+            className="w-full cursor-pointer bg-background text-sm [&::file-selector-button]:rounded-md [&::file-selector-button]:bg-primary [&::file-selector-button]:px-4 [&::file-selector-button]:py-2 [&::file-selector-button]:text-primary-foreground [&::file-selector-button]:font-medium [&::file-selector-button]:border-0 [&::file-selector-button]:mr-4 hover:[&::file-selector-button]:bg-primary/90"
           />
         </div>
       </div>
     </div>
   );
 };
+
+export default ImageUpload;
