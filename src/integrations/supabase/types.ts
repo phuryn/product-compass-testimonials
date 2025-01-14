@@ -13,7 +13,6 @@ export type Database = {
         Row: {
           approved: boolean | null
           author: Json
-          author_photo: string | null
           date: string | null
           id: string
           rating: number
@@ -23,7 +22,6 @@ export type Database = {
         Insert: {
           approved?: boolean | null
           author: Json
-          author_photo?: string | null
           date?: string | null
           id?: string
           rating: number
@@ -33,7 +31,6 @@ export type Database = {
         Update: {
           approved?: boolean | null
           author?: Json
-          author_photo?: string | null
           date?: string | null
           id?: string
           rating?: number

@@ -41,11 +41,21 @@ export const TestimonialCard = ({
     day: "numeric",
   });
 
-  console.log('Rendering testimonial:', {
-    id: testimonial.id,
-    photo_url: testimonial.author_photo,
-    author: testimonial.author.name
-  }); // Debug log
+  const renderAuthorName = () => {
+    if (testimonial.author.social) {
+      return (
+        <a
+          href={testimonial.author.social}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-semibold hover:underline text-blue-600"
+        >
+          {testimonial.author.name}
+        </a>
+      );
+    }
+    return <div className="font-semibold">{testimonial.author.name}</div>;
+  };
 
   return (
     <Card>
@@ -58,10 +68,7 @@ export const TestimonialCard = ({
                   src={testimonial.author_photo}
                   alt={testimonial.author.name}
                   className="object-cover"
-                  onError={() => {
-                    console.error('Image load error for:', testimonial.author_photo);
-                    setImageLoadError(true);
-                  }}
+                  onError={() => setImageLoadError(true)}
                 />
               ) : (
                 <AvatarFallback>
@@ -70,17 +77,7 @@ export const TestimonialCard = ({
               )}
             </Avatar>
             <div>
-              <div className="font-semibold">{testimonial.author.name}</div>
-              {testimonial.author.social && (
-                <a
-                  href={testimonial.author.social}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-blue-600 hover:underline"
-                >
-                  Social Profile
-                </a>
-              )}
+              {renderAuthorName()}
             </div>
           </div>
           {isAdmin && (

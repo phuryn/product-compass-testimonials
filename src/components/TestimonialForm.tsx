@@ -20,6 +20,7 @@ interface TestimonialFormProps {
   onSubmit: (data: any) => void;
   onCancel: () => void;
   initialData?: any;
+  isAdmin?: boolean;
 }
 
 const AVAILABLE_TAGS = [
@@ -29,10 +30,14 @@ const AVAILABLE_TAGS = [
   "Other",
 ] as const;
 
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_IMAGE_DIMENSION = 800; // Maximum width or height in pixels
+
 export const TestimonialForm = ({
   onSubmit,
   onCancel,
   initialData,
+  isAdmin = false,
 }: TestimonialFormProps) => {
   const [formData, setFormData] = useState({
     rating: initialData?.rating || 5,
@@ -49,10 +54,57 @@ export const TestimonialForm = ({
   );
   const { toast } = useToast();
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const compressImage = async (file: File): Promise<Blob> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        
+        // Calculate new dimensions while maintaining aspect ratio
+        if (width > height && width > MAX_IMAGE_DIMENSION) {
+          height = (height * MAX_IMAGE_DIMENSION) / width;
+          width = MAX_IMAGE_DIMENSION;
+        } else if (height > MAX_IMAGE_DIMENSION) {
+          width = (width * MAX_IMAGE_DIMENSION) / height;
+          height = MAX_IMAGE_DIMENSION;
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          reject(new Error('Failed to get canvas context'));
+          return;
+        }
+        
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              resolve(blob);
+            } else {
+              reject(new Error('Failed to compress image'));
+            }
+          },
+          'image/jpeg',
+          0.8
+        );
+      };
+      
+      img.onerror = () => reject(new Error('Failed to load image'));
+    });
+  };
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) {
+      if (file.size > MAX_IMAGE_SIZE) {
         toast({
           title: "Error",
           description: "Image size should be less than 5MB",
@@ -60,21 +112,31 @@ export const TestimonialForm = ({
         });
         return;
       }
-      setImageFile(file);
-      const preview = URL.createObjectURL(file);
-      setImagePreview(preview);
+      
+      try {
+        const compressedBlob = await compressImage(file);
+        const compressedFile = new File([compressedBlob], file.name, {
+          type: 'image/jpeg',
+        });
+        setImageFile(compressedFile);
+        const preview = URL.createObjectURL(compressedBlob);
+        setImagePreview(preview);
+      } catch (error) {
+        console.error('Error compressing image:', error);
+        toast({
+          title: "Error",
+          description: "Failed to process image",
+          variant: "destructive",
+        });
+      }
     }
   };
 
   const uploadImage = async (file: File): Promise<string | null> => {
-    console.log('Starting image upload...'); // Debug log
-    const fileExt = file.name.split('.').pop();
+    const fileExt = 'jpg'; // Always jpg after compression
     const fileName = `${crypto.randomUUID()}.${fileExt}`;
+    const sanitizedFile = new File([file], fileName, { type: 'image/jpeg' });
     
-    // Create a new File object with a sanitized name
-    const sanitizedFile = new File([file], fileName, { type: file.type });
-    
-    console.log('Uploading file:', fileName); // Debug log
     const { data, error } = await supabase.storage
       .from('author-photos')
       .upload(fileName, sanitizedFile);
@@ -89,12 +151,10 @@ export const TestimonialForm = ({
       return null;
     }
 
-    // Get the public URL for the uploaded file
     const { data: { publicUrl } } = supabase.storage
       .from('author-photos')
       .getPublicUrl(fileName);
 
-    console.log('Generated public URL:', publicUrl); // Debug log
     return publicUrl;
   };
 
@@ -128,7 +188,6 @@ export const TestimonialForm = ({
       tags: [formData.tag],
     };
 
-    console.log('Submitting testimonial with data:', submissionData); // Debug log
     onSubmit(submissionData);
   };
 
@@ -236,20 +295,22 @@ export const TestimonialForm = ({
           </div>
         </div>
 
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="permission"
-            checked={formData.permission}
-            onCheckedChange={(checked) =>
-              setFormData({ ...formData, permission: checked as boolean })
-            }
-            required
-          />
-          <Label htmlFor="permission" className="text-sm after:content-['*'] after:ml-0.5 after:text-red-500">
-            I give permission to use this testimonial across social channels and
-            other marketing efforts
-          </Label>
-        </div>
+        {!isAdmin && (
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="permission"
+              checked={formData.permission}
+              onCheckedChange={(checked) =>
+                setFormData({ ...formData, permission: checked as boolean })
+              }
+              required
+            />
+            <Label htmlFor="permission" className="text-sm after:content-['*'] after:ml-0.5 after:text-red-500">
+              I give permission to use this testimonial across social channels and
+              other marketing efforts
+            </Label>
+          </div>
+        )}
       </div>
 
       <div className="flex justify-end gap-2">
