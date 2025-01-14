@@ -138,7 +138,7 @@ export const TestimonialCard = ({
               {testimonial.tags.map((tag, index) => (
                 <Tooltip key={index}>
                   <TooltipTrigger asChild>
-                    <span className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929] cursor-help">
+                    <span className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929]">
                       {getTagAcronym(tag)}
                     </span>
                   </TooltipTrigger>
