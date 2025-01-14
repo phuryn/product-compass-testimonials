@@ -21,6 +21,8 @@ export const TestimonialForm = ({
   initialData,
   isAdmin = false,
 }: TestimonialFormProps) => {
+  console.log("Initializing TestimonialForm with data:", initialData);
+  
   const [formData, setFormData] = useState({
     rating: initialData?.rating || 5,
     text: initialData?.text || "",
@@ -32,7 +34,10 @@ export const TestimonialForm = ({
     photo: initialData?.author?.photo || null,
   });
 
+  console.log("Initial form data state:", formData);
+
   const handleAuthorFieldChange = (field: string, value: string) => {
+    console.log("Author field change:", { field, value });
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -47,6 +52,7 @@ export const TestimonialForm = ({
     };
 
     console.log('Author data to be submitted:', authorData);
+    console.log('Photo URL in submission:', formData.photo);
 
     const submissionData = {
       rating: formData.rating,
@@ -67,9 +73,18 @@ export const TestimonialForm = ({
           rating={formData.rating}
           text={formData.text}
           tag={formData.tag}
-          onRatingChange={(rating) => setFormData((prev) => ({ ...prev, rating }))}
-          onTextChange={(text) => setFormData((prev) => ({ ...prev, text }))}
-          onTagChange={(tag) => setFormData((prev) => ({ ...prev, tag }))}
+          onRatingChange={(rating) => {
+            console.log("Rating changed to:", rating);
+            setFormData((prev) => ({ ...prev, rating }));
+          }}
+          onTextChange={(text) => {
+            console.log("Text changed, length:", text.length);
+            setFormData((prev) => ({ ...prev, text }));
+          }}
+          onTagChange={(tag) => {
+            console.log("Tag changed to:", tag);
+            setFormData((prev) => ({ ...prev, tag }));
+          }}
         />
 
         <AuthorFields
@@ -81,7 +96,10 @@ export const TestimonialForm = ({
 
         <ImageUpload
           initialImage={formData.photo}
-          onImageChange={(url) => setFormData((prev) => ({ ...prev, photo: url }))}
+          onImageChange={(url) => {
+            console.log("Image URL updated:", url);
+            setFormData((prev) => ({ ...prev, photo: url }));
+          }}
           userName={formData.name}
         />
 
@@ -90,9 +108,10 @@ export const TestimonialForm = ({
             <Checkbox
               id="permission"
               checked={formData.permission}
-              onCheckedChange={(checked) =>
-                setFormData((prev) => ({ ...prev, permission: checked as boolean }))
-              }
+              onCheckedChange={(checked) => {
+                console.log("Permission changed to:", checked);
+                setFormData((prev) => ({ ...prev, permission: checked as boolean }));
+              }}
               required
             />
             <Label htmlFor="permission" className="text-sm after:content-['*'] after:ml-0.5 after:text-red-500">

@@ -19,6 +19,7 @@ export const ImageUpload = ({ initialImage, onImageChange, userName }: ImageUplo
   const { toast } = useToast();
 
   const compressImage = async (file: File): Promise<Blob> => {
+    console.log("Starting image compression for file:", file.name);
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.src = URL.createObjectURL(file);
@@ -36,6 +37,7 @@ export const ImageUpload = ({ initialImage, onImageChange, userName }: ImageUplo
           height = MAX_IMAGE_DIMENSION;
         }
         
+        console.log("Compressing image to dimensions:", { width, height });
         canvas.width = width;
         canvas.height = height;
         
@@ -50,6 +52,7 @@ export const ImageUpload = ({ initialImage, onImageChange, userName }: ImageUplo
         canvas.toBlob(
           (blob) => {
             if (blob) {
+              console.log("Image compressed successfully. Size:", blob.size);
               resolve(blob);
             } else {
               reject(new Error('Failed to compress image'));
@@ -65,10 +68,12 @@ export const ImageUpload = ({ initialImage, onImageChange, userName }: ImageUplo
   };
 
   const uploadImage = async (file: File): Promise<string | null> => {
+    console.log("Starting image upload process for file:", file.name);
     const fileExt = 'jpg';
     const fileName = `${crypto.randomUUID()}.${fileExt}`;
     const sanitizedFile = new File([file], fileName, { type: 'image/jpeg' });
     
+    console.log("Uploading file to Supabase storage:", fileName);
     const { error: uploadError, data } = await supabase.storage
       .from('author-photos')
       .upload(fileName, sanitizedFile);
@@ -94,7 +99,9 @@ export const ImageUpload = ({ initialImage, onImageChange, userName }: ImageUplo
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      console.log("New image selected:", file.name);
       if (file.size > MAX_IMAGE_SIZE) {
+        console.warn("File size exceeds limit:", file.size);
         toast({
           title: "Error",
           description: "Image size should be less than 5MB",
@@ -108,10 +115,16 @@ export const ImageUpload = ({ initialImage, onImageChange, userName }: ImageUplo
         const compressedFile = new File([compressedBlob], file.name, {
           type: 'image/jpeg',
         });
+        console.log("File compressed successfully:", { 
+          originalSize: file.size, 
+          compressedSize: compressedFile.size 
+        });
+        
         const preview = URL.createObjectURL(compressedBlob);
         setImagePreview(preview);
         
         const photoUrl = await uploadImage(compressedFile);
+        console.log("Final photo URL:", photoUrl);
         onImageChange(photoUrl);
       } catch (error) {
         console.error('Error processing image:', error);
