@@ -16,6 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { convertDbTestimonialToTestimonial } from "@/utils/testimonialUtils";
 import { AVAILABLE_TAGS } from "@/constants/testimonials";
+import { Navigation } from "@/components/layout/Navigation";
 
 const Admin = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -119,62 +120,65 @@ const Admin = () => {
   }
 
   return (
-    <div className="container py-8">
-      <div className="mb-8 flex items-center gap-4">
-        <Input
-          placeholder="Search by name, email, or testimonial keywords"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="max-w-md"
-        />
-        <Select value={selectedTag} onValueChange={setSelectedTag}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select tag" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Tags</SelectItem>
-            {AVAILABLE_TAGS.map((tag) => (
-              <SelectItem key={tag} value={tag}>
-                {tag}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="grid gap-6">
-        {filteredTestimonials.map((testimonial: Testimonial) => (
-          <TestimonialCard
-            key={testimonial.id}
-            testimonial={testimonial}
-            isAdmin
-            onApprove={handleApprove}
-            onEdit={(id) => {
-              const testimonial = testimonials.find((t) => t.id === id);
-              if (testimonial) {
-                setEditingTestimonial(testimonial);
-              }
-            }}
+    <div className="min-h-screen bg-background flex flex-col">
+      <Navigation />
+      <div className="container py-8">
+        <div className="mb-8 flex items-center gap-4">
+          <Input
+            placeholder="Search by name, email, or testimonial keywords"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="max-w-md"
           />
-        ))}
-      </div>
+          <Select value={selectedTag} onValueChange={setSelectedTag}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select tag" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Tags</SelectItem>
+              {AVAILABLE_TAGS.map((tag) => (
+                <SelectItem key={tag} value={tag}>
+                  {tag}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-      <Dialog
-        open={!!editingTestimonial}
-        onOpenChange={() => setEditingTestimonial(null)}
-      >
-        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
-          <DialogTitle>Edit Testimonial</DialogTitle>
-          {editingTestimonial && (
-            <TestimonialForm
-              initialData={editingTestimonial}
-              onSubmit={handleUpdateTestimonial}
-              onCancel={() => setEditingTestimonial(null)}
+        <div className="grid gap-6">
+          {filteredTestimonials.map((testimonial: Testimonial) => (
+            <TestimonialCard
+              key={testimonial.id}
+              testimonial={testimonial}
               isAdmin
+              onApprove={handleApprove}
+              onEdit={(id) => {
+                const testimonial = testimonials.find((t) => t.id === id);
+                if (testimonial) {
+                  setEditingTestimonial(testimonial);
+                }
+              }}
             />
-          )}
-        </DialogContent>
-      </Dialog>
+          ))}
+        </div>
+
+        <Dialog
+          open={!!editingTestimonial}
+          onOpenChange={() => setEditingTestimonial(null)}
+        >
+          <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+            <DialogTitle>Edit Testimonial</DialogTitle>
+            {editingTestimonial && (
+              <TestimonialForm
+                initialData={editingTestimonial}
+                onSubmit={handleUpdateTestimonial}
+                onCancel={() => setEditingTestimonial(null)}
+                isAdmin
+              />
+            )}
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 };
