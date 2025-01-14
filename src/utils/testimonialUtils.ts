@@ -11,6 +11,7 @@ export const convertDbTestimonialToTestimonial = (dbTestimonial: DbTestimonial):
       name: author.name || '',
       email: author.email || '',
       social: author.social || '',
+      photo: author.photo || '', // Ensure photo is included in conversion
     },
     rating: dbTestimonial.rating,
     text: dbTestimonial.text,

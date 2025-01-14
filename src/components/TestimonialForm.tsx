@@ -131,7 +131,7 @@ export const TestimonialForm = ({
     const fileName = `${crypto.randomUUID()}.${fileExt}`;
     const sanitizedFile = new File([file], fileName, { type: 'image/jpeg' });
     
-    const { error: uploadError } = await supabase.storage
+    const { error: uploadError, data } = await supabase.storage
       .from('author-photos')
       .upload(fileName, sanitizedFile);
 
@@ -145,12 +145,12 @@ export const TestimonialForm = ({
       return null;
     }
 
-    const { data } = supabase.storage
+    const { data: urlData } = supabase.storage
       .from('author-photos')
       .getPublicUrl(fileName);
 
-    console.log('Image uploaded successfully. URL:', data.publicUrl);
-    return data.publicUrl;
+    console.log('Image uploaded successfully. URL:', urlData.publicUrl);
+    return urlData.publicUrl;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -169,6 +169,7 @@ export const TestimonialForm = ({
         });
         return;
       }
+      console.log('New photo URL:', photoUrl);
     }
 
     // Create the author object with all fields including photo
