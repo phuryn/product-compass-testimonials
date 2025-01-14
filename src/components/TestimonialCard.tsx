@@ -38,7 +38,7 @@ interface TestimonialCardProps {
   onEdit?: (id: string) => void;
 }
 
-const MAX_VISIBLE_CHARS = 160;
+const MAX_VISIBLE_CHARS = 320;
 
 const getTagAcronym = (tag: string) => {
   if (tag === "Other") return "Other";
