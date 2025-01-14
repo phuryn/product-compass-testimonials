@@ -16,18 +16,26 @@ const Index = () => {
   const { data: testimonials = [], isLoading } = useQuery({
     queryKey: ["testimonials", "public"],
     queryFn: async () => {
+      console.log("Fetching approved testimonials");
       const { data, error } = await supabase
         .from("testimonials")
         .select("*")
+        .eq('approved', true) // Only select approved testimonials
         .order('date', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching testimonials:", error);
+        throw error;
+      }
+      
+      console.log("Fetched testimonials:", data);
       return data?.map(convertDbTestimonialToTestimonial) || [];
     },
   });
 
   const submitTestimonialMutation = useMutation({
     mutationFn: async (formData: any) => {
+      console.log("Submitting testimonial:", formData);
       const testimonialData = {
         author: {
           name: formData.author.name,
@@ -38,6 +46,7 @@ const Index = () => {
         rating: formData.rating || 5,
         text: formData.text,
         tags: formData.tags,
+        approved: false, // Always set new testimonials as unapproved
       };
 
       const { data, error } = await supabase
@@ -46,7 +55,12 @@ const Index = () => {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error submitting testimonial:", error);
+        throw error;
+      }
+
+      console.log("Testimonial submitted successfully:", data);
       return convertDbTestimonialToTestimonial(data);
     },
     onSuccess: () => {
@@ -58,6 +72,7 @@ const Index = () => {
       });
     },
     onError: (error) => {
+      console.error("Mutation error:", error);
       toast({
         variant: "destructive",
         title: "Error",
