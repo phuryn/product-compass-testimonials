@@ -45,7 +45,7 @@ export const TestimonialForm = ({
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>(
-    initialData?.author?.image || ""
+    initialData?.author_photo || ""
   );
   const { toast } = useToast();
 
@@ -66,26 +66,39 @@ export const TestimonialForm = ({
     }
   };
 
-  const convertImageToBase64 = async (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (typeof reader.result === 'string') {
-          resolve(reader.result);
-        }
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
+  const uploadImage = async (file: File): Promise<string | null> => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${crypto.randomUUID()}.${fileExt}`;
+    
+    const { data, error } = await supabase.storage
+      .from('author-photos')
+      .upload(fileName, file);
+
+    if (error) {
+      console.error('Error uploading image:', error);
+      toast({
+        title: "Error",
+        description: "Failed to upload image",
+        variant: "destructive",
+      });
+      return null;
+    }
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('author-photos')
+      .getPublicUrl(fileName);
+
+    return publicUrl;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    let photoData = null;
+    let photoUrl = null;
 
     if (imageFile) {
       try {
-        photoData = await convertImageToBase64(imageFile);
+        photoUrl = await uploadImage(imageFile);
+        if (!photoUrl) return;
       } catch (error) {
         toast({
           title: "Error",
@@ -103,7 +116,7 @@ export const TestimonialForm = ({
         email: formData.email,
         social: formData.social,
       },
-      author_photo: photoData,
+      author_photo: photoUrl,
       tags: [formData.tag],
     };
 
