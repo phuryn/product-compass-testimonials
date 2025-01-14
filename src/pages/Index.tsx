@@ -124,7 +124,7 @@ const Index = () => {
         <div className="container">
           <div className="grid gap-8 md:grid-cols-2">
             <div>
-              <h3 className="text-lg font-semibold mb-4 text-[#333333]">Stay Connected</h3>
+              <h3 className="text-lg font-semibold mb-4 text-[#666666]">Stay Connected</h3>
               <ul className="space-y-2">
                 <li>
                   <a 
@@ -149,7 +149,7 @@ const Index = () => {
               </ul>
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-4 text-[#333333]">Our Courses</h3>
+              <h3 className="text-lg font-semibold mb-4 text-[#666666]">Our Courses</h3>
               <ul className="space-y-2">
                 <li>
                   <a 
