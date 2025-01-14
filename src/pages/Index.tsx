@@ -44,7 +44,6 @@ const Index = () => {
         rating: formData.rating || 5,
         text: formData.text,
         tags: formData.tags,
-        author_photo: formData.author_photo,
       };
 
       const { data, error } = await supabase
@@ -105,7 +104,7 @@ const Index = () => {
                 Send in text
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px]">
+            <DialogContent className="sm:max-w-[600px] h-[90vh] overflow-y-auto">
               <TestimonialForm
                 onSubmit={(data) => submitTestimonialMutation.mutate(data)}
                 onCancel={() => setIsFormOpen(false)}
