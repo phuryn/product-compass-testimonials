@@ -35,16 +35,22 @@ const Index = () => {
 
   const submitTestimonialMutation = useMutation({
     mutationFn: async (formData: any) => {
+      // Prepare the testimonial data with explicit photo field inclusion
       const testimonialData = {
         author: {
           name: formData.author.name,
           email: formData.author.email,
           social: formData.author.social,
+          photo: formData.author.photo, // Explicitly include photo
         },
         rating: formData.rating || 5,
         text: formData.text,
         tags: formData.tags,
       };
+
+      // Log the complete data before insertion
+      console.log("Data to be inserted into the database:", testimonialData);
+      console.log("Author photo URL being inserted:", testimonialData.author.photo);
 
       const { data, error } = await supabase
         .from("testimonials")
@@ -52,7 +58,12 @@ const Index = () => {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error inserting testimonial:", error);
+        throw error;
+      }
+
+      console.log("Successfully inserted testimonial:", data);
       return convertDbTestimonialToTestimonial(data);
     },
     onSuccess: () => {
