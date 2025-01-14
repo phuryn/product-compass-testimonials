@@ -24,8 +24,8 @@ export const Navigation = () => {
     enabled: !!user,
   });
 
-  // Hide navigation for new users (login page)
-  if (location.pathname === "/login") {
+  // Hide navigation for non-authenticated users or those on the login page
+  if (!user || location.pathname === "/login") {
     return null;
   }
 
