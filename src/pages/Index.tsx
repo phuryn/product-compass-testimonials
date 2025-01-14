@@ -6,6 +6,7 @@ import { convertDbTestimonialToTestimonial } from "@/utils/testimonialUtils";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { TestimonialList } from "@/components/testimonials/TestimonialList";
 import { Footer } from "@/components/layout/Footer";
+import { Navigation } from "@/components/layout/Navigation";
 
 const Index = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -71,6 +72,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <Navigation />
       <div className="container py-8 flex-grow">
         <PageHeader 
           isFormOpen={isFormOpen}
