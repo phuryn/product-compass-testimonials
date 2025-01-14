@@ -175,7 +175,7 @@ export const TestimonialCard = ({
   );
 
   return (
-    <Card className="transition-colors duration-200 hover:bg-[#f5f8fa]">
+    <Card className="transition-colors duration-200 hover:bg-[#fafbfc]">
       <CardContent className="p-6">
         {isTextLong ? (
           <>
