@@ -44,7 +44,7 @@ export const TestimonialForm = ({
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>(
-    initialData?.author_photo || ""
+    initialData?.author?.photo || ""
   );
   const { toast } = useToast();
 
@@ -154,7 +154,7 @@ export const TestimonialForm = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    let photoUrl = initialData?.author_photo || null;
+    let photoUrl = initialData?.author?.photo || null;
 
     if (imageFile) {
       try {
@@ -177,8 +177,8 @@ export const TestimonialForm = ({
         name: formData.name,
         email: formData.email,
         social: formData.social,
+        photo: photoUrl,
       },
-      author_photo: photoUrl,
       tags: [formData.tag],
     };
 

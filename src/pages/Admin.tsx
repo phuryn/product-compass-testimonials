@@ -24,7 +24,6 @@ const Admin = () => {
     null
   );
   const { toast } = useToast();
-  const { user } = useAuth();
   const queryClient = useQueryClient();
 
   const { data: testimonials = [], isLoading } = useQuery({

@@ -11,8 +11,8 @@ export interface Testimonial {
     name: string;
     email: string;
     social?: string;
+    photo?: string;
   };
-  author_photo?: string | null;
   rating: number;
   text: string;
   date: string;
@@ -63,9 +63,9 @@ export const TestimonialCard = ({
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-4">
             <Avatar className="h-12 w-12">
-              {testimonial.author_photo && !imageLoadError ? (
+              {testimonial.author.photo && !imageLoadError ? (
                 <AvatarImage
-                  src={testimonial.author_photo}
+                  src={testimonial.author.photo}
                   alt={testimonial.author.name}
                   className="object-cover"
                   onError={() => setImageLoadError(true)}
