@@ -12,40 +12,39 @@ interface ImageUploadProps {
 }
 
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
-const MAX_IMAGE_DIMENSION = 800; // Maximum width or height in pixels
+const TARGET_SIZE = 128; // Target width and height in pixels
 
 export const ImageUpload = ({ initialImage, onImageChange, userName }: ImageUploadProps) => {
   const [imagePreview, setImagePreview] = useState<string>(initialImage || "");
   const { toast } = useToast();
 
-  const compressImage = async (file: File): Promise<Blob> => {
+  const compressAndCropImage = async (file: File): Promise<Blob> => {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.src = URL.createObjectURL(file);
       
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        let width = img.width;
-        let height = img.height;
-        
-        if (width > height && width > MAX_IMAGE_DIMENSION) {
-          height = (height * MAX_IMAGE_DIMENSION) / width;
-          width = MAX_IMAGE_DIMENSION;
-        } else if (height > MAX_IMAGE_DIMENSION) {
-          width = (width * MAX_IMAGE_DIMENSION) / height;
-          height = MAX_IMAGE_DIMENSION;
-        }
-        
-        canvas.width = width;
-        canvas.height = height;
+        canvas.width = TARGET_SIZE;
+        canvas.height = TARGET_SIZE;
         
         const ctx = canvas.getContext('2d');
         if (!ctx) {
           reject(new Error('Failed to get canvas context'));
           return;
         }
+
+        // Calculate dimensions for center cropping
+        const size = Math.min(img.width, img.height);
+        const startX = (img.width - size) / 2;
+        const startY = (img.height - size) / 2;
         
-        ctx.drawImage(img, 0, 0, width, height);
+        // Draw the image with center cropping
+        ctx.drawImage(
+          img,
+          startX, startY, size, size, // Source rectangle
+          0, 0, TARGET_SIZE, TARGET_SIZE // Destination rectangle
+        );
         
         canvas.toBlob(
           (blob) => {
@@ -102,7 +101,7 @@ export const ImageUpload = ({ initialImage, onImageChange, userName }: ImageUplo
       }
       
       try {
-        const compressedBlob = await compressImage(file);
+        const compressedBlob = await compressAndCropImage(file);
         const compressedFile = new File([compressedBlob], file.name, {
           type: 'image/jpeg',
         });
