@@ -172,14 +172,18 @@ export const TestimonialForm = ({
       console.log('Photo URL to be saved:', photoUrl);
     }
 
+    const authorData = {
+      name: formData.name,
+      email: formData.email,
+      social: formData.social,
+      photo: photoUrl,
+    };
+
+    console.log('Author data being submitted:', authorData);
+
     const submissionData = {
       ...formData,
-      author: {
-        name: formData.name,
-        email: formData.email,
-        social: formData.social,
-        photo: photoUrl, // Include photo URL in author object
-      },
+      author: authorData,
       tags: [formData.tag],
     };
 
