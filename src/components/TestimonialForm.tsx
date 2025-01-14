@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { AVAILABLE_TAGS } from "@/constants/testimonials";
 
 interface TestimonialFormProps {
   onSubmit: (data: any) => void;
@@ -22,13 +23,6 @@ interface TestimonialFormProps {
   initialData?: any;
   isAdmin?: boolean;
 }
-
-const AVAILABLE_TAGS = [
-  "Continuous Product Discovery",
-  "From Strategy to Objectives",
-  "Product Innovation",
-  "Other",
-] as const;
 
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
 const MAX_IMAGE_DIMENSION = 800; // Maximum width or height in pixels

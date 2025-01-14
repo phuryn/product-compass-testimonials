@@ -15,6 +15,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { convertDbTestimonialToTestimonial } from "@/utils/testimonialUtils";
+import { AVAILABLE_TAGS } from "@/constants/testimonials";
 
 const Admin = () => {
   const [searchTerm, setSearchTerm] = useState("");
