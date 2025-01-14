@@ -4,6 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { StarRating } from "./StarRating";
 import { Heart } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export interface Testimonial {
   id: string;
@@ -27,6 +33,15 @@ interface TestimonialCardProps {
   onEdit?: (id: string) => void;
 }
 
+const getTagAcronym = (tag: string) => {
+  if (tag === "Other") return "Other";
+  return tag
+    .split(" ")
+    .map(word => word[0])
+    .join("")
+    .toUpperCase();
+};
+
 export const TestimonialCard = ({
   testimonial,
   isAdmin,
@@ -42,7 +57,12 @@ export const TestimonialCard = ({
   });
 
   const getInitials = (name: string) => {
-    return name.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase();
+    return name
+      .split(" ")
+      .slice(0, 2)
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase();
   };
 
   const renderAuthorName = () => {
@@ -58,7 +78,9 @@ export const TestimonialCard = ({
         </a>
       );
     }
-    return <div className="font-semibold text-[#292929]">{testimonial.author.name}</div>;
+    return (
+      <div className="font-semibold text-[#292929]">{testimonial.author.name}</div>
+    );
   };
 
   return (
@@ -75,14 +97,10 @@ export const TestimonialCard = ({
                   onError={() => setImageLoadError(true)}
                 />
               ) : (
-                <AvatarFallback>
-                  {getInitials(testimonial.author.name)}
-                </AvatarFallback>
+                <AvatarFallback>{getInitials(testimonial.author.name)}</AvatarFallback>
               )}
             </Avatar>
-            <div>
-              {renderAuthorName()}
-            </div>
+            <div>{renderAuthorName()}</div>
           </div>
           {isAdmin && (
             <div className="flex gap-2">
@@ -91,11 +109,9 @@ export const TestimonialCard = ({
                 size="icon"
                 onClick={() => onApprove?.(testimonial.id)}
               >
-                <Heart 
+                <Heart
                   className={`h-5 w-5 ${
-                    testimonial.approved 
-                      ? "text-red-500 fill-current" 
-                      : "text-gray-300"
+                    testimonial.approved ? "text-red-500 fill-current" : "text-gray-300"
                   }`}
                 />
               </Button>
@@ -118,14 +134,22 @@ export const TestimonialCard = ({
 
         <div className="mt-4 flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:gap-0">
           <div className="flex flex-wrap gap-2">
-            {testimonial.tags.map((tag, index) => (
-              <span
-                key={index}
-                className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929]"
-              >
-                {tag}
-              </span>
-            ))}
+            <TooltipProvider>
+              {testimonial.tags.map((tag, index) => (
+                <Tooltip key={index}>
+                  <TooltipTrigger asChild>
+                    <span className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929] cursor-help">
+                      {getTagAcronym(tag)}
+                    </span>
+                  </TooltipTrigger>
+                  {tag !== "Other" && (
+                    <TooltipContent>
+                      <p>{tag}</p>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              ))}
+            </TooltipProvider>
           </div>
           <div className="text-sm text-[#292929]">{formattedDate}</div>
         </div>
