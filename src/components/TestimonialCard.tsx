@@ -54,7 +54,7 @@ export const TestimonialCard = ({
         </a>
       );
     }
-    return <div className="font-semibold">{testimonial.author.name}</div>;
+    return <div className="font-semibold text-[#292929]">{testimonial.author.name}</div>;
   };
 
   return (
