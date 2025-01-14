@@ -42,11 +42,7 @@ export const TestimonialCard = ({
   });
 
   const getInitials = (name: string) => {
-    const names = name.split(' ');
-    if (names.length >= 2) {
-      return `${names[0][0]}${names[1][0]}`.toUpperCase();
-    }
-    return name.slice(0, 2).toUpperCase();
+    return name.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase();
   };
 
   const renderAuthorName = () => {

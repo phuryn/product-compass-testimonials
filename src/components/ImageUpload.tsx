@@ -12,7 +12,7 @@ interface ImageUploadProps {
 }
 
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
-const TARGET_SIZE = 48; // Changed from 128 to 48 pixels
+const TARGET_SIZE = 96; // Changed from 48 to 96 pixels
 
 export const ImageUpload = ({ initialImage, onImageChange, userName }: ImageUploadProps) => {
   const [imagePreview, setImagePreview] = useState<string>(initialImage || "");
@@ -125,14 +125,14 @@ export const ImageUpload = ({ initialImage, onImageChange, userName }: ImageUplo
     <div className="space-y-2">
       <Label htmlFor="photo">Your profile picture</Label>
       <div className="flex items-center gap-4">
-        <Avatar className="h-16 w-16">
+        <Avatar className="h-24 w-24">
           <AvatarImage 
             src={imagePreview} 
             alt={userName} 
             className="object-cover"
           />
           <AvatarFallback>
-            {userName.charAt(0).toUpperCase()}
+            {userName.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase()}
           </AvatarFallback>
         </Avatar>
         <Input
