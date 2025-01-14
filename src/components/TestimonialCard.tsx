@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -33,14 +34,19 @@ export const TestimonialCard = ({
   onApprove,
   onEdit,
 }: TestimonialCardProps) => {
+  const [imageLoadError, setImageLoadError] = useState(false);
+
   const formattedDate = new Date(testimonial.date).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
 
-  // Check if the photo is a base64 string and starts with the correct prefix
-  const isValidBase64Photo = testimonial.author_photo?.startsWith('data:image');
+  // Improved base64 image validation
+  const isValidBase64Photo = testimonial.author_photo?.match(/^data:image\/(png|jpeg|jpg|gif);base64,/);
+
+  // Debug log for photo data
+  console.log("Author photo data:", testimonial.author_photo?.substring(0, 50) + "...");
 
   return (
     <Card>
@@ -48,15 +54,14 @@ export const TestimonialCard = ({
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-4">
             <Avatar className="h-12 w-12">
-              {isValidBase64Photo ? (
+              {isValidBase64Photo && !imageLoadError ? (
                 <AvatarImage
                   src={testimonial.author_photo}
                   alt={testimonial.author.name}
-                  className="object-cover"
+                  className="object-cover w-full h-full"
                   onError={(e) => {
                     console.error("Error loading image:", e);
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
+                    setImageLoadError(true);
                   }}
                 />
               ) : (
