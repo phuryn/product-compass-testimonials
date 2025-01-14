@@ -20,7 +20,7 @@ const Index = () => {
       const { data, error } = await supabase
         .from("testimonials")
         .select("*")
-        .order("date", { ascending: false });
+        .order('date', { ascending: false });
 
       if (error) throw error;
       return data?.map(convertDbTestimonialToTestimonial) || [];
