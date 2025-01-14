@@ -74,10 +74,44 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_testimonials: {
+        Row: {
+          approved: boolean | null
+          author: Json | null
+          date: string | null
+          id: string | null
+          rating: number | null
+          tags: string[] | null
+          text: string | null
+        }
+        Insert: {
+          approved?: boolean | null
+          author?: never
+          date?: string | null
+          id?: string | null
+          rating?: number | null
+          tags?: string[] | null
+          text?: string | null
+        }
+        Update: {
+          approved?: boolean | null
+          author?: never
+          date?: string | null
+          id?: string | null
+          rating?: number | null
+          tags?: string[] | null
+          text?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      [_ in never]: never
+      sanitize_author_for_public: {
+        Args: {
+          author: Json
+        }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never

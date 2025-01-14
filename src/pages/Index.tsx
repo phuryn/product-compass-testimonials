@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { convertDbTestimonialToTestimonial } from "@/utils/testimonialUtils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
 
 const Index = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -72,8 +73,8 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container py-8">
+    <div className="min-h-screen bg-background flex flex-col">
+      <div className="container py-8 flex-grow">
         <div className="mb-12 text-center">
           <div className="mx-auto mb-6">
             <Avatar className="h-24 w-24 mx-auto">
@@ -118,6 +119,73 @@ const Index = () => {
             ))}
         </div>
       </div>
+
+      <footer className="bg-gray-50 py-12 mt-16">
+        <div className="container">
+          <div className="grid gap-8 md:grid-cols-2">
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Stay Connected</h3>
+              <ul className="space-y-2">
+                <li>
+                  <a 
+                    href="https://www.productcompass.pm/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    The Product Compass Newsletter
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="https://www.linkedin.com/in/pawel-huryn" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    LinkedIn
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Our Courses</h3>
+              <ul className="space-y-2">
+                <li>
+                  <a 
+                    href="https://www.productcompass.pm/p/cpdm" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    Continuous Product Discovery Masterclass
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="https://www.productcompass.pm/p/product-vision-strategy-objectives-course" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    From Strategy to Objectives Masterclass
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="https://www.productcompass.pm/p/product-innovation-masterclass" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    Product Innovation Masterclass
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
