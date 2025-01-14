@@ -11,9 +11,8 @@ export interface Testimonial {
     name: string;
     email: string;
     social?: string;
-    image?: string;
   };
-  author_photo?: string;
+  author_photo?: string | null;
   rating: number;
   text: string;
   date: string;
@@ -42,6 +41,8 @@ export const TestimonialCard = ({
     day: "numeric",
   });
 
+  console.log('Rendering testimonial with photo URL:', testimonial.author_photo); // Debug log
+
   return (
     <Card>
       <CardContent className="p-6">
@@ -53,7 +54,10 @@ export const TestimonialCard = ({
                   src={testimonial.author_photo}
                   alt={testimonial.author.name}
                   className="object-cover w-full h-full"
-                  onError={() => setImageLoadError(true)}
+                  onError={() => {
+                    console.error('Image load error for:', testimonial.author_photo);
+                    setImageLoadError(true);
+                  }}
                 />
               ) : (
                 <AvatarFallback>

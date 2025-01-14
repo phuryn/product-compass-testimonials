@@ -70,9 +70,12 @@ export const TestimonialForm = ({
     const fileExt = file.name.split('.').pop();
     const fileName = `${crypto.randomUUID()}.${fileExt}`;
     
+    // Create a new File object with a sanitized name
+    const sanitizedFile = new File([file], fileName, { type: file.type });
+    
     const { data, error } = await supabase.storage
       .from('author-photos')
-      .upload(fileName, file);
+      .upload(fileName, sanitizedFile);
 
     if (error) {
       console.error('Error uploading image:', error);
@@ -84,10 +87,12 @@ export const TestimonialForm = ({
       return null;
     }
 
+    // Get the public URL for the uploaded file
     const { data: { publicUrl } } = supabase.storage
       .from('author-photos')
       .getPublicUrl(fileName);
 
+    console.log('Uploaded image URL:', publicUrl); // Debug log
     return publicUrl;
   };
 
@@ -100,6 +105,7 @@ export const TestimonialForm = ({
         photoUrl = await uploadImage(imageFile);
         if (!photoUrl) return;
       } catch (error) {
+        console.error('Error processing image:', error);
         toast({
           title: "Error",
           description: "Failed to process image",
@@ -116,7 +122,7 @@ export const TestimonialForm = ({
         email: formData.email,
         social: formData.social,
       },
-      author_photo: photoUrl,
+      author_photo: photoUrl || initialData?.author_photo,
       tags: [formData.tag],
     };
 
