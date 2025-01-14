@@ -159,13 +159,15 @@ export const ImageUpload = ({ initialImage, onImageChange, userName }: ImageUplo
             {userName.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase()}
           </AvatarFallback>
         </Avatar>
-        <Input
-          id="photo"
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="max-w-[300px] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 cursor-pointer"
-        />
+        <div className="flex-1 min-w-0">
+          <Input
+            id="photo"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 cursor-pointer text-sm"
+          />
+        </div>
       </div>
     </div>
   );
