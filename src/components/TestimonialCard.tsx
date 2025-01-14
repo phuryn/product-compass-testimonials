@@ -41,7 +41,11 @@ export const TestimonialCard = ({
     day: "numeric",
   });
 
-  console.log('Rendering testimonial with photo URL:', testimonial.author_photo); // Debug log
+  console.log('Rendering testimonial:', {
+    id: testimonial.id,
+    photo_url: testimonial.author_photo,
+    author: testimonial.author.name
+  }); // Debug log
 
   return (
     <Card>
@@ -53,7 +57,7 @@ export const TestimonialCard = ({
                 <AvatarImage
                   src={testimonial.author_photo}
                   alt={testimonial.author.name}
-                  className="object-cover w-full h-full"
+                  className="object-cover"
                   onError={() => {
                     console.error('Image load error for:', testimonial.author_photo);
                     setImageLoadError(true);

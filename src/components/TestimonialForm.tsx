@@ -67,12 +67,14 @@ export const TestimonialForm = ({
   };
 
   const uploadImage = async (file: File): Promise<string | null> => {
+    console.log('Starting image upload...'); // Debug log
     const fileExt = file.name.split('.').pop();
     const fileName = `${crypto.randomUUID()}.${fileExt}`;
     
     // Create a new File object with a sanitized name
     const sanitizedFile = new File([file], fileName, { type: file.type });
     
+    console.log('Uploading file:', fileName); // Debug log
     const { data, error } = await supabase.storage
       .from('author-photos')
       .upload(fileName, sanitizedFile);
@@ -92,13 +94,13 @@ export const TestimonialForm = ({
       .from('author-photos')
       .getPublicUrl(fileName);
 
-    console.log('Uploaded image URL:', publicUrl); // Debug log
+    console.log('Generated public URL:', publicUrl); // Debug log
     return publicUrl;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    let photoUrl = null;
+    let photoUrl = initialData?.author_photo || null;
 
     if (imageFile) {
       try {
@@ -122,10 +124,11 @@ export const TestimonialForm = ({
         email: formData.email,
         social: formData.social,
       },
-      author_photo: photoUrl || initialData?.author_photo,
+      author_photo: photoUrl,
       tags: [formData.tag],
     };
 
+    console.log('Submitting testimonial with data:', submissionData); // Debug log
     onSubmit(submissionData);
   };
 
