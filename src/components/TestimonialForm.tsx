@@ -48,7 +48,7 @@ export const TestimonialForm = ({
       name: formData.name,
       email: formData.email,
       social: formData.social,
-      photo: formData.photo,
+      photo: formData.photo, // Ensure photo is included in authorData
     };
 
     console.log('Author data to be submitted:', authorData);
@@ -57,7 +57,7 @@ export const TestimonialForm = ({
     const submissionData = {
       rating: formData.rating,
       text: formData.text,
-      author: authorData,
+      author: authorData, // This now includes the photo URL
       tags: [formData.tag],
       permission: formData.permission,
     };
