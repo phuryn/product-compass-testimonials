@@ -41,6 +41,14 @@ export const TestimonialCard = ({
     day: "numeric",
   });
 
+  const getInitials = (name: string) => {
+    const names = name.split(' ');
+    if (names.length >= 2) {
+      return `${names[0][0]}${names[1][0]}`.toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
+  };
+
   const renderAuthorName = () => {
     if (testimonial.author.social) {
       return (
@@ -72,7 +80,7 @@ export const TestimonialCard = ({
                 />
               ) : (
                 <AvatarFallback>
-                  {testimonial.author.name.charAt(0).toUpperCase()}
+                  {getInitials(testimonial.author.name)}
                 </AvatarFallback>
               )}
             </Avatar>

@@ -8,7 +8,7 @@ interface StarRatingProps {
 
 export const StarRating = ({ rating, onChange, readonly = false }: StarRatingProps) => {
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map((star) => (
         <button
           key={star}
@@ -18,8 +18,8 @@ export const StarRating = ({ rating, onChange, readonly = false }: StarRatingPro
           type="button"
         >
           <Star
-            className={`h-6 w-6 ${
-              star <= rating ? "fill-star text-star" : "fill-none text-gray-300"
+            className={`h-5 w-5 ${
+              star <= rating ? "fill-star text-star stroke-[1.5]" : "fill-none text-gray-300 stroke-[1.5]"
             }`}
           />
         </button>
