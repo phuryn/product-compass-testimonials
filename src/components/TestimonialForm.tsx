@@ -169,25 +169,27 @@ export const TestimonialForm = ({
         });
         return;
       }
-      console.log('Photo URL to be saved:', photoUrl);
     }
 
+    // Create the author object with all fields including photo
     const authorData = {
       name: formData.name,
       email: formData.email,
       social: formData.social,
-      photo: photoUrl,
+      photo: photoUrl, // Include the photo URL in the author object
     };
 
-    console.log('Author data being submitted:', authorData);
+    console.log('Author data to be submitted:', authorData);
 
     const submissionData = {
-      ...formData,
-      author: authorData,
+      rating: formData.rating,
+      text: formData.text,
+      author: authorData, // Use the complete author object
       tags: [formData.tag],
+      permission: formData.permission,
     };
 
-    console.log('Submitting testimonial with data:', submissionData);
+    console.log('Complete testimonial data being submitted:', submissionData);
     onSubmit(submissionData);
   };
 
