@@ -145,7 +145,6 @@ export const TestimonialForm = ({
       return null;
     }
 
-    // Get the public URL after successful upload
     const { data } = supabase.storage
       .from('author-photos')
       .getPublicUrl(fileName);
@@ -156,6 +155,8 @@ export const TestimonialForm = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Keep existing photo URL if no new image is uploaded
     let photoUrl = initialData?.author?.photo || null;
 
     if (imageFile) {
@@ -177,7 +178,7 @@ export const TestimonialForm = ({
         name: formData.name,
         email: formData.email,
         social: formData.social,
-        photo: photoUrl,
+        photo: photoUrl, // Include photo URL in author object
       },
       tags: [formData.tag],
     };
