@@ -12,7 +12,7 @@ interface ImageUploadProps {
 }
 
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
-const TARGET_SIZE = 128; // Target width and height in pixels
+const TARGET_SIZE = 48; // Changed from 128 to 48 pixels
 
 export const ImageUpload = ({ initialImage, onImageChange, userName }: ImageUploadProps) => {
   const [imagePreview, setImagePreview] = useState<string>(initialImage || "");
