@@ -34,11 +34,7 @@ const Admin = () => {
         .select("*")
         .order("date", { ascending: false });
 
-      if (error) {
-        console.error("Supabase error:", error);
-        throw error;
-      }
-
+      if (error) throw error;
       return data?.map(convertDbTestimonialToTestimonial) || [];
     },
   });
@@ -74,7 +70,6 @@ const Admin = () => {
       setEditingTestimonial(null);
     },
     onError: (error) => {
-      console.error("Error updating testimonial:", error);
       toast({
         variant: "destructive",
         title: "Error",

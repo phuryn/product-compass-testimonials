@@ -17,40 +17,29 @@ const Index = () => {
   const { data: testimonials = [], isLoading } = useQuery({
     queryKey: ["testimonials", "public"],
     queryFn: async () => {
-      console.log("Fetching public testimonials...");
       const { data, error } = await supabase
         .from("testimonials")
         .select("*")
         .order("date", { ascending: false });
 
-      if (error) {
-        console.error("Supabase error:", error);
-        throw error;
-      }
-
-      console.log("Fetched testimonials:", data);
+      if (error) throw error;
       return data?.map(convertDbTestimonialToTestimonial) || [];
     },
   });
 
   const submitTestimonialMutation = useMutation({
     mutationFn: async (formData: any) => {
-      // Prepare the testimonial data with explicit photo field inclusion
       const testimonialData = {
         author: {
           name: formData.author.name,
           email: formData.author.email,
           social: formData.author.social,
-          photo: formData.author.photo, // Explicitly include photo
+          photo: formData.author.photo,
         },
         rating: formData.rating || 5,
         text: formData.text,
         tags: formData.tags,
       };
-
-      // Log the complete data before insertion
-      console.log("Data to be inserted into the database:", testimonialData);
-      console.log("Author photo URL being inserted:", testimonialData.author.photo);
 
       const { data, error } = await supabase
         .from("testimonials")
@@ -58,12 +47,7 @@ const Index = () => {
         .select()
         .single();
 
-      if (error) {
-        console.error("Error inserting testimonial:", error);
-        throw error;
-      }
-
-      console.log("Successfully inserted testimonial:", data);
+      if (error) throw error;
       return convertDbTestimonialToTestimonial(data);
     },
     onSuccess: () => {
@@ -75,7 +59,6 @@ const Index = () => {
       });
     },
     onError: (error) => {
-      console.error("Error submitting testimonial:", error);
       toast({
         variant: "destructive",
         title: "Error",
