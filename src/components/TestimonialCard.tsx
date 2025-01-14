@@ -61,6 +61,11 @@ export const TestimonialCard = ({
     year: "numeric",
     month: "short",
     day: "numeric",
+    ...(isAdmin && {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    }),
   });
 
   const getInitials = (name: string) => {
