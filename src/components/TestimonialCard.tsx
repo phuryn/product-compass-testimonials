@@ -104,7 +104,7 @@ export const TestimonialCard = ({
     <>
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-4">
-          <Avatar className="h-12 w-12">
+          <Avatar className="h-14 w-14 bg-primary text-primary-foreground">
             {testimonial.author.photo && !imageLoadError ? (
               <AvatarImage
                 src={testimonial.author.photo}
@@ -113,7 +113,9 @@ export const TestimonialCard = ({
                 onError={() => setImageLoadError(true)}
               />
             ) : (
-              <AvatarFallback>{getInitials(testimonial.author.name)}</AvatarFallback>
+              <AvatarFallback className="text-lg font-semibold bg-primary text-primary-foreground">
+                {getInitials(testimonial.author.name)}
+              </AvatarFallback>
             )}
           </Avatar>
           <div>{renderAuthorName()}</div>
@@ -179,7 +181,7 @@ export const TestimonialCard = ({
           <>
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-center gap-4">
-                <Avatar className="h-12 w-12">
+                <Avatar className="h-14 w-14 bg-primary text-primary-foreground">
                   {testimonial.author.photo && !imageLoadError ? (
                     <AvatarImage
                       src={testimonial.author.photo}
@@ -188,7 +190,9 @@ export const TestimonialCard = ({
                       onError={() => setImageLoadError(true)}
                     />
                   ) : (
-                    <AvatarFallback>{getInitials(testimonial.author.name)}</AvatarFallback>
+                    <AvatarFallback className="text-lg font-semibold bg-primary text-primary-foreground">
+                      {getInitials(testimonial.author.name)}
+                    </AvatarFallback>
                   )}
                 </Avatar>
                 <div>{renderAuthorName()}</div>
