@@ -20,8 +20,7 @@ const Index = () => {
       const { data, error } = await supabase
         .from("testimonials")
         .select("*")
-        .eq('approved', true) // Only select approved testimonials
-        .order('date', { ascending: false });
+        .eq('approved', true);
 
       if (error) {
         console.error("Error fetching testimonials:", error);
@@ -40,13 +39,14 @@ const Index = () => {
         author: {
           name: formData.author.name,
           email: formData.author.email,
-          social: formData.author.social,
-          photo: formData.author.photo,
+          social: formData.author.social || null,
+          photo: formData.author.photo || null,
         },
-        rating: formData.rating || 5,
+        rating: formData.rating,
         text: formData.text,
         tags: formData.tags,
-        approved: false, // Always set new testimonials as unapproved
+        approved: false,
+        date: new Date().toISOString(),
       };
 
       const { data, error } = await supabase
