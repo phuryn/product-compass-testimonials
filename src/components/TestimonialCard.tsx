@@ -5,6 +5,23 @@ import { Card, CardContent } from "@/components/ui/card";
 import { StarRating } from "./StarRating";
 import { Heart } from "lucide-react";
 
+function analyzeBase64Image(base64String: string | undefined | null) {
+  if (!base64String) {
+    console.error("Base64 string is empty or undefined!");
+    return false;
+  }
+  
+  const [header, content] = base64String.split(",");
+  console.log("Base64 header:", header);
+  console.log("Base64 content length:", content?.length || 0);
+  
+  if (!header.startsWith("data:image")) {
+    console.error("Base64 string is not a valid image:", header);
+    return false;
+  }
+  return true;
+}
+
 export interface Testimonial {
   id: string;
   author: {
@@ -45,8 +62,17 @@ export const TestimonialCard = ({
   // Improved base64 image validation
   const isValidBase64Photo = testimonial.author_photo?.match(/^data:image\/(png|jpeg|jpg|gif);base64,/);
 
-  // Debug log for photo data
-  console.log("Author photo data:", testimonial.author_photo?.substring(0, 50) + "...");
+  // Advanced debugging
+  if (testimonial.author_photo) {
+    console.log(`Analyzing photo for ${testimonial.author.name}:`);
+    analyzeBase64Image(testimonial.author_photo);
+  } else {
+    console.warn(`No photo data for ${testimonial.author.name}`);
+  }
+
+  if (!isValidBase64Photo) {
+    console.warn(`Rendering fallback for ${testimonial.author.name} due to invalid photo format`);
+  }
 
   return (
     <Card>
@@ -60,7 +86,7 @@ export const TestimonialCard = ({
                   alt={testimonial.author.name}
                   className="object-cover w-full h-full"
                   onError={(e) => {
-                    console.error("Error loading image:", e);
+                    console.error("Error loading image for", testimonial.author.name, ":", e);
                     setImageLoadError(true);
                   }}
                 />
