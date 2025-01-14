@@ -64,28 +64,46 @@ export const ImageUpload = ({ initialImage, onImageChange, userName }: ImageUplo
   };
 
   const uploadImage = async (file: File): Promise<string | null> => {
-    const fileExt = 'jpg';
-    const fileName = `${crypto.randomUUID()}.${fileExt}`;
-    const sanitizedFile = new File([file], fileName, { type: 'image/jpeg' });
-    
-    const { error: uploadError, data } = await supabase.storage
-      .from('author-photos')
-      .upload(fileName, sanitizedFile);
+    try {
+      const fileExt = 'jpg';
+      const fileName = `${crypto.randomUUID()}.${fileExt}`;
+      const sanitizedFile = new File([file], fileName, { type: 'image/jpeg' });
+      
+      console.log('Attempting to upload file:', fileName);
+      
+      const { error: uploadError, data } = await supabase.storage
+        .from('author-photos')
+        .upload(fileName, sanitizedFile, {
+          cacheControl: '3600',
+          upsert: false
+        });
 
-    if (uploadError) {
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        toast({
+          title: "Error",
+          description: "Failed to upload image: " + uploadError.message,
+          variant: "destructive",
+        });
+        return null;
+      }
+
+      console.log('Upload successful, getting public URL');
+      const { data: urlData } = supabase.storage
+        .from('author-photos')
+        .getPublicUrl(fileName);
+
+      console.log('Public URL:', urlData.publicUrl);
+      return urlData.publicUrl;
+    } catch (error) {
+      console.error('Unexpected error during upload:', error);
       toast({
         title: "Error",
-        description: "Failed to upload image",
+        description: "An unexpected error occurred during upload",
         variant: "destructive",
       });
       return null;
     }
-
-    const { data: urlData } = supabase.storage
-      .from('author-photos')
-      .getPublicUrl(fileName);
-
-    return urlData.publicUrl;
   };
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,6 +119,7 @@ export const ImageUpload = ({ initialImage, onImageChange, userName }: ImageUplo
       }
       
       try {
+        console.log('Processing image...');
         const compressedBlob = await compressAndCropImage(file);
         const compressedFile = new File([compressedBlob], file.name, {
           type: 'image/jpeg',
@@ -109,9 +128,14 @@ export const ImageUpload = ({ initialImage, onImageChange, userName }: ImageUplo
         const preview = URL.createObjectURL(compressedBlob);
         setImagePreview(preview);
         
+        console.log('Uploading processed image...');
         const photoUrl = await uploadImage(compressedFile);
-        onImageChange(photoUrl);
+        if (photoUrl) {
+          console.log('Upload successful, URL:', photoUrl);
+          onImageChange(photoUrl);
+        }
       } catch (error) {
+        console.error('Error processing image:', error);
         toast({
           title: "Error",
           description: "Failed to process image",
