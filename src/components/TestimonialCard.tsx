@@ -48,7 +48,7 @@ export const TestimonialCard = ({
           href={testimonial.author.social}
           target="_blank"
           rel="noopener noreferrer"
-          className="font-semibold hover:underline text-blue-600"
+          className="font-semibold hover:underline text-[#292929]"
         >
           {testimonial.author.name}
         </a>
