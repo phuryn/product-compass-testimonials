@@ -51,22 +51,19 @@ const Admin = () => {
       id: string;
       data: Partial<Testimonial>;
     }) => {
-      // Ensure author_photo is a string before sending to Supabase
-      const photoData = data.author_photo || null;
-
       const { error } = await supabase
         .from("testimonials")
         .update({
           text: data.text,
           rating: data.rating,
           author: data.author,
-          author_photo: photoData,
-          approved: data.approved,
           tags: data.tags,
+          approved: data.approved,
         })
         .eq("id", id);
 
       if (error) throw error;
+      return { success: true };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["testimonials"] });
@@ -77,12 +74,12 @@ const Admin = () => {
       setEditingTestimonial(null);
     },
     onError: (error) => {
+      console.error("Error updating testimonial:", error);
       toast({
         variant: "destructive",
         title: "Error",
         description: "Failed to update testimonial",
       });
-      console.error("Error updating testimonial:", error);
     },
   });
 
@@ -104,7 +101,6 @@ const Admin = () => {
           text: data.text,
           rating: data.rating,
           author: data.author,
-          author_photo: data.author_photo,
           tags: data.tags,
         },
       });
@@ -142,8 +138,11 @@ const Admin = () => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Tags</SelectItem>
-            <SelectItem value="FS2O">FS2O</SelectItem>
-            <SelectItem value="CPDM">CPDM</SelectItem>
+            {AVAILABLE_TAGS.map((tag) => (
+              <SelectItem key={tag} value={tag}>
+                {tag}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
@@ -169,13 +168,14 @@ const Admin = () => {
         open={!!editingTestimonial}
         onOpenChange={() => setEditingTestimonial(null)}
       >
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
           <DialogTitle>Edit Testimonial</DialogTitle>
           {editingTestimonial && (
             <TestimonialForm
               initialData={editingTestimonial}
               onSubmit={handleUpdateTestimonial}
               onCancel={() => setEditingTestimonial(null)}
+              isAdmin
             />
           )}
         </DialogContent>
