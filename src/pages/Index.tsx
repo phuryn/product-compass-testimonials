@@ -1,26 +1,38 @@
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import { convertDbTestimonialToTestimonial } from "@/utils/testimonialUtils";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { TestimonialList } from "@/components/testimonials/TestimonialList";
 import { Footer } from "@/components/layout/Footer";
 import { Navigation } from "@/components/layout/Navigation";
 
+const TESTIMONIALS_PER_PAGE = 10;
+
 const Index = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: testimonials = [], isLoading } = useQuery({
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isLoading
+  } = useInfiniteQuery({
     queryKey: ["testimonials", "public"],
-    queryFn: async () => {
-      console.log("Fetching approved testimonials");
+    queryFn: async ({ pageParam = 0 }) => {
+      console.log("Fetching testimonials page:", pageParam);
+      const from = pageParam * TESTIMONIALS_PER_PAGE;
+      const to = from + TESTIMONIALS_PER_PAGE - 1;
+
       const { data, error } = await supabase
         .from("testimonials")
         .select("*")
-        .eq('approved', true);
+        .eq('approved', true)
+        .range(from, to)
+        .order('date', { ascending: false });
 
       if (error) {
         console.error("Error fetching testimonials:", error);
@@ -28,8 +40,12 @@ const Index = () => {
       }
       
       console.log("Fetched testimonials:", data);
-      return data?.map(convertDbTestimonialToTestimonial) || [];
+      return {
+        testimonials: data?.map(convertDbTestimonialToTestimonial) || [],
+        nextPage: data?.length === TESTIMONIALS_PER_PAGE ? pageParam + 1 : undefined
+      };
     },
+    getNextPageParam: (lastPage) => lastPage.nextPage,
   });
 
   const submitTestimonialMutation = useMutation({
@@ -85,6 +101,8 @@ const Index = () => {
     return <div>Loading testimonials...</div>;
   }
 
+  const allTestimonials = data?.pages.flatMap(page => page.testimonials) || [];
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Navigation />
@@ -94,7 +112,11 @@ const Index = () => {
           setIsFormOpen={setIsFormOpen}
           onSubmitTestimonial={(data) => submitTestimonialMutation.mutate(data)}
         />
-        <TestimonialList testimonials={testimonials} />
+        <TestimonialList 
+          testimonials={allTestimonials}
+          hasNextPage={hasNextPage}
+          fetchNextPage={fetchNextPage}
+        />
       </div>
       <Footer />
     </div>
