@@ -146,16 +146,16 @@ export const ImageUpload = ({ initialImage, onImageChange, userName }: ImageUplo
   };
 
   return (
-    <div className="space-y-2">
-      <Label htmlFor="photo">Your profile picture</Label>
-      <div className="flex items-center gap-4">
-        <Avatar className="h-24 w-24">
+    <div className="space-y-4">
+      <Label htmlFor="photo" className="text-base font-medium">Your profile picture</Label>
+      <div className="flex items-center gap-6">
+        <Avatar className="h-24 w-24 border-2 border-gray-100">
           <AvatarImage 
             src={imagePreview} 
             alt={userName} 
             className="object-cover"
           />
-          <AvatarFallback>
+          <AvatarFallback className="bg-primary text-primary-foreground text-lg font-semibold">
             {userName.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase()}
           </AvatarFallback>
         </Avatar>
@@ -164,7 +164,7 @@ export const ImageUpload = ({ initialImage, onImageChange, userName }: ImageUplo
           type="file"
           accept="image/*"
           onChange={handleImageChange}
-          className="max-w-[300px] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+          className="max-w-[300px] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 cursor-pointer"
         />
       </div>
     </div>

@@ -22,9 +22,9 @@ const Index = () => {
     isLoading
   } = useInfiniteQuery({
     queryKey: ["testimonials", "public"],
-    queryFn: async ({ pageParam = 0 }) => {
+    queryFn: async ({ pageParam }) => {
       console.log("Fetching testimonials page:", pageParam);
-      const from = pageParam * TESTIMONIALS_PER_PAGE;
+      const from = Number(pageParam) * TESTIMONIALS_PER_PAGE;
       const to = from + TESTIMONIALS_PER_PAGE - 1;
 
       const { data, error } = await supabase
@@ -42,9 +42,10 @@ const Index = () => {
       console.log("Fetched testimonials:", data);
       return {
         testimonials: data?.map(convertDbTestimonialToTestimonial) || [],
-        nextPage: data?.length === TESTIMONIALS_PER_PAGE ? pageParam + 1 : undefined
+        nextPage: data?.length === TESTIMONIALS_PER_PAGE ? Number(pageParam) + 1 : undefined
       };
     },
+    initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.nextPage,
   });
 
