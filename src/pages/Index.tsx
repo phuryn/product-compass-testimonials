@@ -146,6 +146,16 @@ const Index = () => {
                     LinkedIn
                   </a>
                 </li>
+                <li>
+                  <a 
+                    href="https://twitter.com/PawelHuryn" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-[#868787] hover:underline"
+                  >
+                    X (Twitter)
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
