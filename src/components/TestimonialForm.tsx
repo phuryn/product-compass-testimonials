@@ -145,11 +145,13 @@ export const TestimonialForm = ({
       return null;
     }
 
-    const { data: { publicUrl } } = supabase.storage
+    // Get the public URL after successful upload
+    const { data } = supabase.storage
       .from('author-photos')
       .getPublicUrl(fileName);
 
-    return publicUrl;
+    console.log('Image uploaded, public URL:', data.publicUrl);
+    return data.publicUrl;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
