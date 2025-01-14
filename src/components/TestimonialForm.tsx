@@ -150,7 +150,7 @@ export const TestimonialForm = ({
       .from('author-photos')
       .getPublicUrl(fileName);
 
-    console.log('Image uploaded, public URL:', data.publicUrl);
+    console.log('Image uploaded successfully. URL:', data.publicUrl);
     return data.publicUrl;
   };
 
@@ -159,18 +159,16 @@ export const TestimonialForm = ({
     let photoUrl = initialData?.author?.photo || null;
 
     if (imageFile) {
-      try {
-        photoUrl = await uploadImage(imageFile);
-        if (!photoUrl) return;
-      } catch (error) {
-        console.error('Error processing image:', error);
+      photoUrl = await uploadImage(imageFile);
+      if (!photoUrl) {
         toast({
           title: "Error",
-          description: "Failed to process image",
+          description: "Failed to upload image",
           variant: "destructive",
         });
         return;
       }
+      console.log('Photo URL to be saved:', photoUrl);
     }
 
     const submissionData = {
@@ -184,6 +182,7 @@ export const TestimonialForm = ({
       tags: [formData.tag],
     };
 
+    console.log('Submitting testimonial with data:', submissionData);
     onSubmit(submissionData);
   };
 
@@ -320,4 +319,3 @@ export const TestimonialForm = ({
       </div>
     </form>
   );
-};
