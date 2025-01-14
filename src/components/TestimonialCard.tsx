@@ -112,7 +112,7 @@ export const TestimonialCard = ({
 
         <p className="mt-4 text-[#292929]">{testimonial.text}</p>
 
-        <div className="mt-4 flex justify-between items-center">
+        <div className="mt-4 flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:gap-0">
           <div className="flex flex-wrap gap-2">
             {testimonial.tags.map((tag, index) => (
               <span
