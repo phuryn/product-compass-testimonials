@@ -4,7 +4,7 @@ export const Footer = () => {
       <div className="container">
         <div className="flex justify-center">
           <p className="text-[#868787]">
-            © The Product Compass Newsletter 2024
+            © The Product Compass Newsletter 2025
           </p>
         </div>
       </div>
