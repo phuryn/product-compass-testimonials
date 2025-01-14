@@ -204,7 +204,7 @@ export const TestimonialForm = ({
 
         <div className="space-y-2">
           <Label htmlFor="tag" className="after:content-['*'] after:ml-0.5 after:text-red-500">
-            What Do You Recommend?
+            What product did you use?
           </Label>
           <Select
             value={formData.tag}
@@ -212,7 +212,7 @@ export const TestimonialForm = ({
             required
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select what you recommend" />
+              <SelectValue placeholder="Select what you used" />
             </SelectTrigger>
             <SelectContent>
               {AVAILABLE_TAGS.map((tag) => (
@@ -226,8 +226,11 @@ export const TestimonialForm = ({
 
         <div className="space-y-2">
           <Label htmlFor="testimonial" className="after:content-['*'] after:ml-0.5 after:text-red-500">
-            Your Testimonial
+            Your testimonial
           </Label>
+          <div className="text-sm text-muted-foreground mb-2">
+            What's your situation? Are you a PM? How has my offer helped you? What was the best thing about my offer?
+          </div>
           <Textarea
             id="testimonial"
             value={formData.text}
@@ -240,7 +243,7 @@ export const TestimonialForm = ({
 
         <div className="space-y-2">
           <Label htmlFor="name" className="after:content-['*'] after:ml-0.5 after:text-red-500">
-            Your Name
+            Your full name
           </Label>
           <Input
             id="name"
@@ -252,7 +255,7 @@ export const TestimonialForm = ({
 
         <div className="space-y-2">
           <Label htmlFor="email" className="after:content-['*'] after:ml-0.5 after:text-red-500">
-            Your Email
+            Your email (only for me)
           </Label>
           <Input
             id="email"
@@ -264,7 +267,7 @@ export const TestimonialForm = ({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="social">Your Social Link (e.g. LinkedIn)</Label>
+          <Label htmlFor="social">Your social link (e.g. LinkedIn)</Label>
           <Input
             id="social"
             value={formData.social}
@@ -273,7 +276,7 @@ export const TestimonialForm = ({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="photo">Your Photo</Label>
+          <Label htmlFor="photo">Your profile picture</Label>
           <div className="flex items-center gap-4">
             <Avatar className="h-16 w-16">
               <AvatarImage 
@@ -290,7 +293,7 @@ export const TestimonialForm = ({
               type="file"
               accept="image/*"
               onChange={handleImageChange}
-              className="max-w-[300px]"
+              className="max-w-[300px] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
             />
           </div>
         </div>
