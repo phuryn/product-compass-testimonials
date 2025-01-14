@@ -53,7 +53,7 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
         star: {
-          DEFAULT: "#ffd200",
+          DEFAULT: "#FFB621",
         },
       },
       borderRadius: {
