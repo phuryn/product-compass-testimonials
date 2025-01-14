@@ -37,7 +37,7 @@ export const TestimonialCard = ({
 
   const formattedDate = new Date(testimonial.date).toLocaleDateString("en-US", {
     year: "numeric",
-    month: "long",
+    month: "short",
     day: "numeric",
   });
 
@@ -110,20 +110,20 @@ export const TestimonialCard = ({
           <StarRating rating={testimonial.rating} readonly />
         </div>
 
-        <p className="mt-4 text-gray-600">{testimonial.text}</p>
+        <p className="mt-4 text-[#292929]">{testimonial.text}</p>
 
         <div className="mt-4 flex flex-wrap gap-2">
           {testimonial.tags.map((tag, index) => (
             <span
               key={index}
-              className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-600"
+              className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929]"
             >
               {tag}
             </span>
           ))}
         </div>
 
-        <div className="mt-4 text-sm text-gray-500">{formattedDate}</div>
+        <div className="mt-4 text-sm text-[#292929]">{formattedDate}</div>
       </CardContent>
     </Card>
   );
