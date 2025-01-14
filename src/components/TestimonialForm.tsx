@@ -7,6 +7,7 @@ import { ImageUpload } from "./ImageUpload";
 import { AuthorFields } from "./AuthorFields";
 import { TestimonialContent } from "./TestimonialContent";
 import { AVAILABLE_TAGS } from "@/constants/testimonials";
+import { triggerConfetti } from "@/utils/confetti";
 
 interface TestimonialFormProps {
   onSubmit: (data: any) => void;
@@ -48,7 +49,7 @@ export const TestimonialForm = ({
       name: formData.name,
       email: formData.email,
       social: formData.social,
-      photo: formData.photo, // Ensure photo is included in authorData
+      photo: formData.photo,
     };
 
     console.log('Author data to be submitted:', authorData);
@@ -57,13 +58,14 @@ export const TestimonialForm = ({
     const submissionData = {
       rating: formData.rating,
       text: formData.text,
-      author: authorData, // This now includes the photo URL
+      author: authorData,
       tags: [formData.tag],
       permission: formData.permission,
     };
 
     console.log('Complete testimonial data being submitted:', submissionData);
-    onSubmit(submissionData);
+    await onSubmit(submissionData);
+    triggerConfetti();
   };
 
   return (
