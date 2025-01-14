@@ -11,6 +11,9 @@ function analyzeBase64Image(base64String: string | undefined | null) {
     return false;
   }
   
+  // Log the raw value for debugging
+  console.log("Raw base64 string:", base64String);
+  
   const [header, content] = base64String.split(",");
   console.log("Base64 header:", header);
   console.log("Base64 content length:", content?.length || 0);
@@ -59,12 +62,17 @@ export const TestimonialCard = ({
     day: "numeric",
   });
 
-  // Improved base64 image validation
+  // Log the raw author_photo value
+  console.log(`Raw author_photo for ${testimonial.author.name}:`, testimonial.author_photo);
+
+  // Improved base64 image validation with detailed type checking
   const isValidBase64Photo = testimonial.author_photo?.match(/^data:image\/(png|jpeg|jpg|gif);base64,/);
 
-  // Advanced debugging
+  // Advanced debugging with type information
   if (testimonial.author_photo) {
     console.log(`Analyzing photo for ${testimonial.author.name}:`);
+    console.log("Type:", typeof testimonial.author_photo);
+    console.log("Length:", testimonial.author_photo.length);
     analyzeBase64Image(testimonial.author_photo);
   } else {
     console.warn(`No photo data for ${testimonial.author.name}`);
