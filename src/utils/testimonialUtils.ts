@@ -12,7 +12,6 @@ export const convertDbTestimonialToTestimonial = (dbTestimonial: DbTestimonial):
       email: author.email || '',
       social: author.social || '',
     },
-    author_photo: dbTestimonial.author_photo,
     rating: dbTestimonial.rating,
     text: dbTestimonial.text,
     date: dbTestimonial.date || new Date().toISOString(),
