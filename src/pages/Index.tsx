@@ -88,7 +88,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Navigation />
-      <div className="container py-8 flex-grow">
+      <div className="container max-w-5xl px-4 sm:px-6 py-8 flex-grow">
         <PageHeader 
           isFormOpen={isFormOpen}
           setIsFormOpen={setIsFormOpen}

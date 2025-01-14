@@ -1,3 +1,4 @@
+import Masonry from 'react-masonry-css';
 import { TestimonialCard, type Testimonial } from "@/components/TestimonialCard";
 
 interface TestimonialListProps {
@@ -5,16 +6,27 @@ interface TestimonialListProps {
 }
 
 export const TestimonialList = ({ testimonials }: TestimonialListProps) => {
+  const breakpointColumns = {
+    default: 2,
+    1100: 2,
+    700: 1
+  };
+
   return (
-    <div className="grid gap-6 md:grid-cols-2">
+    <Masonry
+      breakpointCols={breakpointColumns}
+      className="flex -ml-6 w-auto"
+      columnClassName="pl-6 bg-clip-padding"
+    >
       {testimonials
         .filter((t: Testimonial) => t.approved)
         .map((testimonial: Testimonial) => (
-          <TestimonialCard
-            key={testimonial.id}
-            testimonial={testimonial}
-          />
+          <div key={testimonial.id} className="mb-6">
+            <TestimonialCard
+              testimonial={testimonial}
+            />
+          </div>
         ))}
-    </div>
+    </Masonry>
   );
 };
