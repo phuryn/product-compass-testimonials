@@ -19,6 +19,8 @@ interface TestimonialContentProps {
   onTagChange: (tag: string) => void;
 }
 
+const MAX_CHARS = 1000;
+
 export const TestimonialContent = ({
   rating,
   text,
@@ -27,6 +29,12 @@ export const TestimonialContent = ({
   onTextChange,
   onTagChange,
 }: TestimonialContentProps) => {
+  const handleTextChange = (value: string) => {
+    if (value.length <= MAX_CHARS) {
+      onTextChange(value);
+    }
+  };
+
   return (
     <>
       <div className="space-y-2">
@@ -62,11 +70,15 @@ export const TestimonialContent = ({
         <Textarea
           id="testimonial"
           value={text}
-          onChange={(e) => onTextChange(e.target.value)}
+          onChange={(e) => handleTextChange(e.target.value)}
           placeholder="Share your experience..."
           className="min-h-[150px]"
           required
+          maxLength={MAX_CHARS}
         />
+        <div className="text-sm text-muted-foreground text-right">
+          {text.length}/{MAX_CHARS} characters
+        </div>
       </div>
     </>
   );
