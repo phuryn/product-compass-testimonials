@@ -85,10 +85,9 @@ export const ImageUpload = ({
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-            className={`file:border-0 file:rounded-md file:px-4 file:py-2 file:mr-4 file:cursor-pointer file:transition-colors file:text-primary-foreground`}
+            className="file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-medium file:rounded-md file:text-primary-foreground hover:file:opacity-90 file:transition-opacity"
             style={{
               ['--tw-file-bg' as string]: primaryColor,
-              ['--tw-file-hover-bg' as string]: `${primaryColor}dd`,
             }}
           />
         </div>
