@@ -30,25 +30,27 @@ export const EmbedCodeGenerator = () => {
   });
 
   const embedCode = `<!-- Testimonials Embed Code -->
-<iframe 
-  id="testimonials-embed"
-  src="${window.location.origin}/embed${selectedTag !== "all" ? `?tag=${selectedTag}` : ""}"
-  style="width: 1px; min-width: 100%;"
-  frameborder="0"
-  scrolling="no"
-></iframe>
+<div id="testimonials-container">
+  <iframe 
+    id="testimonials-embed"
+    src="${window.location.origin}/embed${selectedTag !== "all" ? `?tag=${selectedTag}` : ""}"
+    style="width: 1px; min-width: 100%;"
+    frameborder="0"
+    scrolling="no"
+  ></iframe>
+</div>
 <script type="text/javascript" src="${window.location.origin}/embed-resizer.js"></script>
 <script>
-  // Wait for both the iframe and resizer script to load
-  window.addEventListener('load', function() {
-    setTimeout(function() {
+  document.getElementById('testimonials-embed').addEventListener('load', function() {
+    if (window.iFrameResize) {
       window.iFrameResize({ 
         log: false,
         checkOrigin: false,
         heightCalculationMethod: 'lowestElement',
-        warningTimeout: 0
+        warningTimeout: 0,
+        scrolling: false
       }, '#testimonials-embed');
-    }, 100);
+    }
   });
 </script>`;
 
