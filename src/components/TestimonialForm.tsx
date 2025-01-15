@@ -141,11 +141,11 @@ export const TestimonialForm = ({
         )}
       </div>
 
-      <div className="flex justify-end gap-2">
+      <div className="flex justify-between gap-2">
         {isAdmin && onDelete && (
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive" type="button">
+              <Button variant="outline" type="button">
                 Delete
               </Button>
             </AlertDialogTrigger>
@@ -157,24 +157,34 @@ export const TestimonialForm = ({
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={onDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                <AlertDialogAction 
+                  onClick={onDelete} 
+                  variant="outline"
+                >
                   Delete
                 </AlertDialogAction>
+                <AlertDialogCancel 
+                  style={{ backgroundColor: primaryColor }}
+                  className="text-primary-foreground hover:opacity-90"
+                >
+                  Cancel
+                </AlertDialogCancel>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
         )}
-        <Button type="button" variant="outline" onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button 
-          type="submit"
-          style={{ backgroundColor: primaryColor }}
-          className="text-primary-foreground hover:opacity-90"
-        >
-          Submit
-        </Button>
+        <div className="flex gap-2 ml-auto">
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button 
+            type="submit"
+            style={{ backgroundColor: primaryColor }}
+            className="text-primary-foreground hover:opacity-90"
+          >
+            Submit
+          </Button>
+        </div>
       </div>
     </form>
   );
