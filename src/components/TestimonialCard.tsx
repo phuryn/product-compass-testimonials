@@ -89,14 +89,14 @@ export const TestimonialCard = ({
           href={testimonial.author.social}
           target="_blank"
           rel="noopener noreferrer"
-          className="font-bold text-left text-base hover:underline text-[#292929]"
+          className="font-semibold hover:underline text-[#292929]"
         >
           {testimonial.author.name}
         </a>
       );
     }
     return (
-      <div className="font-bold text-left text-base text-[#292929]">{testimonial.author.name}</div>
+      <div className="font-semibold text-[#292929]">{testimonial.author.name}</div>
     );
   };
 
@@ -108,31 +108,25 @@ export const TestimonialCard = ({
   const renderTestimonialContent = () => (
     <>
       <div className="flex items-start justify-between gap-4">
-        <div className="flex flex-row">
-          <div style={{ width: '48px', height: '48px', minWidth: '48px' }} className="relative">
-            <Avatar className="h-12 w-12">
-              {testimonial.author.photo && !imageLoadError ? (
-                <AvatarImage
-                  src={testimonial.author.photo}
-                  alt={testimonial.author.name}
-                  className="object-cover"
-                  onError={() => setImageLoadError(true)}
-                />
-              ) : (
-                <AvatarFallback 
-                  className="text-lg font-semibold text-primary-foreground"
-                  style={{ backgroundColor: primaryColor }}
-                >
-                  {getInitials(testimonial.author.name)}
-                </AvatarFallback>
-              )}
-            </Avatar>
-          </div>
-          <div className="flex justify-between grow">
-            <div className="ml-3 my-auto">
-              {renderAuthorName()}
-            </div>
-          </div>
+        <div className="flex items-center gap-4">
+          <Avatar className="h-14 w-14">
+            {testimonial.author.photo && !imageLoadError ? (
+              <AvatarImage
+                src={testimonial.author.photo}
+                alt={testimonial.author.name}
+                className="object-cover"
+                onError={() => setImageLoadError(true)}
+              />
+            ) : (
+              <AvatarFallback 
+                className="text-lg font-semibold text-primary-foreground"
+                style={{ backgroundColor: primaryColor }}
+              >
+                {getInitials(testimonial.author.name)}
+              </AvatarFallback>
+            )}
+          </Avatar>
+          <div>{renderAuthorName()}</div>
         </div>
         {isAdmin && (
           <div className="flex gap-2">
@@ -164,7 +158,7 @@ export const TestimonialCard = ({
 
       <p className="mt-4 text-[#292929]">{testimonial.text}</p>
 
-      <div className="mt-4 flex flex-col md:flex-row md:items-center gap-4 md:gap-4">
+      <div className="mt-4 flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:gap-0">
         <div className="flex flex-wrap gap-2">
           <TooltipProvider>
             {testimonial.tags.map((tag, index) => (
@@ -212,7 +206,7 @@ export const TestimonialCard = ({
                     </AvatarFallback>
                   )}
                 </Avatar>
-                <div className="min-w-0 max-w-[calc(100%-8rem)]">{renderAuthorName()}</div>
+                <div>{renderAuthorName()}</div>
               </div>
               {isAdmin && (
                 <div className="flex gap-2">
@@ -255,7 +249,7 @@ export const TestimonialCard = ({
               </DialogContent>
             </Dialog>
 
-            <div className="mt-4 flex flex-col md:flex-row md:items-center gap-4 md:gap-4">
+            <div className="mt-4 flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:gap-0">
               <div className="flex flex-wrap gap-2">
                 <TooltipProvider>
                   {testimonial.tags.map((tag, index) => (
