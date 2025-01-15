@@ -89,18 +89,17 @@ export const BrandingImageUpload = ({ imageKey, label, description }: BrandingIm
   };
 
   return (
-    <div className="space-y-4">
-      <div>
-        <Label className="text-base font-medium">{label}</Label>
-        <p className="text-sm text-muted-foreground">{description}</p>
-      </div>
-      <div className="flex items-center gap-6">
+    <div className="space-y-2">
+      <Label htmlFor={imageKey}>{label}</Label>
+      <p className="text-sm text-muted-foreground">{description}</p>
+      <div className="flex items-center gap-6 mt-4">
         <Avatar className="h-24 w-24">
           <AvatarImage src={branding?.[imageKey]} alt={label} />
           <AvatarFallback>IMG</AvatarFallback>
         </Avatar>
         <div className="flex-1">
           <Input
+            id={imageKey}
             type="file"
             accept="image/*"
             onChange={handleImageChange}

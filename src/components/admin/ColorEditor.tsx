@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useBranding } from "@/hooks/useBranding";
 import { useToast } from "@/components/ui/use-toast";
+import { Label } from "@/components/ui/label";
 
 const predefinedColors = [
   "#2e75a9", // Current primary
@@ -56,10 +57,12 @@ export const ColorEditor = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h4 className="text-base font-medium mb-2">Primary Color</h4>
+      <div className="space-y-2">
+        <Label htmlFor="primary-color">Primary Color</Label>
+        <p className="text-sm text-muted-foreground">Choose the main color for your brand's buttons and accents.</p>
         <div className="flex items-center gap-4">
           <Input
+            id="primary-color"
             type="color"
             value={selectedColor}
             onChange={(e) => handleColorChange(e.target.value)}
@@ -75,8 +78,9 @@ export const ColorEditor = () => {
         </div>
       </div>
 
-      <div>
-        <h4 className="text-base font-medium mb-2">Preset Colors</h4>
+      <div className="space-y-2">
+        <Label>Preset Colors</Label>
+        <p className="text-sm text-muted-foreground">Quick access to predefined brand colors.</p>
         <div className="flex flex-wrap gap-2">
           {predefinedColors.map((color) => (
             <Button
@@ -92,8 +96,9 @@ export const ColorEditor = () => {
         </div>
       </div>
 
-      <div className="mt-6">
-        <h4 className="text-base font-medium mb-2">Preview</h4>
+      <div className="space-y-2">
+        <Label>Preview</Label>
+        <p className="text-sm text-muted-foreground">See how your selected color looks on a button.</p>
         <div className="space-y-2">
           <Button style={{ backgroundColor: selectedColor }}>
             Primary Button
