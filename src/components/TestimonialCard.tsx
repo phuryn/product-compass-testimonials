@@ -126,7 +126,7 @@ export const TestimonialCard = ({
               </AvatarFallback>
             )}
           </Avatar>
-          <div className="min-w-0 max-w-[calc(100%-8rem)]">{renderAuthorName()}</div>
+          <div>{renderAuthorName()}</div>
         </div>
         {isAdmin && (
           <div className="flex gap-2">
