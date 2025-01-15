@@ -12,18 +12,18 @@ export type Database = {
       branding: {
         Row: {
           key: string
-          value: string
           updated_at: string | null
+          value: string
         }
         Insert: {
           key: string
-          value: string
           updated_at?: string | null
+          value: string
         }
         Update: {
           key?: string
-          value?: string
           updated_at?: string | null
+          value?: string
         }
         Relationships: []
       }
