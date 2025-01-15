@@ -158,9 +158,8 @@ export const TestimonialForm = ({
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogAction 
-                  onClick={onDelete} 
-                  className={Button.defaultProps?.className}
-                  variant="outline"
+                  onClick={onDelete}
+                  className="bg-background text-foreground border border-input hover:bg-accent hover:text-accent-foreground"
                 >
                   Delete
                 </AlertDialogAction>
