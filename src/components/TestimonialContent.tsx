@@ -58,7 +58,6 @@ export const TestimonialContent = ({
   return (
     <>
       <div className="space-y-2">
-        <Label>Rating</Label>
         <StarRating rating={rating} onChange={onRatingChange} />
       </div>
 
@@ -72,7 +71,7 @@ export const TestimonialContent = ({
           required
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select what you used" />
+            <SelectValue placeholder="What did you use?" className="text-muted-foreground" />
           </SelectTrigger>
           <SelectContent>
             {tags.map((tagName) => (
