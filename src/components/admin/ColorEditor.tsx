@@ -57,7 +57,7 @@ export const ColorEditor = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium mb-2">Primary Color</h3>
+        <h4 className="text-base font-medium mb-2">Primary Color</h4>
         <div className="flex items-center gap-4">
           <Input
             type="color"
@@ -76,7 +76,7 @@ export const ColorEditor = () => {
       </div>
 
       <div>
-        <h3 className="text-lg font-medium mb-2">Preset Colors</h3>
+        <h4 className="text-base font-medium mb-2">Preset Colors</h4>
         <div className="flex flex-wrap gap-2">
           {predefinedColors.map((color) => (
             <Button
@@ -93,7 +93,7 @@ export const ColorEditor = () => {
       </div>
 
       <div className="mt-6">
-        <h3 className="text-lg font-medium mb-2">Preview</h3>
+        <h4 className="text-base font-medium mb-2">Preview</h4>
         <div className="space-y-2">
           <Button style={{ backgroundColor: selectedColor }}>
             Primary Button
