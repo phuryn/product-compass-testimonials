@@ -8,7 +8,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AVAILABLE_TAGS } from "@/constants/testimonials";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 interface TestimonialContentProps {
   rating: number;
@@ -29,6 +30,25 @@ export const TestimonialContent = ({
   onTextChange,
   onTagChange,
 }: TestimonialContentProps) => {
+  const { data: tags = [] } = useQuery({
+    queryKey: ["tags"],
+    queryFn: async () => {
+      console.log("Fetching tags from Supabase");
+      const { data, error } = await supabase
+        .from("tags")
+        .select("name")
+        .order("name");
+
+      if (error) {
+        console.error("Error fetching tags:", error);
+        throw error;
+      }
+
+      console.log("Fetched tags:", data);
+      return data.map(tag => tag.name);
+    },
+  });
+
   const handleTextChange = (value: string) => {
     if (value.length <= MAX_CHARS) {
       onTextChange(value);
@@ -46,14 +66,18 @@ export const TestimonialContent = ({
         <Label htmlFor="tag" className="after:content-['*'] after:ml-0.5 after:text-red-500">
           What product did you use?
         </Label>
-        <Select value={tag} onValueChange={onTagChange} required>
+        <Select 
+          value={tag} 
+          onValueChange={onTagChange} 
+          required
+        >
           <SelectTrigger>
             <SelectValue placeholder="Select what you used" />
           </SelectTrigger>
           <SelectContent>
-            {AVAILABLE_TAGS.map((tag) => (
-              <SelectItem key={tag} value={tag}>
-                {tag}
+            {tags.map((tagName) => (
+              <SelectItem key={tagName} value={tagName}>
+                {tagName}
               </SelectItem>
             ))}
           </SelectContent>
