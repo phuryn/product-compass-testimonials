@@ -85,7 +85,7 @@ export const ImageUpload = ({
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-            className="file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-medium file:rounded-md file:bg-zinc-600 file:text-white hover:file:bg-zinc-700 file:transition-colors"
+            className="file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-medium file:rounded-md file:bg-zinc-500 file:text-white hover:file:bg-zinc-600 file:transition-colors"
           />
         </div>
       </div>
