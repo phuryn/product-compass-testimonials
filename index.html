@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Recommend Paweł Huryn</title>
-    <meta name="description" content="Hi there! I would be thrilled if you could take a moment to leave me a testimonial." />
+    <meta name="description" id="metaDescription" content="Hi there! I would be thrilled if you could take a moment to leave me a testimonial." />
     <meta name="author" content="Paweł Huryn" />
-    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:image" id="ogImage" content="/og-image.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/lovable-uploads/1913b5ad-2720-4a1f-8921-061e58e115f3.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/lovable-uploads/1913b5ad-2720-4a1f-8921-061e58e115f3.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/lovable-uploads/1913b5ad-2720-4a1f-8921-061e58e115f3.png" />
@@ -16,5 +16,40 @@
     <div id="root"></div>
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      window.addEventListener('load', async () => {
+        try {
+          const response = await fetch('https://gykadoptlurvnmimejlm.supabase.co/rest/v1/branding', {
+            headers: {
+              'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5a2Fkb3B0bHVydm5taW1lamxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MjQ1NzAsImV4cCI6MjAyNTUwMDU3MH0.vxMKl0YQ8E1kHWKJMHyOyJoMWjFgBE2GVQYtRbvHZYo'
+            }
+          });
+          const data = await response.json();
+          const brandingMap = data.reduce((acc, item) => {
+            acc[item.key] = item.value;
+            return acc;
+          }, {});
+
+          // Update meta description
+          if (brandingMap.header_title && brandingMap.header_subtitle) {
+            document.getElementById('metaDescription').content = `${brandingMap.header_title} - ${brandingMap.header_subtitle}`;
+          }
+
+          // Update OG image
+          if (brandingMap.profile_picture) {
+            document.getElementById('ogImage').content = brandingMap.profile_picture;
+          }
+
+          // Update favicon
+          if (brandingMap.favicon) {
+            document.getElementById('favicon32').href = brandingMap.favicon;
+            document.getElementById('favicon16').href = brandingMap.favicon;
+            document.getElementById('appleIcon').href = brandingMap.favicon;
+          }
+        } catch (error) {
+          console.error('Error updating meta tags:', error);
+        }
+      });
+    </script>
   </body>
 </html>
