@@ -24,18 +24,23 @@ export const useTestimonialForm = (initialData?: any) => {
   };
 
   const getSubmissionData = () => {
+    console.log("Getting submission data from form:", formData);
+    
     const authorData = {
       name: formData.name,
       email: formData.email,
-      social: formData.social,
-      photo: formData.photo,
+      social: formData.social || null,
+      photo: formData.photo || null,
     };
+
+    // Ensure tag is a string, not a tag object
+    const tag = typeof formData.tag === 'string' ? formData.tag : formData.tag.name;
 
     return {
       rating: formData.rating,
       text: formData.text,
       author: authorData,
-      tags: [formData.tag],
+      tags: [tag], // Ensure tags is always an array of strings
       permission: formData.permission,
     };
   };

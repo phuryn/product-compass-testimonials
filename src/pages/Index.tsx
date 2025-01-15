@@ -15,14 +15,14 @@ const Index = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  console.log("Rendering Index component"); // Debug log
+  console.log("Rendering Index component");
 
   const {
     data,
     fetchNextPage,
     hasNextPage,
     isLoading,
-    error // Add error to check for any issues
+    error
   } = useInfiniteQuery({
     queryKey: ["testimonials", "public"],
     queryFn: async ({ pageParam }) => {
@@ -54,7 +54,7 @@ const Index = () => {
 
   const submitTestimonialMutation = useMutation({
     mutationFn: async (formData: any) => {
-      console.log("Submitting testimonial:", formData);
+      console.log("Submitting testimonial with data:", formData);
       const testimonialData = {
         author: {
           name: formData.author.name,
@@ -64,7 +64,7 @@ const Index = () => {
         },
         rating: formData.rating,
         text: formData.text,
-        tags: formData.tags,
+        tags: formData.tags, // This should now be an array of strings
         approved: false,
         date: new Date().toISOString(),
       };
@@ -101,7 +101,6 @@ const Index = () => {
     },
   });
 
-  // Add error handling
   if (error) {
     console.error("Query error:", error);
     return <div className="text-center p-4">Error loading testimonials. Please try again later.</div>;
@@ -112,7 +111,7 @@ const Index = () => {
   }
 
   const allTestimonials = data?.pages.flatMap(page => page.testimonials) || [];
-  console.log("All testimonials:", allTestimonials); // Debug log
+  console.log("All testimonials:", allTestimonials);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
