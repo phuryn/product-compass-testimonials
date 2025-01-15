@@ -96,7 +96,7 @@ export const TestimonialCard = ({
       );
     }
     return (
-      <div className="font-semibold text-[#292929]">{testimonial.author.name}</div>
+      <div className="font-semibold text-[#292929] truncate">{testimonial.author.name}</div>
     );
   };
 
@@ -126,7 +126,7 @@ export const TestimonialCard = ({
               </AvatarFallback>
             )}
           </Avatar>
-          <div>{renderAuthorName()}</div>
+          <div className="min-w-0 max-w-[calc(100%-8rem)]">{renderAuthorName()}</div>
         </div>
         {isAdmin && (
           <div className="flex gap-2">
@@ -158,7 +158,7 @@ export const TestimonialCard = ({
 
       <p className="mt-4 text-[#292929]">{testimonial.text}</p>
 
-      <div className="mt-4 flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:gap-0">
+      <div className="mt-4 flex flex-col md:flex-row md:items-center gap-4 md:gap-4">
         <div className="flex flex-wrap gap-2">
           <TooltipProvider>
             {testimonial.tags.map((tag, index) => (
@@ -206,7 +206,7 @@ export const TestimonialCard = ({
                     </AvatarFallback>
                   )}
                 </Avatar>
-                <div>{renderAuthorName()}</div>
+                <div className="min-w-0 max-w-[calc(100%-8rem)]">{renderAuthorName()}</div>
               </div>
               {isAdmin && (
                 <div className="flex gap-2">
@@ -249,7 +249,7 @@ export const TestimonialCard = ({
               </DialogContent>
             </Dialog>
 
-            <div className="mt-4 flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:gap-0">
+            <div className="mt-4 flex flex-col md:flex-row md:items-center gap-4 md:gap-4">
               <div className="flex flex-wrap gap-2">
                 <TooltipProvider>
                   {testimonial.tags.map((tag, index) => (
