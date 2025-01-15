@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { TestimonialForm } from "@/components/TestimonialForm";
 import { useBranding } from "@/hooks/useBranding";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface PageHeaderProps {
   isFormOpen: boolean;
@@ -11,7 +12,20 @@ interface PageHeaderProps {
 }
 
 export const PageHeader = ({ isFormOpen, setIsFormOpen, onSubmitTestimonial }: PageHeaderProps) => {
-  const { data: branding } = useBranding();
+  const { data: branding, isLoading } = useBranding();
+
+  if (isLoading) {
+    return (
+      <div className="mb-12 text-center">
+        <div className="mx-auto mb-6">
+          <Skeleton className="h-24 w-24 rounded-full mx-auto" />
+        </div>
+        <Skeleton className="h-10 w-3/4 mx-auto mb-4" />
+        <Skeleton className="h-6 w-2/3 mx-auto mb-8" />
+        <Skeleton className="h-10 w-32 mx-auto" />
+      </div>
+    );
+  }
 
   return (
     <div className="mb-12 text-center">
@@ -36,8 +50,7 @@ export const PageHeader = ({ isFormOpen, setIsFormOpen, onSubmitTestimonial }: P
           <Button 
             size="lg" 
             className="mr-4"
-            variant="default"
-            style={{ backgroundColor: "#2e75a9" }} // Match the default primary color
+            style={{ backgroundColor: branding?.primary_color }}
           >
             Send in text
           </Button>
