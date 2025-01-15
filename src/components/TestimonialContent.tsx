@@ -45,7 +45,7 @@ export const TestimonialContent = ({
       }
 
       console.log("Fetched tags:", data);
-      return data.map(tag => tag.name);
+      return data;
     },
   });
 
@@ -74,9 +74,9 @@ export const TestimonialContent = ({
             <SelectValue placeholder="Please select..." className="text-gray-400" />
           </SelectTrigger>
           <SelectContent>
-            {tags.map((tagName) => (
-              <SelectItem key={tagName} value={tagName}>
-                {tagName}
+            {tags.map((tag) => (
+              <SelectItem key={tag.name} value={tag.name}>
+                {tag.name}
               </SelectItem>
             ))}
           </SelectContent>
