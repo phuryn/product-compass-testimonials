@@ -37,6 +37,7 @@ interface TestimonialCardProps {
   isAdmin?: boolean;
   onApprove?: (id: string) => void;
   onEdit?: (id: string) => void;
+  isEmbedded?: boolean;
 }
 
 const MAX_VISIBLE_CHARS = 320;
@@ -55,10 +56,11 @@ export const TestimonialCard = ({
   isAdmin,
   onApprove,
   onEdit,
+  isEmbedded = window.location.pathname === "/embed",
 }: TestimonialCardProps) => {
   const [imageLoadError, setImageLoadError] = useState(false);
   const { data: branding } = useBranding();
-  const primaryColor = branding?.primary_color || '#2e75a9'; // Fallback color
+  const primaryColor = branding?.primary_color || '#2e75a9';
 
   const formattedDate = new Date(testimonial.date).toLocaleDateString("en-US", {
     year: "numeric",
@@ -99,7 +101,7 @@ export const TestimonialCard = ({
   };
 
   const isTextLong = testimonial.text.length > MAX_VISIBLE_CHARS;
-  const displayText = isTextLong
+  const displayText = isTextLong && !isEmbedded
     ? `${testimonial.text.slice(0, MAX_VISIBLE_CHARS)}...`
     : testimonial.text;
 
@@ -183,7 +185,7 @@ export const TestimonialCard = ({
   return (
     <Card className="transition-colors duration-200 hover:bg-[#fafbfc]">
       <CardContent className="p-6">
-        {isTextLong ? (
+        {isTextLong && !isEmbedded ? (
           <>
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-center gap-4">
