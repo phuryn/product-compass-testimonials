@@ -37,6 +37,7 @@ export const PageHeader = ({ isFormOpen, setIsFormOpen, onSubmitTestimonial }: P
             size="lg" 
             className="mr-4"
             variant="default"
+            style={{ backgroundColor: "#2e75a9" }} // Match the default primary color
           >
             Send in text
           </Button>
