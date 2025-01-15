@@ -12,18 +12,17 @@ interface PageHeaderProps {
 
 export const PageHeader = ({ isFormOpen, setIsFormOpen, onSubmitTestimonial }: PageHeaderProps) => {
   const { data: branding } = useBranding();
-  console.log("Current branding:", branding); // Debug log to check branding data
 
   return (
     <div className="mb-12 text-center">
       <div className="mx-auto mb-6">
         <Avatar className="h-24 w-24 mx-auto">
           <AvatarImage
-            src="/lovable-uploads/38757e69-417d-4b2f-8d5a-6ff4a1d96c6b.png"
+            src={branding?.profile_picture}
             alt="Profile"
             className="object-cover"
           />
-          <AvatarFallback>JD</AvatarFallback>
+          <AvatarFallback>PH</AvatarFallback>
         </Avatar>
       </div>
       <h1 className="mb-4 text-4xl font-bold">
