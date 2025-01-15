@@ -98,13 +98,13 @@ export const BrandingImageUpload = ({ imageKey, label, description }: BrandingIm
           <AvatarFallback>IMG</AvatarFallback>
         </Avatar>
         <div className="flex-1">
-          <Input
+          <input
             id={imageKey}
             type="file"
             accept="image/*"
             onChange={handleImageChange}
             disabled={isUploading}
-            className="file:bg-primary file:text-primary-foreground file:border-0 file:rounded-md file:px-4 file:py-2 file:mr-4 file:cursor-pointer hover:file:bg-primary/90"
+            className="file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-medium file:rounded-md file:bg-zinc-600 file:text-white hover:file:bg-zinc-700 file:transition-colors"
           />
         </div>
       </div>
