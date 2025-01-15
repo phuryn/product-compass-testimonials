@@ -5,6 +5,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { convertDbTestimonialToTestimonial } from "@/utils/testimonialUtils";
 import { useEffect } from "react";
 
+declare global {
+  interface Window {
+    parentIFrame?: {
+      size: () => void;
+    };
+  }
+}
+
 const EmbedPage = () => {
   const [searchParams] = useSearchParams();
   const tag = searchParams.get("tag");

@@ -29,7 +29,7 @@ export const EmbedCodeGenerator = () => {
     },
   });
 
-  const embedCode = `<!-- Lovable Testimonials Embed Code -->
+  const embedCode = `<!-- Testimonials Embed Code -->
 <script type="text/javascript" src="${window.location.origin}/embed-resizer.js"></script>
 <iframe 
   id="lovable-testimonials-embed"
@@ -57,7 +57,7 @@ export const EmbedCodeGenerator = () => {
           Select Tag
         </label>
         <Select value={selectedTag} onValueChange={setSelectedTag}>
-          <SelectTrigger className="w-full md:w-[300px]">
+          <SelectTrigger className="w-full">
             <SelectValue placeholder="Select a tag" />
           </SelectTrigger>
           <SelectContent>
@@ -80,7 +80,7 @@ export const EmbedCodeGenerator = () => {
             id="embed-code"
             value={embedCode}
             readOnly
-            className="font-mono text-sm min-h-[160px]"
+            className="font-mono text-sm min-h-[200px]"
           />
           <Button variant="outline" size="icon" onClick={copyToClipboard}>
             <Copy className="h-4 w-4" />
