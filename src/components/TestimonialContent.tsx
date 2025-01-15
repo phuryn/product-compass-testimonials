@@ -19,7 +19,7 @@ interface TestimonialContentProps {
   onTagChange: (tag: string) => void;
 }
 
-const MAX_CHARS = 1000;
+const MAX_CHARS = 1200;
 
 export const TestimonialContent = ({
   rating,
