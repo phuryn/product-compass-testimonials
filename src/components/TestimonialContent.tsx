@@ -71,7 +71,7 @@ export const TestimonialContent = ({
           required
         >
           <SelectTrigger>
-            <SelectValue placeholder="What did you use?" className="text-muted-foreground" />
+            <SelectValue placeholder="What did you use?" className="text-gray-400" />
           </SelectTrigger>
           <SelectContent>
             {tags.map((tagName) => (
