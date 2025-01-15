@@ -32,14 +32,14 @@ export const EmbedCodeGenerator = () => {
   const embedCode = `<!-- Testimonials Embed Code -->
 <script type="text/javascript" src="${window.location.origin}/embed-resizer.js"></script>
 <iframe 
-  id="lovable-testimonials-embed"
+  id="testimonials-embed"
   src="${window.location.origin}/embed${selectedTag !== "all" ? `?tag=${selectedTag}` : ""}"
   style="width: 1px; min-width: 100%;"
   frameborder="0"
   scrolling="no"
 ></iframe>
 <script>
-  window.iFrameResize({ log: false }, '#lovable-testimonials-embed');
+  window.iFrameResize({ log: false }, '#testimonials-embed');
 </script>`;
 
   const copyToClipboard = () => {
