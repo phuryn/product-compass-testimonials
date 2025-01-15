@@ -159,6 +159,7 @@ export const TestimonialForm = ({
               <AlertDialogFooter>
                 <AlertDialogAction 
                   onClick={onDelete} 
+                  className={Button.defaultProps?.className}
                   variant="outline"
                 >
                   Delete
