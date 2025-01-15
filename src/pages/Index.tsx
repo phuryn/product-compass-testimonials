@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import { convertDbTestimonialToTestimonial } from "@/utils/testimonialUtils";
@@ -7,6 +7,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { TestimonialList } from "@/components/testimonials/TestimonialList";
 import { Footer } from "@/components/layout/Footer";
 import { Navigation } from "@/components/layout/Navigation";
+import { triggerConfetti } from "@/utils/confetti";
 
 const TESTIMONIALS_PER_PAGE = 10;
 
@@ -64,7 +65,7 @@ const Index = () => {
         },
         rating: formData.rating,
         text: formData.text,
-        tags: formData.tags, // This should now be an array of strings
+        tags: formData.tags,
         approved: false,
         date: new Date().toISOString(),
       };
@@ -86,8 +87,9 @@ const Index = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["testimonials"] });
       setIsFormOpen(false);
+      triggerConfetti();
       toast({
-        title: "Thank you for your testimonial!",
+        title: "Thank you for your testimonial! 🎉",
         description: "We'll review it and publish it soon.",
       });
     },
