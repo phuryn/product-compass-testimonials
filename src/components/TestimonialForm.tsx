@@ -8,6 +8,7 @@ import { AuthorFields } from "./AuthorFields";
 import { TestimonialContent } from "./TestimonialContent";
 import { AVAILABLE_TAGS } from "@/constants/testimonials";
 import { triggerConfetti } from "@/utils/confetti";
+import { useBranding } from "@/hooks/useBranding";
 
 interface TestimonialFormProps {
   onSubmit: (data: any) => void;
@@ -22,6 +23,9 @@ export const TestimonialForm = ({
   initialData,
   isAdmin = false,
 }: TestimonialFormProps) => {
+  const { data: branding } = useBranding();
+  const primaryColor = branding?.primary_color || '#2e75a9'; // Fallback color
+  
   console.log("Initializing TestimonialForm with data:", initialData);
   
   const [formData, setFormData] = useState({
@@ -130,7 +134,8 @@ export const TestimonialForm = ({
         </Button>
         <Button 
           type="submit"
-          className="bg-gray-700 hover:bg-gray-800 text-white"
+          style={{ backgroundColor: primaryColor }}
+          className="text-primary-foreground hover:opacity-90"
         >
           Submit
         </Button>

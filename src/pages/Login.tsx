@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
+import { useBranding } from "@/hooks/useBranding";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -12,6 +13,8 @@ export default function Login() {
   const { signIn } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { data: branding } = useBranding();
+  const primaryColor = branding?.primary_color || '#2e75a9'; // Fallback color
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +53,11 @@ export default function Login() {
             required
           />
         </div>
-        <Button type="submit" className="w-full">
+        <Button 
+          type="submit" 
+          className="w-full text-primary-foreground hover:opacity-90"
+          style={{ backgroundColor: primaryColor }}
+        >
           Sign In
         </Button>
       </form>
