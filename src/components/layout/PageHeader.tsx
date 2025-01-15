@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { TestimonialForm } from "@/components/TestimonialForm";
+import { useBranding } from "@/hooks/useBranding";
 
 interface PageHeaderProps {
   isFormOpen: boolean;
@@ -10,6 +11,9 @@ interface PageHeaderProps {
 }
 
 export const PageHeader = ({ isFormOpen, setIsFormOpen, onSubmitTestimonial }: PageHeaderProps) => {
+  const { data: branding } = useBranding();
+  console.log("Current branding:", branding); // Debug log to check branding data
+
   return (
     <div className="mb-12 text-center">
       <div className="mx-auto mb-6">
@@ -31,7 +35,11 @@ export const PageHeader = ({ isFormOpen, setIsFormOpen, onSubmitTestimonial }: P
       </p>
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
         <DialogTrigger asChild>
-          <Button size="lg" className="mr-4">
+          <Button 
+            size="lg" 
+            className="mr-4"
+            variant="default"
+          >
             Send in text
           </Button>
         </DialogTrigger>
