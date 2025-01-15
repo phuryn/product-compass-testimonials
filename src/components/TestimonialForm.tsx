@@ -23,16 +23,14 @@ export const TestimonialForm = ({
 }: TestimonialFormProps) => {
   console.log("Initializing TestimonialForm with data:", initialData);
   
-  const { formData, handleInputChange, getSubmissionData } = useTestimonialForm(initialData);
+  const { formData, handleInputChange, getSubmissionData, isFormValid } = useTestimonialForm(initialData);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Form submitted with data:", formData);
     const submissionData = getSubmissionData();
-    if (submissionData) {
-      console.log("Processed submission data:", submissionData);
-      onSubmit(submissionData);
-    }
+    console.log("Processed submission data:", submissionData);
+    onSubmit(submissionData);
   };
 
   const handleAuthorFieldChange = (field: string, value: string) => {
@@ -82,7 +80,12 @@ export const TestimonialForm = ({
         )}
       </div>
 
-      <FormActions onCancel={onCancel} onDelete={onDelete} isAdmin={isAdmin} />
+      <FormActions 
+        onCancel={onCancel} 
+        onDelete={onDelete} 
+        isAdmin={isAdmin} 
+        isSubmitDisabled={!isFormValid}
+      />
     </form>
   );
 };

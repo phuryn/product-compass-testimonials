@@ -6,9 +6,10 @@ interface FormActionsProps {
   isAdmin: boolean;
   onDelete?: () => void;
   onCancel: () => void;
+  isSubmitDisabled?: boolean;
 }
 
-export const FormActions = ({ isAdmin, onDelete, onCancel }: FormActionsProps) => {
+export const FormActions = ({ isAdmin, onDelete, onCancel, isSubmitDisabled }: FormActionsProps) => {
   const { data: branding } = useBranding();
   const primaryColor = branding?.primary_color || '#2e75a9';
 
@@ -25,6 +26,7 @@ export const FormActions = ({ isAdmin, onDelete, onCancel }: FormActionsProps) =
           type="submit"
           style={{ backgroundColor: primaryColor }}
           className="text-primary-foreground hover:opacity-90"
+          disabled={isSubmitDisabled}
         >
           Submit
         </Button>

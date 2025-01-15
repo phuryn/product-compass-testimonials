@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { useState, useMemo } from "react";
 
 interface FormData {
   rating: number;
@@ -13,7 +12,6 @@ interface FormData {
 }
 
 export const useTestimonialForm = (initialData?: any) => {
-  const { toast } = useToast();
   const [formData, setFormData] = useState<FormData>({
     rating: initialData?.rating || 5,
     text: initialData?.text || "",
@@ -27,44 +25,18 @@ export const useTestimonialForm = (initialData?: any) => {
 
   console.log("Initial form data state:", formData);
 
-  const validateForm = () => {
-    const requiredFields = {
-      text: "Testimonial text",
-      name: "Full name",
-      email: "Email",
-      tag: "Product used",
-      permission: "Permission to use testimonial"
-    };
-
-    for (const [field, label] of Object.entries(requiredFields)) {
-      if (!formData[field as keyof FormData]) {
-        toast({
-          variant: "destructive",
-          title: "Required Field Missing",
-          description: `Please fill in the ${label} field.`
-        });
-        return false;
-      }
-    }
-
-    if (!formData.permission) {
-      toast({
-        variant: "destructive",
-        title: "Permission Required",
-        description: "Please give permission to use your testimonial."
-      });
-      return false;
-    }
-
-    return true;
-  };
+  const isFormValid = useMemo(() => {
+    return Boolean(
+      formData.text &&
+      formData.name &&
+      formData.email &&
+      formData.tag &&
+      formData.permission
+    );
+  }, [formData]);
 
   const getSubmissionData = () => {
     console.log("Getting submission data from form:", formData);
-    
-    if (!validateForm()) {
-      return null;
-    }
     
     const authorData = {
       name: formData.name,
@@ -97,5 +69,6 @@ export const useTestimonialForm = (initialData?: any) => {
     formData,
     handleInputChange,
     getSubmissionData,
+    isFormValid,
   };
 };
