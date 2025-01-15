@@ -104,7 +104,7 @@ export const TestimonialCard = ({
     <>
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-4">
-          <Avatar className="h-14 w-14 bg-primary text-primary-foreground">
+          <Avatar className="h-14 w-14">
             {testimonial.author.photo && !imageLoadError ? (
               <AvatarImage
                 src={testimonial.author.photo}
@@ -181,7 +181,7 @@ export const TestimonialCard = ({
           <>
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-center gap-4">
-                <Avatar className="h-14 w-14 bg-primary text-primary-foreground">
+                <Avatar className="h-14 w-14">
                   {testimonial.author.photo && !imageLoadError ? (
                     <AvatarImage
                       src={testimonial.author.photo}
