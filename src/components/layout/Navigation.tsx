@@ -5,10 +5,13 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+import { useBranding } from "@/hooks/useBranding";
 
 export const Navigation = () => {
   const { user, signOut } = useAuth();
   const location = useLocation();
+  const { data: branding } = useBranding();
+  const primaryColor = branding?.primary_color || '#2e75a9'; // Fallback color
 
   const { data: userRole } = useQuery({
     queryKey: ["userRole", user?.id],
@@ -38,8 +41,14 @@ export const Navigation = () => {
               to="/" 
               className={cn(
                 "flex items-center space-x-2 px-3 py-2 rounded-md transition-colors",
-                location.pathname === "/" ? "bg-primary/10 text-primary" : "hover:bg-muted"
+                location.pathname === "/" 
+                  ? "hover:opacity-90" 
+                  : "hover:bg-muted"
               )}
+              style={location.pathname === "/" ? {
+                backgroundColor: `${primaryColor}10`,
+                color: primaryColor
+              } : undefined}
             >
               <Home className="h-5 w-5" />
               <span className="font-medium">Home</span>
@@ -49,8 +58,14 @@ export const Navigation = () => {
                 to="/admin" 
                 className={cn(
                   "flex items-center space-x-2 px-3 py-2 rounded-md transition-colors",
-                  location.pathname === "/admin" ? "bg-primary/10 text-primary" : "hover:bg-muted"
+                  location.pathname === "/admin" 
+                    ? "hover:opacity-90" 
+                    : "hover:bg-muted"
                 )}
+                style={location.pathname === "/admin" ? {
+                  backgroundColor: `${primaryColor}10`,
+                  color: primaryColor
+                } : undefined}
               >
                 <Settings className="h-5 w-5" />
                 <span className="font-medium">Admin</span>
