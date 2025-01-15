@@ -15,11 +15,14 @@ const Index = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
+  console.log("Rendering Index component"); // Debug log
+
   const {
     data,
     fetchNextPage,
     hasNextPage,
-    isLoading
+    isLoading,
+    error // Add error to check for any issues
   } = useInfiniteQuery({
     queryKey: ["testimonials", "public"],
     queryFn: async ({ pageParam }) => {
@@ -98,11 +101,18 @@ const Index = () => {
     },
   });
 
+  // Add error handling
+  if (error) {
+    console.error("Query error:", error);
+    return <div className="text-center p-4">Error loading testimonials. Please try again later.</div>;
+  }
+
   if (isLoading) {
-    return <div>Loading testimonials...</div>;
+    return <div className="text-center p-4">Loading testimonials...</div>;
   }
 
   const allTestimonials = data?.pages.flatMap(page => page.testimonials) || [];
+  console.log("All testimonials:", allTestimonials); // Debug log
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
