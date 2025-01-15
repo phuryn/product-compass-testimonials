@@ -30,28 +30,45 @@ export const EmbedCodeGenerator = () => {
   });
 
   const embedCode = `<!-- Testimonials Embed Code -->
-<div id="testimonials-container">
+<div id="testimonials-container" style="width: 100%;">
   <iframe 
     id="testimonials-embed"
     src="${window.location.origin}/embed${selectedTag !== "all" ? `?tag=${selectedTag}` : ""}"
-    style="width: 1px; min-width: 100%;"
-    frameborder="0"
+    style="width: 1px; min-width: 100%; border: none;"
     scrolling="no"
   ></iframe>
 </div>
 <script type="text/javascript" src="${window.location.origin}/embed-resizer.js"></script>
 <script>
-  document.getElementById('testimonials-embed').addEventListener('load', function() {
-    if (window.iFrameResize) {
-      window.iFrameResize({ 
-        log: false,
-        checkOrigin: false,
-        heightCalculationMethod: 'lowestElement',
-        warningTimeout: 0,
-        scrolling: false
-      }, '#testimonials-embed');
+  (function() {
+    function initializeIframe() {
+      var iframe = document.getElementById('testimonials-embed');
+      if (!iframe) return;
+      
+      iframe.onload = function() {
+        if (typeof window.iFrameResize === 'function') {
+          window.iFrameResize({
+            log: false,
+            checkOrigin: false,
+            heightCalculationMethod: 'lowestElement',
+            warningTimeout: 0,
+            scrolling: false,
+            sizeWidth: false,
+            sizeHeight: true,
+            autoResize: true,
+            minHeight: 100
+          }, '#testimonials-embed');
+        }
+      };
     }
-  });
+
+    // Initialize on load
+    if (document.readyState === 'complete') {
+      initializeIframe();
+    } else {
+      window.addEventListener('load', initializeIframe);
+    }
+  })();
 </script>`;
 
   const copyToClipboard = () => {
