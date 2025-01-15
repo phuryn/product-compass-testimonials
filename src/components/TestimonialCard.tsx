@@ -15,6 +15,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useBranding } from "@/hooks/useBranding";
 
 export interface Testimonial {
   id: string;
@@ -56,6 +57,8 @@ export const TestimonialCard = ({
   onEdit,
 }: TestimonialCardProps) => {
   const [imageLoadError, setImageLoadError] = useState(false);
+  const { data: branding } = useBranding();
+  const primaryColor = branding?.primary_color || '#2e75a9'; // Fallback color
 
   const formattedDate = new Date(testimonial.date).toLocaleDateString("en-US", {
     year: "numeric",
@@ -113,7 +116,10 @@ export const TestimonialCard = ({
                 onError={() => setImageLoadError(true)}
               />
             ) : (
-              <AvatarFallback className="text-lg font-semibold bg-primary text-primary-foreground">
+              <AvatarFallback 
+                className="text-lg font-semibold text-primary-foreground"
+                style={{ backgroundColor: primaryColor }}
+              >
                 {getInitials(testimonial.author.name)}
               </AvatarFallback>
             )}
@@ -190,7 +196,10 @@ export const TestimonialCard = ({
                       onError={() => setImageLoadError(true)}
                     />
                   ) : (
-                    <AvatarFallback className="text-lg font-semibold bg-primary text-primary-foreground">
+                    <AvatarFallback 
+                      className="text-lg font-semibold text-primary-foreground"
+                      style={{ backgroundColor: primaryColor }}
+                    >
                       {getInitials(testimonial.author.name)}
                     </AvatarFallback>
                   )}
