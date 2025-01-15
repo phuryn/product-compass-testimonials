@@ -5,6 +5,7 @@ import Index from "@/pages/Index";
 import Admin from "@/pages/Admin";
 import Login from "@/pages/Login";
 import Embed from "@/pages/Embed";
+import { AdminRoute } from "@/components/auth/AdminRoute";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -17,7 +18,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <Admin />,
+    element: (
+      <AdminRoute>
+        <Admin />
+      </AdminRoute>
+    ),
   },
   {
     path: "/login",
