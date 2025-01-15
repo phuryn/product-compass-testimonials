@@ -18,7 +18,7 @@ export const useTestimonialForm = (initialData?: any) => {
     name: initialData?.author?.name || "",
     email: initialData?.author?.email || "",
     social: initialData?.author?.social || "",
-    permission: false,
+    permission: initialData?.permission || false,
     tag: initialData?.tags?.[0] || "",
     photo: initialData?.author?.photo || null,
   });
@@ -27,6 +27,10 @@ export const useTestimonialForm = (initialData?: any) => {
 
   const getSubmissionData = () => {
     console.log("Getting submission data from form:", formData);
+    
+    if (!formData.text || !formData.name || !formData.email || !formData.tag || !formData.permission) {
+      throw new Error("Please fill in all required fields");
+    }
     
     const authorData = {
       name: formData.name,
@@ -39,7 +43,7 @@ export const useTestimonialForm = (initialData?: any) => {
       rating: formData.rating,
       text: formData.text,
       author: authorData,
-      tags: [formData.tag], // Ensure tags is always an array of strings
+      tags: [formData.tag],
       permission: formData.permission,
     };
   };
@@ -48,6 +52,7 @@ export const useTestimonialForm = (initialData?: any) => {
     field: keyof FormData,
     value: string | number | boolean | null
   ) => {
+    console.log(`Updating form field ${field} with value:`, value);
     setFormData((prev) => ({
       ...prev,
       [field]: value,

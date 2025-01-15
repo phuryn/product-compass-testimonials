@@ -25,11 +25,14 @@ export const TestimonialForm = ({
 }: TestimonialFormProps) => {
   console.log("Initializing TestimonialForm with data:", initialData);
   
-  const { formData, handleInputChange } = useTestimonialForm(initialData);
+  const { formData, handleInputChange, getSubmissionData } = useTestimonialForm(initialData);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    console.log("Form submitted with data:", formData);
+    const submissionData = getSubmissionData();
+    console.log("Processed submission data:", submissionData);
+    onSubmit(submissionData);
   };
 
   const handleAuthorFieldChange = (field: string, value: string) => {
