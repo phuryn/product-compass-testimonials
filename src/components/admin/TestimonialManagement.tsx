@@ -77,6 +77,33 @@ export const TestimonialManagement = () => {
     },
   });
 
+  const deleteTestimonialMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from("testimonials")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+      return { success: true };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["testimonials"] });
+      toast({
+        title: "Success",
+        description: "Testimonial deleted successfully",
+      });
+      setEditingTestimonial(null);
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to delete testimonial",
+      });
+    },
+  });
+
   const handleApprove = (id: string) => {
     const testimonial = testimonials.find((t) => t.id === id);
     if (testimonial) {
@@ -98,6 +125,12 @@ export const TestimonialManagement = () => {
           tags: data.tags,
         },
       });
+    }
+  };
+
+  const handleDeleteTestimonial = () => {
+    if (editingTestimonial) {
+      deleteTestimonialMutation.mutate(editingTestimonial.id);
     }
   };
 
@@ -169,6 +202,7 @@ export const TestimonialManagement = () => {
               initialData={editingTestimonial}
               onSubmit={handleUpdateTestimonial}
               onCancel={() => setEditingTestimonial(null)}
+              onDelete={handleDeleteTestimonial}
               isAdmin
             />
           )}

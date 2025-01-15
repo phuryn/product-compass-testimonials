@@ -9,10 +9,22 @@ import { TestimonialContent } from "./TestimonialContent";
 import { AVAILABLE_TAGS } from "@/constants/testimonials";
 import { triggerConfetti } from "@/utils/confetti";
 import { useBranding } from "@/hooks/useBranding";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface TestimonialFormProps {
   onSubmit: (data: any) => void;
   onCancel: () => void;
+  onDelete?: () => void;
   initialData?: any;
   isAdmin?: boolean;
 }
@@ -20,6 +32,7 @@ interface TestimonialFormProps {
 export const TestimonialForm = ({
   onSubmit,
   onCancel,
+  onDelete,
   initialData,
   isAdmin = false,
 }: TestimonialFormProps) => {
@@ -140,6 +153,32 @@ export const TestimonialForm = ({
           Submit
         </Button>
       </div>
+
+      {isAdmin && onDelete && (
+        <div className="pt-4 border-t mt-4">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive" type="button" className="w-full">
+                Delete Testimonial
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete the testimonial.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={onDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      )}
     </form>
   );
 };
