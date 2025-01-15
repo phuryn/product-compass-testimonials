@@ -1,44 +1,32 @@
-import { Navigation } from "@/components/layout/Navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TestimonialManagement } from "@/components/admin/TestimonialManagement";
 import { Settings } from "@/components/admin/Settings";
-import { useBranding } from "@/hooks/useBranding";
-import { Skeleton } from "@/components/ui/skeleton";
+import { TagManagement } from "@/components/admin/TagManagement";
+import { EmbedCodeGenerator } from "@/components/EmbedCodeGenerator";
 
 const Admin = () => {
-  const { isLoading } = useBranding();
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col">
-        <Navigation />
-        <div className="container py-8">
-          <div className="space-y-6">
-            <Skeleton className="h-10 w-48" />
-            <Skeleton className="h-[400px] w-full" />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <Navigation />
-      <div className="container py-8">
-        <Tabs defaultValue="testimonials" className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="testimonials">Testimonials</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
-          </TabsList>
-          <TabsContent value="testimonials">
-            <TestimonialManagement />
-          </TabsContent>
-          <TabsContent value="settings">
-            <Settings />
-          </TabsContent>
-        </Tabs>
-      </div>
+    <div className="container max-w-5xl px-4 sm:px-6 py-8">
+      <Tabs defaultValue="testimonials">
+        <TabsList>
+          <TabsTrigger value="testimonials">Testimonials</TabsTrigger>
+          <TabsTrigger value="tags">Tags</TabsTrigger>
+          <TabsTrigger value="settings">Settings</TabsTrigger>
+          <TabsTrigger value="embed">Embed</TabsTrigger>
+        </TabsList>
+        <TabsContent value="testimonials" className="mt-6">
+          <TestimonialManagement />
+        </TabsContent>
+        <TabsContent value="tags" className="mt-6">
+          <TagManagement />
+        </TabsContent>
+        <TabsContent value="settings" className="mt-6">
+          <Settings />
+        </TabsContent>
+        <TabsContent value="embed" className="mt-6">
+          <EmbedCodeGenerator />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
