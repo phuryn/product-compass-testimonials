@@ -3,6 +3,7 @@ import { TestimonialList } from "@/components/testimonials/TestimonialList";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { convertDbTestimonialToTestimonial } from "@/utils/testimonialUtils";
+import { useEffect } from "react";
 
 const EmbedPage = () => {
   const [searchParams] = useSearchParams();
@@ -33,12 +34,19 @@ const EmbedPage = () => {
     },
   });
 
+  useEffect(() => {
+    // Notify parent window that content has been loaded/updated
+    if (window.parentIFrame) {
+      window.parentIFrame.size();
+    }
+  }, [testimonials]);
+
   if (isLoading) {
     return <div className="p-4">Loading testimonials...</div>;
   }
 
   return (
-    <div className="p-4 bg-background min-h-screen">
+    <div className="p-4 bg-background">
       <TestimonialList testimonials={testimonials} />
     </div>
   );

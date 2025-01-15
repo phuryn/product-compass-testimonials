@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Copy } from "lucide-react";
@@ -29,12 +29,18 @@ export const EmbedCodeGenerator = () => {
     },
   });
 
-  const embedCode = `<iframe 
+  const embedCode = `<!-- Lovable Testimonials Embed Code -->
+<script type="text/javascript" src="${window.location.origin}/embed-resizer.js"></script>
+<iframe 
+  id="lovable-testimonials-embed"
   src="${window.location.origin}/embed${selectedTag !== "all" ? `?tag=${selectedTag}` : ""}"
-  width="100%"
-  height="600"
+  style="width: 1px; min-width: 100%;"
   frameborder="0"
-></iframe>`;
+  scrolling="no"
+></iframe>
+<script>
+  window.iFrameResize({ log: false }, '#lovable-testimonials-embed');
+</script>`;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(embedCode);
@@ -51,7 +57,7 @@ export const EmbedCodeGenerator = () => {
           Select Tag
         </label>
         <Select value={selectedTag} onValueChange={setSelectedTag}>
-          <SelectTrigger className="w-[200px]">
+          <SelectTrigger className="w-full md:w-[300px]">
             <SelectValue placeholder="Select a tag" />
           </SelectTrigger>
           <SelectContent>
@@ -70,11 +76,11 @@ export const EmbedCodeGenerator = () => {
           Embed Code
         </label>
         <div className="flex gap-2">
-          <Input
+          <Textarea
             id="embed-code"
             value={embedCode}
             readOnly
-            className="font-mono text-sm"
+            className="font-mono text-sm min-h-[160px]"
           />
           <Button variant="outline" size="icon" onClick={copyToClipboard}>
             <Copy className="h-4 w-4" />
