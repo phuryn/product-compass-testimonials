@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { useBranding } from "@/hooks/useBranding";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -13,8 +14,7 @@ export default function Login() {
   const { signIn } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { data: branding } = useBranding();
-  const primaryColor = branding?.primary_color || '#2e75a9'; // Fallback color
+  const { data: branding, isLoading } = useBranding();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,6 +29,22 @@ export default function Login() {
       });
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="container max-w-md mx-auto py-16 space-y-6">
+        <div className="space-y-2">
+          <Skeleton className="h-6 w-20" />
+          <Skeleton className="h-10 w-full" />
+        </div>
+        <div className="space-y-2">
+          <Skeleton className="h-6 w-24" />
+          <Skeleton className="h-10 w-full" />
+        </div>
+        <Skeleton className="h-10 w-full" />
+      </div>
+    );
+  }
 
   return (
     <div className="container max-w-md mx-auto py-16">
@@ -55,8 +71,8 @@ export default function Login() {
         </div>
         <Button 
           type="submit" 
-          className="w-full text-primary-foreground hover:opacity-90"
-          style={{ backgroundColor: primaryColor }}
+          className="w-full"
+          style={{ backgroundColor: branding?.primary_color }}
         >
           Sign In
         </Button>
