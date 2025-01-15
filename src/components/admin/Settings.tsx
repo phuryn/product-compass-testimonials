@@ -1,6 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Card } from "@/components/ui/card";
 import { TagManagement } from "./TagManagement";
+import { ColorEditor } from "./ColorEditor";
 
 export const Settings = () => {
   const { user } = useAuth();
@@ -17,6 +18,11 @@ export const Settings = () => {
             </div>
           </div>
         </div>
+      </Card>
+
+      <Card className="p-6">
+        <h2 className="text-2xl font-semibold mb-4">Branding</h2>
+        <ColorEditor />
       </Card>
 
       <Card className="p-6">
