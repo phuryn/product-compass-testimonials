@@ -30,7 +30,6 @@ export const EmbedCodeGenerator = () => {
   });
 
   const embedCode = `<!-- Testimonials Embed Code -->
-<script type="text/javascript" src="${window.location.origin}/embed-resizer.js"></script>
 <iframe 
   id="testimonials-embed"
   src="${window.location.origin}/embed${selectedTag !== "all" ? `?tag=${selectedTag}` : ""}"
@@ -38,14 +37,13 @@ export const EmbedCodeGenerator = () => {
   frameborder="0"
   scrolling="no"
 ></iframe>
+<script type="text/javascript" src="${window.location.origin}/embed-resizer.js"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    window.iFrameResize({ 
-      log: false,
-      checkOrigin: false,
-      heightCalculationMethod: 'lowestElement'
-    }, '#testimonials-embed');
-  });
+  window.iFrameResize({ 
+    log: false,
+    checkOrigin: false,
+    heightCalculationMethod: 'lowestElement'
+  }, '#testimonials-embed');
 </script>`;
 
   const copyToClipboard = () => {
