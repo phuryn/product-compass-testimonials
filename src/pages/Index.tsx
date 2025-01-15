@@ -8,6 +8,7 @@ import { TestimonialList } from "@/components/testimonials/TestimonialList";
 import { Footer } from "@/components/layout/Footer";
 import { Navigation } from "@/components/layout/Navigation";
 import { triggerConfetti } from "@/utils/confetti";
+import { Toaster } from "@/components/ui/toaster";
 
 const TESTIMONIALS_PER_PAGE = 10;
 
@@ -131,6 +132,7 @@ const Index = () => {
         />
       </div>
       <Footer />
+      <Toaster />
     </div>
   );
 };
