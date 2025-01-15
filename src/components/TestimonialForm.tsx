@@ -1,25 +1,11 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { ImageUpload } from "./ImageUpload";
 import { AuthorFields } from "./AuthorFields";
 import { TestimonialContent } from "./TestimonialContent";
-import { AVAILABLE_TAGS } from "@/constants/testimonials";
 import { triggerConfetti } from "@/utils/confetti";
-import { useBranding } from "@/hooks/useBranding";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { FormActions } from "./admin/FormActions";
+import { PermissionCheckbox } from "./testimonials/PermissionCheckbox";
+import { useTestimonialForm } from "@/hooks/useTestimonialForm";
 
 interface TestimonialFormProps {
   onSubmit: (data: any) => void;
@@ -36,50 +22,14 @@ export const TestimonialForm = ({
   initialData,
   isAdmin = false,
 }: TestimonialFormProps) => {
-  const { data: branding } = useBranding();
-  const primaryColor = branding?.primary_color || '#2e75a9'; // Fallback color
+  const { formData, handleAuthorFieldChange, handleChange, getSubmissionData } = useTestimonialForm(initialData);
   
   console.log("Initializing TestimonialForm with data:", initialData);
-  
-  const [formData, setFormData] = useState({
-    rating: initialData?.rating || 5,
-    text: initialData?.text || "",
-    name: initialData?.author?.name || "",
-    email: initialData?.author?.email || "",
-    social: initialData?.author?.social || "",
-    permission: initialData?.permission || false,
-    tag: initialData?.tags?.[0] || AVAILABLE_TAGS[0],
-    photo: initialData?.author?.photo || null,
-  });
-
   console.log("Initial form data state:", formData);
-
-  const handleAuthorFieldChange = (field: string, value: string) => {
-    console.log("Author field change:", { field, value });
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const authorData = {
-      name: formData.name,
-      email: formData.email,
-      social: formData.social,
-      photo: formData.photo,
-    };
-
-    console.log('Author data to be submitted:', authorData);
-    console.log('Photo URL in submission:', formData.photo);
-
-    const submissionData = {
-      rating: formData.rating,
-      text: formData.text,
-      author: authorData,
-      tags: [formData.tag],
-      permission: formData.permission,
-    };
-
+    const submissionData = getSubmissionData();
     console.log('Complete testimonial data being submitted:', submissionData);
     await onSubmit(submissionData);
     triggerConfetti();
@@ -92,18 +42,9 @@ export const TestimonialForm = ({
           rating={formData.rating}
           text={formData.text}
           tag={formData.tag}
-          onRatingChange={(rating) => {
-            console.log("Rating changed to:", rating);
-            setFormData((prev) => ({ ...prev, rating }));
-          }}
-          onTextChange={(text) => {
-            console.log("Text changed, length:", text.length);
-            setFormData((prev) => ({ ...prev, text }));
-          }}
-          onTagChange={(tag) => {
-            console.log("Tag changed to:", tag);
-            setFormData((prev) => ({ ...prev, tag }));
-          }}
+          onRatingChange={(rating) => handleChange('rating', rating)}
+          onTextChange={(text) => handleChange('text', text)}
+          onTagChange={(tag) => handleChange('tag', tag)}
         />
 
         <AuthorFields
@@ -115,77 +56,23 @@ export const TestimonialForm = ({
 
         <ImageUpload
           initialImage={formData.photo}
-          onImageChange={(url) => {
-            console.log("Image URL updated:", url);
-            setFormData((prev) => ({ ...prev, photo: url }));
-          }}
+          onImageChange={(url) => handleChange('photo', url)}
           userName={formData.name}
         />
 
         {!isAdmin && (
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="permission"
-              checked={formData.permission}
-              onCheckedChange={(checked) => {
-                console.log("Permission changed to:", checked);
-                setFormData((prev) => ({ ...prev, permission: checked as boolean }));
-              }}
-              required
-            />
-            <Label htmlFor="permission" className="text-sm after:content-['*'] after:ml-0.5 after:text-red-500">
-              I give permission to use this testimonial across social channels and
-              other marketing efforts
-            </Label>
-          </div>
+          <PermissionCheckbox
+            checked={formData.permission}
+            onCheckedChange={(checked) => handleChange('permission', checked)}
+          />
         )}
       </div>
 
-      <div className="flex justify-between gap-2">
-        {isAdmin && onDelete && (
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="outline" type="button">
-                Delete
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete the testimonial.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogAction 
-                  onClick={onDelete}
-                  className="bg-background text-foreground border border-input hover:bg-accent hover:text-accent-foreground"
-                >
-                  Delete
-                </AlertDialogAction>
-                <AlertDialogCancel 
-                  style={{ backgroundColor: primaryColor }}
-                  className="text-primary-foreground hover:opacity-90"
-                >
-                  Cancel
-                </AlertDialogCancel>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )}
-        <div className="flex gap-2 ml-auto">
-          <Button type="button" variant="outline" onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button 
-            type="submit"
-            style={{ backgroundColor: primaryColor }}
-            className="text-primary-foreground hover:opacity-90"
-          >
-            Submit
-          </Button>
-        </div>
-      </div>
+      <FormActions
+        isAdmin={isAdmin}
+        onDelete={onDelete}
+        onCancel={onCancel}
+      />
     </form>
   );
 };
