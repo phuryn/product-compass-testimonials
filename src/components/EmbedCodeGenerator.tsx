@@ -39,7 +39,13 @@ export const EmbedCodeGenerator = () => {
   scrolling="no"
 ></iframe>
 <script>
-  window.iFrameResize({ log: false }, '#testimonials-embed');
+  document.addEventListener('DOMContentLoaded', function() {
+    window.iFrameResize({ 
+      log: false,
+      checkOrigin: false,
+      heightCalculationMethod: 'lowestElement'
+    }, '#testimonials-embed');
+  });
 </script>`;
 
   const copyToClipboard = () => {
