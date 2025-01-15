@@ -96,7 +96,7 @@ export const TestimonialCard = ({
       );
     }
     return (
-      <div className="font-semibold text-[#292929] truncate whitespace-nowrap">{testimonial.author.name}</div>
+      <div className="font-semibold text-[#292929] truncate">{testimonial.author.name}</div>
     );
   };
 
