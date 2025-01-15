@@ -26,11 +26,10 @@ export const PageHeader = ({ isFormOpen, setIsFormOpen, onSubmitTestimonial }: P
         </Avatar>
       </div>
       <h1 className="mb-4 text-4xl font-bold">
-        Would you like to recommend my content?
+        {branding?.header_title || "Would you like to recommend my content?"}
       </h1>
       <p className="mb-8 text-xl text-gray-600">
-        Hi there! I would be thrilled if you could take a moment to leave me a
-        testimonial.
+        {branding?.header_subtitle || "Hi there! I would be thrilled if you could take a moment to leave me a testimonial."}
       </p>
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
         <DialogTrigger asChild>
