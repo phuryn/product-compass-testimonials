@@ -142,24 +142,11 @@ export const TestimonialForm = ({
       </div>
 
       <div className="flex justify-end gap-2">
-        <Button type="button" variant="outline" onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button 
-          type="submit"
-          style={{ backgroundColor: primaryColor }}
-          className="text-primary-foreground hover:opacity-90"
-        >
-          Submit
-        </Button>
-      </div>
-
-      {isAdmin && onDelete && (
-        <div className="pt-4 border-t mt-4">
+        {isAdmin && onDelete && (
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive" type="button" className="w-full">
-                Delete Testimonial
+              <Button variant="destructive" type="button">
+                Delete
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -177,8 +164,18 @@ export const TestimonialForm = ({
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-        </div>
-      )}
+        )}
+        <Button type="button" variant="outline" onClick={onCancel}>
+          Cancel
+        </Button>
+        <Button 
+          type="submit"
+          style={{ backgroundColor: primaryColor }}
+          className="text-primary-foreground hover:opacity-90"
+        >
+          Submit
+        </Button>
+      </div>
     </form>
   );
 };
