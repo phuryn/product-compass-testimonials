@@ -3,19 +3,12 @@ import { TestimonialList } from "@/components/testimonials/TestimonialList";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { convertDbTestimonialToTestimonial } from "@/utils/testimonialUtils";
-import { useEffect } from "react";
-
-declare global {
-  interface Window {
-    parentIFrame?: {
-      size: () => void;
-    };
-  }
-}
+import { useEffect, useRef } from "react";
 
 const EmbedPage = () => {
   const [searchParams] = useSearchParams();
   const tag = searchParams.get("tag");
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const { data: testimonials = [], isLoading } = useQuery({
     queryKey: ["testimonials", "embed", tag],
@@ -42,11 +35,42 @@ const EmbedPage = () => {
     },
   });
 
+  // Send height updates to parent
   useEffect(() => {
-    // Notify parent window that content has been loaded/updated
-    if (window.parentIFrame) {
-      window.parentIFrame.size();
+    const sendHeight = () => {
+      if (containerRef.current) {
+        const height = containerRef.current.offsetHeight;
+        window.parent.postMessage({ type: 'resize', height }, '*');
+      }
+    };
+
+    // Listen for resize requests from parent
+    const handleMessage = (e: MessageEvent) => {
+      if (e.data && e.data.type === 'requestResize') {
+        sendHeight();
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    
+    // Send initial height
+    sendHeight();
+
+    // Set up observer for content changes
+    const observer = new MutationObserver(sendHeight);
+    if (containerRef.current) {
+      observer.observe(containerRef.current, {
+        childList: true,
+        subtree: true,
+        attributes: true
+      });
     }
+
+    // Clean up
+    return () => {
+      window.removeEventListener('message', handleMessage);
+      observer.disconnect();
+    };
   }, [testimonials]);
 
   if (isLoading) {
@@ -54,7 +78,7 @@ const EmbedPage = () => {
   }
 
   return (
-    <div className="p-4 bg-background">
+    <div ref={containerRef} className="p-4 bg-background">
       <TestimonialList testimonials={testimonials} />
     </div>
   );

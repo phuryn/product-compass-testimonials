@@ -24,33 +24,34 @@
           return;
         }
 
-        function resize() {
-          var height = iframe.contentWindow.document.documentElement.scrollHeight;
-          iframe.style.height = height + 'px';
-        }
-
-        iframe.onload = function() {
-          resize();
-          // Add event listener for content changes
-          if (iframe.contentWindow.document.body) {
-            var observer = new MutationObserver(resize);
-            observer.observe(iframe.contentWindow.document.body, {
-              attributes: true,
-              childList: true,
-              subtree: true
-            });
+        // Set initial height
+        iframe.style.width = '1px';
+        iframe.style.minWidth = '100%';
+        iframe.style.border = 'none';
+        iframe.style.height = '500px'; // Set a default height
+        
+        // Listen for resize messages from the iframe
+        window.addEventListener('message', function(e) {
+          // Verify the message origin matches the iframe's src
+          if (iframe.src.indexOf(e.origin) !== 0) {
+            return;
           }
-        };
 
-        // Initial resize
-        if (iframe.contentWindow && iframe.contentWindow.document.body) {
-          resize();
-        }
+          // Handle height updates
+          if (e.data && typeof e.data === 'object' && e.data.type === 'resize') {
+            var height = parseInt(e.data.height);
+            if (!isNaN(height) && height > 0) {
+              iframe.style.height = height + 'px';
+            }
+          }
+        });
 
         return {
-          resize: resize,
-          removeListeners: function() {
-            iframe.onload = null;
+          resize: function() {
+            // Trigger a resize if needed
+            if (iframe.contentWindow) {
+              iframe.contentWindow.postMessage({ type: 'requestResize' }, '*');
+            }
           }
         };
       };

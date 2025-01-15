@@ -30,42 +30,23 @@ export const EmbedCodeGenerator = () => {
   });
 
   const embedCode = `<!-- Testimonials Embed Code -->
-<div id="testimonials-container" style="width: 100%; min-height: 100px;">
+<div id="testimonials-container" style="width: 100%; min-height: 500px;">
   <iframe 
     id="testimonials-embed"
     src="${window.location.origin}/embed${selectedTag !== "all" ? `?tag=${selectedTag}` : ""}"
-    style="width: 1px; min-width: 100%; border: none; height: 0;"
-    scrolling="no"
+    style="width: 1px; min-width: 100%; border: none; height: 500px;"
     title="Testimonials embed"
   ></iframe>
 </div>
 <script>
   (function() {
-    // Load the resizer script
     var script = document.createElement('script');
     script.src = "${window.location.origin}/embed-resizer.js";
     script.async = true;
     script.onload = function() {
-      // Initialize iframe after script loads
       var iframe = document.getElementById('testimonials-embed');
       if (iframe && typeof window.iFrameResize === 'function') {
-        window.iFrameResize({
-          log: false,
-          checkOrigin: false,
-          heightCalculationMethod: 'lowestElement',
-          warningTimeout: 0,
-          scrolling: false,
-          sizeWidth: false,
-          sizeHeight: true,
-          autoResize: true,
-          minHeight: 100,
-          onInit: function() {
-            console.log('iFrame initialized successfully');
-          },
-          onError: function(err) {
-            console.error('iFrame error:', err);
-          }
-        }, '#testimonials-embed');
+        window.iFrameResize({}, '#testimonials-embed');
       }
     };
     document.body.appendChild(script);
