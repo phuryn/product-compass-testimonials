@@ -155,7 +155,7 @@ export const ImageUpload = ({ initialImage, onImageChange, userName }: ImageUplo
             alt={userName} 
             className="object-cover"
           />
-          <AvatarFallback className="bg-primary text-primary-foreground text-lg font-semibold">
+          <AvatarFallback className="bg-gray-200 text-gray-600 text-lg font-semibold">
             {userName.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase()}
           </AvatarFallback>
         </Avatar>
@@ -165,7 +165,7 @@ export const ImageUpload = ({ initialImage, onImageChange, userName }: ImageUplo
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-            className="file:bg-primary file:text-primary-foreground file:border-0 file:rounded-md file:px-4 file:py-2 file:mr-4 file:cursor-pointer hover:file:bg-primary/90"
+            className="file:bg-gray-200 file:text-gray-700 file:border-0 file:rounded-md file:px-4 file:py-2 file:mr-4 file:cursor-pointer hover:file:bg-gray-300 file:transition-colors"
           />
         </div>
       </div>

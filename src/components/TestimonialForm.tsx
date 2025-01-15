@@ -128,7 +128,12 @@ export const TestimonialForm = ({
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit">Submit</Button>
+        <Button 
+          type="submit"
+          className="bg-gray-700 hover:bg-gray-800 text-white"
+        >
+          Submit
+        </Button>
       </div>
     </form>
   );
