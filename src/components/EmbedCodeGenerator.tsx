@@ -30,44 +30,45 @@ export const EmbedCodeGenerator = () => {
   });
 
   const embedCode = `<!-- Testimonials Embed Code -->
-<div id="testimonials-container" style="width: 100%;">
+<div id="testimonials-container" style="width: 100%; min-height: 100px;">
   <iframe 
     id="testimonials-embed"
     src="${window.location.origin}/embed${selectedTag !== "all" ? `?tag=${selectedTag}` : ""}"
-    style="width: 1px; min-width: 100%; border: none;"
+    style="width: 1px; min-width: 100%; border: none; height: 0;"
     scrolling="no"
+    title="Testimonials embed"
   ></iframe>
 </div>
-<script type="text/javascript" src="${window.location.origin}/embed-resizer.js"></script>
 <script>
   (function() {
-    function initializeIframe() {
+    // Load the resizer script
+    var script = document.createElement('script');
+    script.src = "${window.location.origin}/embed-resizer.js";
+    script.async = true;
+    script.onload = function() {
+      // Initialize iframe after script loads
       var iframe = document.getElementById('testimonials-embed');
-      if (!iframe) return;
-      
-      iframe.onload = function() {
-        if (typeof window.iFrameResize === 'function') {
-          window.iFrameResize({
-            log: false,
-            checkOrigin: false,
-            heightCalculationMethod: 'lowestElement',
-            warningTimeout: 0,
-            scrolling: false,
-            sizeWidth: false,
-            sizeHeight: true,
-            autoResize: true,
-            minHeight: 100
-          }, '#testimonials-embed');
-        }
-      };
-    }
-
-    // Initialize on load
-    if (document.readyState === 'complete') {
-      initializeIframe();
-    } else {
-      window.addEventListener('load', initializeIframe);
-    }
+      if (iframe && typeof window.iFrameResize === 'function') {
+        window.iFrameResize({
+          log: false,
+          checkOrigin: false,
+          heightCalculationMethod: 'lowestElement',
+          warningTimeout: 0,
+          scrolling: false,
+          sizeWidth: false,
+          sizeHeight: true,
+          autoResize: true,
+          minHeight: 100,
+          onInit: function() {
+            console.log('iFrame initialized successfully');
+          },
+          onError: function(err) {
+            console.error('iFrame error:', err);
+          }
+        }, '#testimonials-embed');
+      }
+    };
+    document.body.appendChild(script);
   })();
 </script>`;
 
