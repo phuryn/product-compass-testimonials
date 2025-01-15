@@ -9,12 +9,6 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { useBranding } from "@/hooks/useBranding";
 
 export interface Testimonial {
@@ -41,15 +35,6 @@ interface TestimonialCardProps {
 }
 
 const MAX_VISIBLE_CHARS = 320;
-
-const getTagAcronym = (tag: string) => {
-  if (tag === "Other") return "Other";
-  return tag
-    .split(" ")
-    .map(word => word[0])
-    .join("")
-    .toUpperCase();
-};
 
 export const TestimonialCard = ({
   testimonial,
