@@ -14,7 +14,7 @@ const Admin = () => {
           <TabsList>
             <TabsTrigger value="testimonials">Testimonials</TabsTrigger>
             <TabsTrigger value="tags">Tags</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
+            <TabsTrigger value="branding">Branding</TabsTrigger>
             <TabsTrigger value="embed">Embed</TabsTrigger>
           </TabsList>
           <TabsContent value="testimonials" className="mt-6">
@@ -23,7 +23,7 @@ const Admin = () => {
           <TabsContent value="tags" className="mt-6">
             <TagManagement />
           </TabsContent>
-          <TabsContent value="settings" className="mt-6">
+          <TabsContent value="branding" className="mt-6">
             <Settings />
           </TabsContent>
           <TabsContent value="embed" className="mt-6">
