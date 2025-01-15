@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Home, Settings } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -6,10 +6,13 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { useBranding } from "@/hooks/useBranding";
+import { useToast } from "@/hooks/use-toast";
 
 export const Navigation = () => {
   const { user, signOut } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const { data: branding } = useBranding();
   const primaryColor = branding?.primary_color || '#2e75a9'; // Fallback color
 
@@ -26,6 +29,20 @@ export const Navigation = () => {
     },
     enabled: !!user,
   });
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      navigate('/login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+      toast({
+        variant: "destructive",
+        title: "Error signing out",
+        description: "Please try again.",
+      });
+    }
+  };
 
   // Hide navigation for non-authenticated users or those on the login page
   if (!user || location.pathname === "/login") {
@@ -74,7 +91,7 @@ export const Navigation = () => {
           </div>
           <div className="flex items-center space-x-4">
             {user && (
-              <Button variant="outline" onClick={() => signOut()}>
+              <Button variant="outline" onClick={handleSignOut}>
                 Sign Out
               </Button>
             )}
