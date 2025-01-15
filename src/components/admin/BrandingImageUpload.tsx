@@ -18,6 +18,7 @@ const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
 export const BrandingImageUpload = ({ imageKey, label, description }: BrandingImageUploadProps) => {
   const { data: branding } = useBranding();
   const [isUploading, setIsUploading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -69,15 +70,21 @@ export const BrandingImageUpload = ({ imageKey, label, description }: BrandingIm
       return;
     }
 
+    // Show preview immediately
+    const objectUrl = URL.createObjectURL(file);
+    setPreviewUrl(objectUrl);
+
     setIsUploading(true);
     try {
-      await uploadImage(file);
+      const uploadedUrl = await uploadImage(file);
       queryClient.invalidateQueries({ queryKey: ['branding'] });
       toast({
         title: "Success",
         description: "Image updated successfully",
       });
     } catch (error) {
+      // Revert preview on error
+      setPreviewUrl(null);
       toast({
         title: "Error",
         description: "Failed to upload image",
@@ -88,13 +95,16 @@ export const BrandingImageUpload = ({ imageKey, label, description }: BrandingIm
     }
   };
 
+  // Use preview URL if available, otherwise fall back to branding URL
+  const displayUrl = previewUrl || branding?.[imageKey];
+
   return (
     <div className="space-y-2">
       <Label htmlFor={imageKey}>{label}</Label>
       <p className="text-sm text-muted-foreground">{description}</p>
       <div className="flex items-center gap-6 mt-4">
         <Avatar className="h-24 w-24">
-          <AvatarImage src={branding?.[imageKey]} alt={label} />
+          <AvatarImage src={displayUrl} alt={label} />
           <AvatarFallback>IMG</AvatarFallback>
         </Avatar>
         <div className="flex-1">
