@@ -2,8 +2,6 @@ import { Button } from "@/components/ui/button";
 import { AuthorFields } from "@/components/AuthorFields";
 import { PermissionCheckbox } from "@/components/testimonials/PermissionCheckbox";
 import { useTestimonialForm } from "@/hooks/useTestimonialForm";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { FormActions } from "@/components/admin/FormActions";
 import { TestimonialContent } from "@/components/TestimonialContent";
 import { ImageUpload } from "@/components/ImageUpload";
@@ -31,8 +29,10 @@ export const TestimonialForm = ({
     e.preventDefault();
     console.log("Form submitted with data:", formData);
     const submissionData = getSubmissionData();
-    console.log("Processed submission data:", submissionData);
-    onSubmit(submissionData);
+    if (submissionData) {
+      console.log("Processed submission data:", submissionData);
+      onSubmit(submissionData);
+    }
   };
 
   const handleAuthorFieldChange = (field: string, value: string) => {
