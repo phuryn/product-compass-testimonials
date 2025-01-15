@@ -1,78 +1,109 @@
-import { useToast } from "@/hooks/use-toast";
-import { ImageUpload } from "./ImageUpload";
-import { AuthorFields } from "./AuthorFields";
-import { TestimonialContent } from "./TestimonialContent";
-import { triggerConfetti } from "@/utils/confetti";
-import { FormActions } from "./admin/FormActions";
-import { PermissionCheckbox } from "./testimonials/PermissionCheckbox";
+import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { StarRating } from "@/components/StarRating";
+import { AuthorFields } from "@/components/AuthorFields";
+import { PermissionCheckbox } from "@/components/testimonials/PermissionCheckbox";
 import { useTestimonialForm } from "@/hooks/useTestimonialForm";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { FormActions } from "@/components/admin/FormActions";
 
 interface TestimonialFormProps {
-  onSubmit: (data: any) => void;
-  onCancel: () => void;
-  onDelete?: () => void;
   initialData?: any;
+  onSubmit: (data: any) => void;
+  onCancel?: () => void;
+  onDelete?: () => void;
   isAdmin?: boolean;
 }
 
 export const TestimonialForm = ({
+  initialData,
   onSubmit,
   onCancel,
   onDelete,
-  initialData,
   isAdmin = false,
 }: TestimonialFormProps) => {
-  const { formData, handleAuthorFieldChange, handleChange, getSubmissionData } = useTestimonialForm(initialData);
-  
   console.log("Initializing TestimonialForm with data:", initialData);
-  console.log("Initial form data state:", formData);
+  
+  const { formData, handleInputChange, getSubmissionData } =
+    useTestimonialForm(initialData);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const { data: tags = [] } = useQuery({
+    queryKey: ["tags"],
+    queryFn: async () => {
+      console.log("Fetching tags");
+      const { data, error } = await supabase.from("tags").select("name");
+      if (error) throw error;
+      console.log("Fetched tags:", data);
+      return data || [];
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const submissionData = getSubmissionData();
-    console.log('Complete testimonial data being submitted:', submissionData);
-    await onSubmit(submissionData);
-    triggerConfetti();
+    const data = getSubmissionData();
+    onSubmit(data);
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-4">
-        <TestimonialContent
+        <StarRating
           rating={formData.rating}
-          text={formData.text}
-          tag={formData.tag}
-          onRatingChange={(rating) => handleChange('rating', rating)}
-          onTextChange={(text) => handleChange('text', text)}
-          onTagChange={(tag) => handleChange('tag', tag)}
+          onRatingChange={(rating) => handleInputChange("rating", rating)}
         />
+
+        <Textarea
+          placeholder="Share your experience..."
+          value={formData.text}
+          onChange={(e) => handleInputChange("text", e.target.value)}
+          required
+        />
+
+        <Select
+          value={formData.tag}
+          onValueChange={(value) => handleInputChange("tag", value)}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select a tag" />
+          </SelectTrigger>
+          <SelectContent>
+            {tags.map((tag) => (
+              <SelectItem key={tag.name} value={tag.name}>
+                {tag.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
         <AuthorFields
           name={formData.name}
           email={formData.email}
           social={formData.social}
-          onChange={handleAuthorFieldChange}
-        />
-
-        <ImageUpload
-          initialImage={formData.photo}
-          onImageChange={(url) => handleChange('photo', url)}
-          userName={formData.name}
+          photo={formData.photo}
+          onNameChange={(value) => handleInputChange("name", value)}
+          onEmailChange={(value) => handleInputChange("email", value)}
+          onSocialChange={(value) => handleInputChange("social", value)}
+          onPhotoChange={(value) => handleInputChange("photo", value)}
         />
 
         {!isAdmin && (
           <PermissionCheckbox
             checked={formData.permission}
-            onCheckedChange={(checked) => handleChange('permission', checked)}
+            onCheckedChange={(checked) => handleInputChange("permission", checked)}
           />
         )}
       </div>
 
-      <FormActions
-        isAdmin={isAdmin}
-        onDelete={onDelete}
-        onCancel={onCancel}
-      />
+      <FormActions onCancel={onCancel} onDelete={onDelete} isAdmin={isAdmin} />
     </form>
   );
 };

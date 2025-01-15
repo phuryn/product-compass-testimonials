@@ -1,27 +1,29 @@
 import { useState } from "react";
-import { AVAILABLE_TAGS } from "@/constants/testimonials";
+
+interface FormData {
+  rating: number;
+  text: string;
+  name: string;
+  email: string;
+  social: string;
+  permission: boolean;
+  tag: string;
+  photo: string | null;
+}
 
 export const useTestimonialForm = (initialData?: any) => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     rating: initialData?.rating || 5,
     text: initialData?.text || "",
     name: initialData?.author?.name || "",
     email: initialData?.author?.email || "",
     social: initialData?.author?.social || "",
-    permission: initialData?.permission || false,
-    tag: initialData?.tags?.[0] || AVAILABLE_TAGS[0],
+    permission: false,
+    tag: initialData?.tags?.[0] || "",
     photo: initialData?.author?.photo || null,
   });
 
-  const handleAuthorFieldChange = (field: string, value: string) => {
-    console.log("Author field change:", { field, value });
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleChange = (field: string, value: any) => {
-    console.log(`${field} changed to:`, value);
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
+  console.log("Initial form data state:", formData);
 
   const getSubmissionData = () => {
     console.log("Getting submission data from form:", formData);
@@ -33,22 +35,28 @@ export const useTestimonialForm = (initialData?: any) => {
       photo: formData.photo || null,
     };
 
-    // Ensure tag is a string, not a tag object
-    const tag = typeof formData.tag === 'string' ? formData.tag : formData.tag.name;
-
     return {
       rating: formData.rating,
       text: formData.text,
       author: authorData,
-      tags: [tag], // Ensure tags is always an array of strings
+      tags: [formData.tag], // Ensure tags is always an array of strings
       permission: formData.permission,
     };
   };
 
+  const handleInputChange = (
+    field: keyof FormData,
+    value: string | number | boolean | null
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
   return {
     formData,
-    handleAuthorFieldChange,
-    handleChange,
+    handleInputChange,
     getSubmissionData,
   };
 };
