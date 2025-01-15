@@ -39,11 +39,17 @@ export const EmbedCodeGenerator = () => {
 ></iframe>
 <script type="text/javascript" src="${window.location.origin}/embed-resizer.js"></script>
 <script>
-  window.iFrameResize({ 
-    log: false,
-    checkOrigin: false,
-    heightCalculationMethod: 'lowestElement'
-  }, '#testimonials-embed');
+  // Wait for both the iframe and resizer script to load
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      window.iFrameResize({ 
+        log: false,
+        checkOrigin: false,
+        heightCalculationMethod: 'lowestElement',
+        warningTimeout: 0
+      }, '#testimonials-embed');
+    }, 100);
+  });
 </script>`;
 
   const copyToClipboard = () => {
