@@ -32,6 +32,20 @@ export const TestimonialForm = ({
     onSubmit(formData);
   };
 
+  const handleAuthorFieldChange = (field: string, value: string) => {
+    switch (field) {
+      case 'name':
+        handleInputChange('name', value);
+        break;
+      case 'email':
+        handleInputChange('email', value);
+        break;
+      case 'social':
+        handleInputChange('social', value);
+        break;
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-4">
@@ -48,7 +62,7 @@ export const TestimonialForm = ({
           name={formData.name}
           email={formData.email}
           social={formData.social}
-          onChange={(field, value) => handleInputChange(field, value)}
+          onChange={handleAuthorFieldChange}
         />
 
         <ImageUpload
