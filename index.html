@@ -23,21 +23,27 @@
       // Function to update favicon with cache buster
       const updateFavicon = async () => {
         try {
-          const { data, error } = await fetch(`${supabaseUrl}/rest/v1/branding?key=eq.favicon`, {
+          console.log('Fetching favicon from branding table...');
+          const response = await fetch(`${supabaseUrl}/rest/v1/branding?key=eq.favicon`, {
             headers: {
-              'apikey': supabaseAnonKey
+              'apikey': supabaseAnonKey,
+              'Accept': 'application/json'
             }
-          }).then(res => res.json());
-
-          if (error) throw error;
+          });
           
+          const data = await response.json();
+          console.log('Favicon data:', data);
+
           if (data?.[0]?.value) {
             const timestamp = new Date().getTime();
             const faviconUrl = `${data[0].value}?t=${timestamp}`;
+            console.log('Setting favicon URL:', faviconUrl);
             
             document.querySelector('link[sizes="32x32"]').href = faviconUrl;
             document.querySelector('link[sizes="16x16"]').href = faviconUrl;
             document.querySelector('link[rel="apple-touch-icon"]').href = faviconUrl;
+          } else {
+            console.log('No favicon found in branding table');
           }
         } catch (error) {
           console.error('Error updating favicon:', error);
@@ -51,11 +57,13 @@
       // Fetch and update meta description and OG image
       fetch(`${supabaseUrl}/rest/v1/branding`, {
         headers: {
-          'apikey': supabaseAnonKey
+          'apikey': supabaseAnonKey,
+          'Accept': 'application/json'
         }
       })
       .then(response => response.json())
       .then(data => {
+        console.log('Branding data:', data);
         const brandingMap = data.reduce((acc, item) => {
           acc[item.key] = item.value;
           return acc;
