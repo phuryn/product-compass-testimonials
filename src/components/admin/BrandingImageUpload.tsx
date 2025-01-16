@@ -31,16 +31,17 @@ export const BrandingImageUpload = ({ imageKey, label, description }: BrandingIm
       const { error: uploadError, data } = await supabase.storage
         .from('branding-assets')
         .upload(fileName, file, {
-          cacheControl: '3600',
+          cacheControl: 'no-cache', // Prevent caching
           upsert: false
         });
 
       if (uploadError) throw uploadError;
 
-      // Get public URL
+      // Get public URL with cache buster
+      const timestamp = new Date().getTime();
       const { data: urlData } = supabase.storage
         .from('branding-assets')
-        .getPublicUrl(fileName);
+        .getPublicUrl(`${fileName}?t=${timestamp}`);
 
       // Update branding record
       const { error: updateError } = await supabase
@@ -83,7 +84,6 @@ export const BrandingImageUpload = ({ imageKey, label, description }: BrandingIm
         description: "Image updated successfully",
       });
     } catch (error) {
-      // Revert preview on error
       setPreviewUrl(null);
       toast({
         title: "Error",
@@ -95,8 +95,8 @@ export const BrandingImageUpload = ({ imageKey, label, description }: BrandingIm
     }
   };
 
-  // Use preview URL if available, otherwise fall back to branding URL
-  const displayUrl = previewUrl || branding?.[imageKey];
+  // Add timestamp to prevent caching
+  const displayUrl = previewUrl || (branding?.[imageKey] ? `${branding[imageKey]}?t=${new Date().getTime()}` : null);
 
   return (
     <div className="space-y-2">
@@ -104,7 +104,7 @@ export const BrandingImageUpload = ({ imageKey, label, description }: BrandingIm
       <p className="text-sm text-muted-foreground">{description}</p>
       <div className="flex items-center gap-6 mt-4">
         <Avatar className="h-24 w-24">
-          <AvatarImage src={displayUrl} alt={label} />
+          <AvatarImage src={displayUrl || undefined} alt={label} />
           <AvatarFallback>IMG</AvatarFallback>
         </Avatar>
         <div className="flex-1">
