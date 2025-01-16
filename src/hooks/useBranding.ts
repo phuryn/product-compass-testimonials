@@ -5,7 +5,6 @@ export const useBranding = () => {
   return useQuery({
     queryKey: ["branding"],
     queryFn: async () => {
-      // Always fetch fresh data from Supabase
       const { data, error } = await supabase
         .from("branding")
         .select("*");
@@ -21,22 +20,9 @@ export const useBranding = () => {
         return acc;
       }, {});
 
-      // Update localStorage with fresh data
-      localStorage.setItem('branding', JSON.stringify(brandingObject));
-
       return brandingObject;
     },
-    // Refetch data every 30 seconds to ensure updates are reflected
-    refetchInterval: 30000,
-    // Also refetch when window regains focus
+    // Refetch when window regains focus
     refetchOnWindowFocus: true,
-    // Initialize with data from localStorage if available
-    initialData: () => {
-      const cachedBranding = localStorage.getItem('branding');
-      if (cachedBranding) {
-        return JSON.parse(cachedBranding);
-      }
-      return undefined;
-    },
   });
 };
