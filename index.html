@@ -4,13 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Recommend Paweł Huryn</title>
-    <meta name="description" id="metaDescription" content="Hi there! I would be thrilled if you could take a moment to leave me a testimonial." />
-    <meta name="author" content="Paweł Huryn" />
+    <meta name="description" id="metaDescription" content="" />
+    <meta name="author" id="metaAuthor" content="" />
     <meta property="og:image" id="ogImage" content="/og-image.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/lovable-uploads/1913b5ad-2720-4a1f-8921-061e58e115f3.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/lovable-uploads/1913b5ad-2720-4a1f-8921-061e58e115f3.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/lovable-uploads/1913b5ad-2720-4a1f-8921-061e58e115f3.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="" />
+    <link rel="icon" type="image/png" sizes="16x16" href="" />
+    <link rel="apple-touch-icon" sizes="180x180" href="" />
     <script>
+      // Set meta description and author from environment variables
+      document.getElementById('metaDescription').content = import.meta.env.VITE_META_DESCRIPTION;
+      document.getElementById('metaAuthor').content = import.meta.env.VITE_META_AUTHOR;
+
       // Get environment variables
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
