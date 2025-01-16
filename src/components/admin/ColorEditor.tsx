@@ -32,14 +32,6 @@ export const ColorEditor = () => {
         .upsert({ key: "primary_color", value: color });
 
       if (error) throw error;
-
-      // Update localStorage with the new color
-      const cachedBranding = localStorage.getItem('branding');
-      if (cachedBranding) {
-        const brandingData = JSON.parse(cachedBranding);
-        brandingData.primary_color = color;
-        localStorage.setItem('branding', JSON.stringify(brandingData));
-      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["branding"] });
