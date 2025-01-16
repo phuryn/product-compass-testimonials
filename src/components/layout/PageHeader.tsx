@@ -36,7 +36,7 @@ export const PageHeader = ({ isFormOpen, setIsFormOpen, onSubmitTestimonial }: P
             alt="Profile"
             className="object-cover"
           />
-          <AvatarFallback>PH</AvatarFallback>
+          <AvatarFallback>{""}</AvatarFallback>
         </Avatar>
       </div>
       <h1 className="mb-4 text-4xl font-bold">

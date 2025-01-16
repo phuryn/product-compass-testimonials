@@ -3,26 +3,67 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Recommend Paweł Huryn</title>
-    <meta name="description" id="metaDescription" content="Hi there! I would be thrilled if you could take a moment to leave me a testimonial." />
-    <meta name="author" content="Paweł Huryn" />
+    <title id="metaTitle"></title>
+    <meta name="description" id="metaDescription" content="" />
+    <meta name="author" id="metaAuthor" content="" />
     <meta property="og:image" id="ogImage" content="/og-image.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/lovable-uploads/1913b5ad-2720-4a1f-8921-061e58e115f3.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/lovable-uploads/1913b5ad-2720-4a1f-8921-061e58e115f3.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/lovable-uploads/1913b5ad-2720-4a1f-8921-061e58e115f3.png" />
-    <script>
+    <link rel="icon" type="image/png" sizes="32x32" href="" />
+    <link rel="icon" type="image/png" sizes="16x16" href="" />
+    <link rel="apple-touch-icon" sizes="180x180" href="" />
+    <script type="module">
+      // Set meta title, description and author from environment variables
+      document.getElementById('metaTitle').textContent = import.meta.env.VITE_META_TITLE;
+      document.getElementById('metaDescription').content = import.meta.env.VITE_META_DESCRIPTION;
+      document.getElementById('metaAuthor').content = import.meta.env.VITE_META_AUTHOR;
+
       // Get environment variables
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-      // Fetch branding data before page loads
+      // Function to update favicon with cache buster
+      const updateFavicon = async () => {
+        try {
+          console.log('Fetching favicon from branding table...');
+          const response = await fetch(`${supabaseUrl}/rest/v1/branding?key=eq.favicon`, {
+            headers: {
+              'apikey': supabaseAnonKey,
+              'Accept': 'application/json'
+            }
+          });
+          
+          const data = await response.json();
+          console.log('Favicon data:', data);
+
+          if (data?.[0]?.value) {
+            const timestamp = new Date().getTime();
+            const faviconUrl = `${data[0].value}?t=${timestamp}`;
+            console.log('Setting favicon URL:', faviconUrl);
+            
+            document.querySelector('link[sizes="32x32"]').href = faviconUrl;
+            document.querySelector('link[sizes="16x16"]').href = faviconUrl;
+            document.querySelector('link[rel="apple-touch-icon"]').href = faviconUrl;
+          } else {
+            console.log('No favicon found in branding table');
+          }
+        } catch (error) {
+          console.error('Error updating favicon:', error);
+        }
+      };
+
+      // Update favicon immediately and when window gains focus
+      updateFavicon();
+      window.addEventListener('focus', updateFavicon);
+
+      // Fetch and update meta description and OG image
       fetch(`${supabaseUrl}/rest/v1/branding`, {
         headers: {
-          'apikey': supabaseAnonKey
+          'apikey': supabaseAnonKey,
+          'Accept': 'application/json'
         }
       })
       .then(response => response.json())
       .then(data => {
+        console.log('Branding data:', data);
         const brandingMap = data.reduce((acc, item) => {
           acc[item.key] = item.value;
           return acc;
@@ -33,13 +74,11 @@
           document.getElementById('metaDescription').content = `${brandingMap.header_title} - ${brandingMap.header_subtitle}`;
         }
 
-        // Update OG image
+        // Update OG image with cache buster
         if (brandingMap.profile_picture) {
-          document.getElementById('ogImage').content = brandingMap.profile_picture;
+          const timestamp = new Date().getTime();
+          document.getElementById('ogImage').content = `${brandingMap.profile_picture}?t=${timestamp}`;
         }
-
-        // Store branding data in localStorage for immediate access
-        localStorage.setItem('branding', JSON.stringify(brandingMap));
       })
       .catch(error => console.error('Error fetching branding:', error));
     </script>
