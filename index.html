@@ -15,7 +15,35 @@
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-      // Fetch branding data before page loads
+      // Function to update favicon with cache buster
+      const updateFavicon = async () => {
+        try {
+          const { data, error } = await fetch(`${supabaseUrl}/rest/v1/branding?key=eq.favicon`, {
+            headers: {
+              'apikey': supabaseAnonKey
+            }
+          }).then(res => res.json());
+
+          if (error) throw error;
+          
+          if (data?.[0]?.value) {
+            const timestamp = new Date().getTime();
+            const faviconUrl = `${data[0].value}?t=${timestamp}`;
+            
+            document.querySelector('link[sizes="32x32"]').href = faviconUrl;
+            document.querySelector('link[sizes="16x16"]').href = faviconUrl;
+            document.querySelector('link[rel="apple-touch-icon"]').href = faviconUrl;
+          }
+        } catch (error) {
+          console.error('Error updating favicon:', error);
+        }
+      };
+
+      // Update favicon immediately and when window gains focus
+      updateFavicon();
+      window.addEventListener('focus', updateFavicon);
+
+      // Fetch and update meta description and OG image
       fetch(`${supabaseUrl}/rest/v1/branding`, {
         headers: {
           'apikey': supabaseAnonKey
@@ -33,13 +61,11 @@
           document.getElementById('metaDescription').content = `${brandingMap.header_title} - ${brandingMap.header_subtitle}`;
         }
 
-        // Update OG image
+        // Update OG image with cache buster
         if (brandingMap.profile_picture) {
-          document.getElementById('ogImage').content = brandingMap.profile_picture;
+          const timestamp = new Date().getTime();
+          document.getElementById('ogImage').content = `${brandingMap.profile_picture}?t=${timestamp}`;
         }
-
-        // Store branding data in localStorage for immediate access
-        localStorage.setItem('branding', JSON.stringify(brandingMap));
       })
       .catch(error => console.error('Error fetching branding:', error));
     </script>
