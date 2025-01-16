@@ -11,10 +11,14 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/lovable-uploads/1913b5ad-2720-4a1f-8921-061e58e115f3.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/lovable-uploads/1913b5ad-2720-4a1f-8921-061e58e115f3.png" />
     <script>
+      // Get environment variables
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
       // Fetch branding data before page loads
-      fetch('https://gykadoptlurvnmimejlm.supabase.co/rest/v1/branding', {
+      fetch(`${supabaseUrl}/rest/v1/branding`, {
         headers: {
-          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5a2Fkb3B0bHVydm5taW1lamxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY3OTc2NjQsImV4cCI6MjA1MjM3MzY2NH0.9jBXFdhdcyF3rvT3eyooTqiEl4I6KroK-jZchYbJpFY'
+          'apikey': supabaseAnonKey
         }
       })
       .then(response => response.json())
