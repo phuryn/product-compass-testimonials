@@ -11,5 +11,5 @@ values
 insert into public.tags (name)
 values 
     ('Newsletter'),
-    ('First Course'),
-    ('Second Course');
+    ('My First Course'),
+    ('My Second Course');
