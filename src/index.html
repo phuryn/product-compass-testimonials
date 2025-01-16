@@ -17,12 +17,16 @@
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
     <script>
+      // Get environment variables
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
       // Update favicon when branding data is available
       window.addEventListener('load', async () => {
         try {
-          const response = await fetch('https://gykadoptlurvnmimejlm.supabase.co/rest/v1/branding?key=eq.favicon', {
+          const response = await fetch(`${supabaseUrl}/rest/v1/branding?key=eq.favicon`, {
             headers: {
-              'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5a2Fkb3B0bHVydm5taW1lamxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MjQ1NzAsImV4cCI6MjAyNTUwMDU3MH0.vxMKl0YQ8E1kHWKJMHyOyJoMWjFgBE2GVQYtRbvHZYo'
+              'apikey': supabaseAnonKey
             }
           });
           const data = await response.json();
