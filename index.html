@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Recommend Paweł Huryn</title>
+    <title id="metaTitle"></title>
     <meta name="description" id="metaDescription" content="" />
     <meta name="author" id="metaAuthor" content="" />
     <meta property="og:image" id="ogImage" content="/og-image.png" />
@@ -11,7 +11,8 @@
     <link rel="icon" type="image/png" sizes="16x16" href="" />
     <link rel="apple-touch-icon" sizes="180x180" href="" />
     <script>
-      // Set meta description and author from environment variables
+      // Set meta title, description and author from environment variables
+      document.getElementById('metaTitle').textContent = import.meta.env.VITE_META_TITLE;
       document.getElementById('metaDescription').content = import.meta.env.VITE_META_DESCRIPTION;
       document.getElementById('metaAuthor').content = import.meta.env.VITE_META_AUTHOR;
 
