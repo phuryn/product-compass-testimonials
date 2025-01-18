@@ -48,8 +48,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
+      // First try to get the current session
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      // If there's no session, just clear the local state
+      if (!session) {
+        setUser(null);
+        return;
+      }
+
+      // Try to sign out
       const { error } = await supabase.auth.signOut();
       if (error) {
+        // If we get a session_not_found error, just clear the local state
         if (error.message.includes('session_not_found')) {
           setUser(null);
           return;
@@ -58,6 +69,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (error: any) {
       console.error('Sign out error:', error);
+      // Always clear the local state, even if there's an error
       setUser(null);
       throw error;
     }

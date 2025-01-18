@@ -35,11 +35,6 @@ export const Navigation = () => {
       await signOut();
       navigate('/');
     } catch (error: any) {
-      if (error?.message?.includes('session_not_found')) {
-        setUser(null);
-        navigate('/');
-        return;
-      }
       console.error('Error signing out:', error);
       toast({
         variant: "destructive",
