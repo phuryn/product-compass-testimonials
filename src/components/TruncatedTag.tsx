@@ -24,7 +24,7 @@ export const TruncatedTag = ({ tag, index, onClick, isSelected }: TruncatedTagPr
       const element = tagRef.current;
       if (element) {
         const isOverflowing = element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
-        if (isOverflowing && window.innerWidth < 1024 && window.location.pathname === '/embed') {
+        if (isOverflowing) {
           const computeDisplayTag = (text: string): string => {
             element.textContent = text + '...';
             if (element.scrollHeight <= element.clientHeight && element.scrollWidth <= element.clientWidth) {
