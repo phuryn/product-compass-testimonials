@@ -11,9 +11,15 @@ import { triggerConfetti } from "@/utils/confetti";
 import { Toaster } from "@/components/ui/toaster";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { TestimonialForm } from "@/components/TestimonialForm";
-import { Badge } from "@/components/ui/badge";
-import { X } from "lucide-react";
 import { useBranding } from "@/hooks/useBranding";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { AVAILABLE_TAGS } from "@/constants/testimonials";
 
 const TESTIMONIALS_PER_PAGE = 10;
 
@@ -25,8 +31,6 @@ const Index = () => {
   const { data: branding } = useBranding();
   const showTagsOnIndex = branding?.show_tags_on_index === "true";
 
-  console.log("Rendering Index component");
-
   const {
     data,
     fetchNextPage,
@@ -36,7 +40,6 @@ const Index = () => {
   } = useInfiniteQuery({
     queryKey: ["testimonials", "public", selectedTag],
     queryFn: async ({ pageParam }) => {
-      console.log("Fetching testimonials page:", pageParam);
       const from = Number(pageParam) * TESTIMONIALS_PER_PAGE;
       const to = from + TESTIMONIALS_PER_PAGE - 1;
 
@@ -53,12 +56,8 @@ const Index = () => {
 
       const { data: testimonials, error } = await query;
 
-      if (error) {
-        console.error("Error fetching testimonials:", error);
-        throw error;
-      }
+      if (error) throw error;
       
-      console.log("Fetched testimonials:", testimonials);
       return {
         testimonials: testimonials?.map(convertDbTestimonialToTestimonial) || [],
         nextPage: testimonials?.length === TESTIMONIALS_PER_PAGE ? Number(pageParam) + 1 : undefined
@@ -70,7 +69,6 @@ const Index = () => {
 
   const submitTestimonialMutation = useMutation({
     mutationFn: async (formData: any) => {
-      console.log("Submitting testimonial with data:", formData);
       const testimonialData = {
         author: {
           name: formData.author.name,
@@ -91,12 +89,8 @@ const Index = () => {
         .select()
         .single();
 
-      if (error) {
-        console.error("Error submitting testimonial:", error);
-        throw error;
-      }
+      if (error) throw error;
 
-      console.log("Testimonial submitted successfully:", data);
       return convertDbTestimonialToTestimonial(data);
     },
     onSuccess: () => {
@@ -109,7 +103,6 @@ const Index = () => {
       });
     },
     onError: (error) => {
-      console.error("Mutation error:", error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -118,16 +111,7 @@ const Index = () => {
     },
   });
 
-  const handleTagClick = (tag: string) => {
-    if (selectedTag === tag) {
-      setSelectedTag(null);
-    } else {
-      setSelectedTag(tag);
-    }
-  };
-
   if (error) {
-    console.error("Query error:", error);
     return <div className="text-center p-4">Error loading testimonials. Please try again later.</div>;
   }
 
@@ -136,7 +120,6 @@ const Index = () => {
   }
 
   const allTestimonials = data?.pages.flatMap(page => page.testimonials) || [];
-  console.log("All testimonials:", allTestimonials);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -147,24 +130,32 @@ const Index = () => {
           setIsFormOpen={setIsFormOpen}
           onSubmitTestimonial={(data) => submitTestimonialMutation.mutate(data)}
         />
-        {showTagsOnIndex && selectedTag && (
-          <div className="mb-6">
-            <Badge 
-              variant="secondary" 
-              className="cursor-pointer flex items-center gap-1"
-              onClick={() => setSelectedTag(null)}
+        
+        {showTagsOnIndex && (
+          <div className="mb-8">
+            <Select
+              value={selectedTag || ""}
+              onValueChange={(value) => setSelectedTag(value || null)}
             >
-              {selectedTag}
-              <X className="h-3 w-3" />
-            </Badge>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Filter by tag" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">All tags</SelectItem>
+                {AVAILABLE_TAGS.map((tag) => (
+                  <SelectItem key={tag} value={tag}>
+                    {tag}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         )}
+
         <TestimonialList 
           testimonials={allTestimonials}
           hasNextPage={hasNextPage}
           fetchNextPage={fetchNextPage}
-          onTagClick={showTagsOnIndex ? handleTagClick : undefined}
-          selectedTag={selectedTag}
         />
       </div>
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
