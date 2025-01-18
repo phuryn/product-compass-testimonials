@@ -21,7 +21,7 @@ export const TruncatedTag = ({ tag, index }: TruncatedTagProps) => {
       const element = tagRef.current;
       if (element) {
         const isOverflowing = element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
-        if (isOverflowing && window.innerWidth < 1024) {
+        if (isOverflowing && window.innerWidth < 1024 && window.location.pathname === '/embed') {
           const computeDisplayTag = (text: string): string => {
             element.textContent = text + '...';
             if (element.scrollHeight <= element.clientHeight && element.scrollWidth <= element.clientWidth) {
@@ -53,7 +53,7 @@ export const TruncatedTag = ({ tag, index }: TruncatedTagProps) => {
           <TooltipTrigger asChild>
             <span 
               ref={tagRef}
-              className="rounded-full bg-gray-100 pl-3 pr-6 py-1 text-sm text-[#292929] whitespace-nowrap overflow-hidden"
+              className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929] whitespace-nowrap overflow-hidden"
             >
               {displayTag}
             </span>
@@ -69,7 +69,7 @@ export const TruncatedTag = ({ tag, index }: TruncatedTagProps) => {
   return (
     <span 
       ref={tagRef}
-      className="rounded-full bg-gray-100 pl-3 pr-6 py-1 text-sm text-[#292929] whitespace-nowrap overflow-hidden"
+      className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929] whitespace-nowrap overflow-hidden"
     >
       {displayTag}
     </span>
