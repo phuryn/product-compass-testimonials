@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -42,7 +42,6 @@ interface TestimonialCardProps {
 }
 
 const MAX_VISIBLE_CHARS = 320;
-const MAX_TAG_CHARS = 32;
 
 export const TestimonialCard = ({
   testimonial,
@@ -102,17 +101,49 @@ export const TestimonialCard = ({
     : testimonial.text;
 
   const renderTag = (tag: string, index: number) => {
-    const shouldTruncate = window.innerWidth < 1024 && tag.length > MAX_TAG_CHARS;
-    const displayTag = shouldTruncate
-      ? `${tag.slice(0, MAX_TAG_CHARS)}...`
-      : tag;
+    const tagRef = useRef<HTMLSpanElement>(null);
+    const [needsTruncation, setNeedsTruncation] = useState(false);
+    const [displayTag, setDisplayTag] = useState(tag);
 
-    if (shouldTruncate) {
+    useEffect(() => {
+      const checkOverflow = () => {
+        const element = tagRef.current;
+        if (element) {
+          const isOverflowing = element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+          if (isOverflowing && window.innerWidth < 1024) {
+            const computeDisplayTag = (text: string): string => {
+              element.textContent = text + '...';
+              if (element.scrollHeight <= element.clientHeight && element.scrollWidth <= element.clientWidth) {
+                return text + '...';
+              }
+              return computeDisplayTag(text.slice(0, -1));
+            };
+            
+            element.textContent = tag;
+            const truncatedText = computeDisplayTag(tag);
+            setDisplayTag(truncatedText);
+            setNeedsTruncation(true);
+          } else {
+            setDisplayTag(tag);
+            setNeedsTruncation(false);
+          }
+        }
+      };
+
+      checkOverflow();
+      window.addEventListener('resize', checkOverflow);
+      return () => window.removeEventListener('resize', checkOverflow);
+    }, [tag]);
+
+    if (needsTruncation) {
       return (
         <TooltipProvider key={index}>
           <Tooltip>
             <TooltipTrigger asChild>
-              <span className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929]">
+              <span 
+                ref={tagRef}
+                className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929] whitespace-nowrap overflow-hidden"
+              >
                 {displayTag}
               </span>
             </TooltipTrigger>
@@ -126,10 +157,11 @@ export const TestimonialCard = ({
 
     return (
       <span 
+        ref={tagRef}
         key={index} 
-        className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929]"
+        className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929] whitespace-nowrap overflow-hidden"
       >
-        {tag}
+        {displayTag}
       </span>
     );
   };
