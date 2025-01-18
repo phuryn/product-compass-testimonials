@@ -23,9 +23,10 @@ export const TruncatedTag = ({ tag, index }: TruncatedTagProps) => {
         const isOverflowing = element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
         if (isOverflowing && window.innerWidth < 1024) {
           const computeDisplayTag = (text: string): string => {
-            element.textContent = text + '...';
+            // Add padding by truncating earlier and adding more space for the ellipsis
+            element.textContent = text + '   ...';
             if (element.scrollHeight <= element.clientHeight && element.scrollWidth <= element.clientWidth) {
-              return text + '...';
+              return text + '   ...';
             }
             return computeDisplayTag(text.slice(0, -1));
           };
