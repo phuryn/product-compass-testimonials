@@ -35,7 +35,6 @@ export const Navigation = () => {
       await signOut();
       navigate('/');
     } catch (error: any) {
-      // If the error is session_not_found, we can still proceed with navigation
       if (error?.message?.includes('session_not_found')) {
         navigate('/');
         return;
@@ -49,7 +48,7 @@ export const Navigation = () => {
     }
   };
 
-  // Hide navigation for non-authenticated users
+  // Hide navigation for non-authenticated users or while loading
   if (!user || isLoading) {
     return null;
   }
