@@ -42,7 +42,7 @@ export const TestimonialManagement = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("tags")
-        .select("*")
+        .select("name")
         .order("name");
 
       if (error) throw error;
