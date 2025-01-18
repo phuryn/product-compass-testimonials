@@ -30,17 +30,26 @@ const Index = () => {
   const { data: branding } = useBranding();
   const showTagsOnIndex = branding?.show_tags_on_index === "true";
 
-  // Fetch tags from the database
+  // Fetch tags that have at least one published testimonial
   const { data: tags = [] } = useQuery({
-    queryKey: ["tags"],
+    queryKey: ["tags", "published"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("tags")
-        .select("name")
-        .order("name");
+        .from("testimonials")
+        .select('tags')
+        .eq('approved', true);
 
       if (error) throw error;
-      return data;
+
+      // Extract unique tags from approved testimonials
+      const uniqueTags = new Set<string>();
+      data.forEach(testimonial => {
+        testimonial.tags?.forEach(tag => {
+          if (tag) uniqueTags.add(tag);
+        });
+      });
+
+      return Array.from(uniqueTags).sort();
     },
   });
 
@@ -156,8 +165,8 @@ const Index = () => {
               <SelectContent>
                 <SelectItem value="all">All categories</SelectItem>
                 {tags.map((tag) => (
-                  <SelectItem key={tag.name} value={tag.name}>
-                    {tag.name}
+                  <SelectItem key={tag} value={tag}>
+                    {tag}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -169,6 +178,8 @@ const Index = () => {
           testimonials={allTestimonials}
           hasNextPage={hasNextPage}
           fetchNextPage={fetchNextPage}
+          onTagClick={(tag) => setSelectedTag(tag)}
+          selectedTag={selectedTag}
         />
       </div>
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
