@@ -26,7 +26,7 @@ export const TagManagement = () => {
   const queryClient = useQueryClient();
 
   const { data: tags, isLoading } = useQuery({
-    queryKey: ["tags"],
+    queryKey: ["admin", "tags", "management"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("tags")
@@ -43,7 +43,7 @@ export const TagManagement = () => {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tags"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "tags"] });
       setNewTag("");
       toast({
         title: "Success",
@@ -65,7 +65,7 @@ export const TagManagement = () => {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tags"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "tags"] });
       toast({
         title: "Success",
         description: "Tag deleted successfully",

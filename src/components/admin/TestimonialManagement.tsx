@@ -25,7 +25,7 @@ export const TestimonialManagement = () => {
   const queryClient = useQueryClient();
 
   const { data: testimonials = [], isLoading: isLoadingTestimonials } = useQuery({
-    queryKey: ["testimonials", "admin"],
+    queryKey: ["admin", "testimonials"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("testimonials")
@@ -37,8 +37,8 @@ export const TestimonialManagement = () => {
     },
   });
 
-  const { data: tags = [], isLoading: isLoadingTags } = useQuery({
-    queryKey: ["tags"],
+  const { data: tagNames = [], isLoading: isLoadingTags } = useQuery({
+    queryKey: ["admin", "tags", "list"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("tags")
@@ -177,9 +177,9 @@ export const TestimonialManagement = () => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All categories</SelectItem>
-            {tags.map((tag) => (
-              <SelectItem key={tag} value={tag}>
-                {tag}
+            {tagNames.map((tagName) => (
+              <SelectItem key={tagName} value={tagName}>
+                {tagName}
               </SelectItem>
             ))}
           </SelectContent>
