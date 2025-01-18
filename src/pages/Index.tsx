@@ -134,14 +134,14 @@ const Index = () => {
         {showTagsOnIndex && (
           <div className="mb-8">
             <Select
-              value={selectedTag || ""}
-              onValueChange={(value) => setSelectedTag(value || null)}
+              value={selectedTag || "all"}
+              onValueChange={(value) => setSelectedTag(value === "all" ? null : value)}
             >
               <SelectTrigger className="w-[200px]">
                 <SelectValue placeholder="Filter by tag" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All tags</SelectItem>
+                <SelectItem value="all">All tags</SelectItem>
                 {AVAILABLE_TAGS.map((tag) => (
                   <SelectItem key={tag} value={tag}>
                     {tag}
