@@ -37,7 +37,8 @@ interface TestimonialCardProps {
   selectedTag?: string | null;
 }
 
-const MAX_VISIBLE_CHARS = 320;
+// Increased from 320 to 500 characters for better preview
+const MAX_VISIBLE_CHARS = 500;
 
 export const TestimonialCard = ({
   testimonial,
