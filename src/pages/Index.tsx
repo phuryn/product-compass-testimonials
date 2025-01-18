@@ -154,7 +154,7 @@ const Index = () => {
                 <SelectValue placeholder="Filter by tag" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All categories</SelectItem>
+                <SelectItem value="all">Display all categories</SelectItem>
                 {tags.map((tag) => (
                   <SelectItem key={tag.name} value={tag.name}>
                     {tag.name}
