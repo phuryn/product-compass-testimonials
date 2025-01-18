@@ -14,7 +14,7 @@ export const Navigation = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { data: branding } = useBranding();
-  const primaryColor = branding?.primary_color || '#2e75a9'; // Fallback color
+  const primaryColor = branding?.primary_color || '#2e75a9';
 
   const { data: userRole, isLoading } = useQuery({
     queryKey: ["userRole", user?.id],
@@ -36,6 +36,7 @@ export const Navigation = () => {
       navigate('/');
     } catch (error: any) {
       if (error?.message?.includes('session_not_found')) {
+        setUser(null);
         navigate('/');
         return;
       }

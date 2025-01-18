@@ -48,13 +48,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        setUser(null);
-        return;
-      }
-
       const { error } = await supabase.auth.signOut();
       if (error) {
         if (error.message.includes('session_not_found')) {
