@@ -150,7 +150,7 @@ const Index = () => {
               value={selectedTag || "all"}
               onValueChange={(value) => setSelectedTag(value === "all" ? null : value)}
             >
-              <SelectTrigger className="w-[350px]">
+              <SelectTrigger className="w-[330px]">
                 <SelectValue placeholder="Filter by tag" />
               </SelectTrigger>
               <SelectContent>
