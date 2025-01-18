@@ -144,18 +144,16 @@ export const TestimonialCard = ({
       <p className="mt-4 text-[#292929]">{testimonial.text}</p>
 
       <div className="mt-4 flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:gap-0">
-        {(isAdmin || isEmbedded) && (
-          <div className="flex flex-wrap gap-2">
-            {testimonial.tags.map((tag, index) => (
-              <span 
-                key={index} 
-                className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929]"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
+        <div className="flex flex-wrap gap-2">
+          {testimonial.tags.map((tag, index) => (
+            <span 
+              key={index} 
+              className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929]"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
         <div className="text-sm text-[#292929]">{formattedDate}</div>
       </div>
     </>
@@ -229,18 +227,16 @@ export const TestimonialCard = ({
             </Dialog>
 
             <div className="mt-4 flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:gap-0">
-              {(isAdmin || isEmbedded) && (
-                <div className="flex flex-wrap gap-2">
-                  {testimonial.tags.map((tag, index) => (
-                    <span 
-                      key={index} 
-                      className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929]"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
+              <div className="flex flex-wrap gap-2">
+                {testimonial.tags.map((tag, index) => (
+                  <span 
+                    key={index} 
+                    className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929]"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
               <div className="text-sm text-[#292929]">{formattedDate}</div>
             </div>
           </>
