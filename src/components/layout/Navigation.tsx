@@ -34,7 +34,12 @@ export const Navigation = () => {
     try {
       await signOut();
       navigate('/');
-    } catch (error) {
+    } catch (error: any) {
+      // If the error is session_not_found, we can still proceed with navigation
+      if (error?.message?.includes('session_not_found')) {
+        navigate('/');
+        return;
+      }
       console.error('Error signing out:', error);
       toast({
         variant: "destructive",
