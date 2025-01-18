@@ -20,34 +20,43 @@ export const TruncatedTag = ({ tag, index, onClick, isSelected }: TruncatedTagPr
   const tagRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    const checkOverflow = () => {
-      const element = tagRef.current;
-      if (element) {
-        // Increase buffer to 10px to prevent premature truncation
-        const isOverflowing = element.scrollWidth > (element.clientWidth + 10);
-        if (isOverflowing) {
-          const computeDisplayTag = (text: string): string => {
-            element.textContent = text + '...';
-            // Increase buffer to 10px to prevent premature truncation
-            if (element.scrollWidth <= (element.clientWidth + 10)) {
-              return text + '...';
-            }
-            return computeDisplayTag(text.slice(0, -1));
-          };
+    // Add a small delay to ensure the component is fully rendered
+    const timer = setTimeout(() => {
+      const checkOverflow = () => {
+        const element = tagRef.current;
+        if (element) {
+          // Reset content to full tag to measure actual width
+          element.textContent = tag;
+          
+          // Increase buffer to 10px to prevent premature truncation
+          const isOverflowing = element.scrollWidth > (element.clientWidth + 10);
+          
+          if (isOverflowing) {
+            const computeDisplayTag = (text: string): string => {
+              element.textContent = text + '...';
+              // Increase buffer to 10px to prevent premature truncation
+              if (element.scrollWidth <= (element.clientWidth + 10)) {
+                return text + '...';
+              }
+              return computeDisplayTag(text.slice(0, -1));
+            };
 
-          const truncatedText = computeDisplayTag(tag);
-          setDisplayTag(truncatedText);
-          setNeedsTooltip(true);
-        } else {
-          setDisplayTag(tag);
-          setNeedsTooltip(false);
+            const truncatedText = computeDisplayTag(tag);
+            setDisplayTag(truncatedText);
+            setNeedsTooltip(true);
+          } else {
+            setDisplayTag(tag);
+            setNeedsTooltip(false);
+          }
         }
-      }
-    };
+      };
 
-    checkOverflow();
-    window.addEventListener('resize', checkOverflow);
-    return () => window.removeEventListener('resize', checkOverflow);
+      checkOverflow();
+      window.addEventListener('resize', checkOverflow);
+      return () => window.removeEventListener('resize', checkOverflow);
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, [tag]);
 
   const tagContent = (
