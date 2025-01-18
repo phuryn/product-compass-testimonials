@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,14 +9,8 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { useBranding } from "@/hooks/useBranding";
+import { TruncatedTag } from "./TruncatedTag";
 
 export interface Testimonial {
   id: string;
@@ -52,7 +46,6 @@ export const TestimonialCard = ({
 }: TestimonialCardProps) => {
   const [imageLoadError, setImageLoadError] = useState(false);
   const { data: branding } = useBranding();
-  const isMobile = useIsMobile();
   const primaryColor = branding?.primary_color || '#2e75a9';
   const showTagsOnIndex = branding?.show_tags_on_index === "true";
   const shouldShowTags = isAdmin || isEmbedded || showTagsOnIndex;
@@ -99,72 +92,6 @@ export const TestimonialCard = ({
   const displayText = isTextLong && !isEmbedded
     ? `${testimonial.text.slice(0, MAX_VISIBLE_CHARS)}...`
     : testimonial.text;
-
-  const renderTag = (tag: string, index: number) => {
-    const tagRef = useRef<HTMLSpanElement>(null);
-    const [needsTruncation, setNeedsTruncation] = useState(false);
-    const [displayTag, setDisplayTag] = useState(tag);
-
-    useEffect(() => {
-      const checkOverflow = () => {
-        const element = tagRef.current;
-        if (element) {
-          const isOverflowing = element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
-          if (isOverflowing && window.innerWidth < 1024) {
-            const computeDisplayTag = (text: string): string => {
-              element.textContent = text + '...';
-              if (element.scrollHeight <= element.clientHeight && element.scrollWidth <= element.clientWidth) {
-                return text + '...';
-              }
-              return computeDisplayTag(text.slice(0, -1));
-            };
-            
-            element.textContent = tag;
-            const truncatedText = computeDisplayTag(tag);
-            setDisplayTag(truncatedText);
-            setNeedsTruncation(true);
-          } else {
-            setDisplayTag(tag);
-            setNeedsTruncation(false);
-          }
-        }
-      };
-
-      checkOverflow();
-      window.addEventListener('resize', checkOverflow);
-      return () => window.removeEventListener('resize', checkOverflow);
-    }, [tag]);
-
-    if (needsTruncation) {
-      return (
-        <TooltipProvider key={index}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span 
-                ref={tagRef}
-                className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929] whitespace-nowrap overflow-hidden"
-              >
-                {displayTag}
-              </span>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{tag}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      );
-    }
-
-    return (
-      <span 
-        ref={tagRef}
-        key={index} 
-        className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929] whitespace-nowrap overflow-hidden"
-      >
-        {displayTag}
-      </span>
-    );
-  };
 
   const renderTestimonialContent = () => (
     <>
@@ -222,7 +149,9 @@ export const TestimonialCard = ({
       {shouldShowTags && testimonial.tags.length > 0 && (
         <div className="mt-4 flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 lg:gap-0">
           <div className="flex flex-wrap gap-2">
-            {testimonial.tags.map((tag, index) => renderTag(tag, index))}
+            {testimonial.tags.map((tag, index) => (
+              <TruncatedTag key={index} tag={tag} index={index} />
+            ))}
           </div>
           <div className="text-sm text-[#292929]">{formattedDate}</div>
         </div>
@@ -303,7 +232,9 @@ export const TestimonialCard = ({
             {shouldShowTags && testimonial.tags.length > 0 && (
               <div className="mt-4 flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 lg:gap-0">
                 <div className="flex flex-wrap gap-2">
-                  {testimonial.tags.map((tag, index) => renderTag(tag, index))}
+                  {testimonial.tags.map((tag, index) => (
+                    <TruncatedTag key={index} tag={tag} index={index} />
+                  ))}
                 </div>
                 <div className="text-sm text-[#292929]">{formattedDate}</div>
               </div>
