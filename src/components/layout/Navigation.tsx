@@ -44,8 +44,8 @@ export const Navigation = () => {
     }
   };
 
-  // Hide navigation for non-authenticated users or those on the login page
-  if (!user || location.pathname === "/login") {
+  // Hide navigation for non-authenticated users
+  if (!user) {
     return null;
   }
 
@@ -90,11 +90,9 @@ export const Navigation = () => {
             )}
           </div>
           <div className="flex items-center space-x-4">
-            {user && (
-              <Button variant="outline" onClick={handleSignOut}>
-                Sign Out
-              </Button>
-            )}
+            <Button variant="outline" onClick={handleSignOut}>
+              Sign Out
+            </Button>
           </div>
         </div>
       </div>
