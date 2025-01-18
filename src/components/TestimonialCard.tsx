@@ -102,11 +102,11 @@ export const TestimonialCard = ({
     : testimonial.text;
 
   const renderTag = (tag: string, index: number) => {
-    const displayTag = isMobile && tag.length > MAX_TAG_CHARS
+    const displayTag = tag.length > MAX_TAG_CHARS
       ? `${tag.slice(0, MAX_TAG_CHARS)}...`
       : tag;
 
-    if (isMobile && tag.length > MAX_TAG_CHARS) {
+    if (tag.length > MAX_TAG_CHARS) {
       return (
         <TooltipProvider key={index}>
           <Tooltip>
