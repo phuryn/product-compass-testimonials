@@ -16,7 +16,7 @@ export const Navigation = () => {
   const { data: branding } = useBranding();
   const primaryColor = branding?.primary_color || '#2e75a9'; // Fallback color
 
-  const { data: userRole } = useQuery({
+  const { data: userRole, isLoading } = useQuery({
     queryKey: ["userRole", user?.id],
     queryFn: async () => {
       if (!user) return null;
@@ -50,7 +50,7 @@ export const Navigation = () => {
   };
 
   // Hide navigation for non-authenticated users
-  if (!user) {
+  if (!user || isLoading) {
     return null;
   }
 
