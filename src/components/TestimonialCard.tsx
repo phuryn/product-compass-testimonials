@@ -9,6 +9,13 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useBranding } from "@/hooks/useBranding";
 
 export interface Testimonial {
@@ -35,6 +42,7 @@ interface TestimonialCardProps {
 }
 
 const MAX_VISIBLE_CHARS = 320;
+const MAX_TAG_CHARS = 30;
 
 export const TestimonialCard = ({
   testimonial,
@@ -45,6 +53,7 @@ export const TestimonialCard = ({
 }: TestimonialCardProps) => {
   const [imageLoadError, setImageLoadError] = useState(false);
   const { data: branding } = useBranding();
+  const isMobile = useIsMobile();
   const primaryColor = branding?.primary_color || '#2e75a9';
   const showTagsOnIndex = branding?.show_tags_on_index === "true";
   const shouldShowTags = isAdmin || isEmbedded || showTagsOnIndex;
@@ -91,6 +100,38 @@ export const TestimonialCard = ({
   const displayText = isTextLong && !isEmbedded
     ? `${testimonial.text.slice(0, MAX_VISIBLE_CHARS)}...`
     : testimonial.text;
+
+  const renderTag = (tag: string, index: number) => {
+    const displayTag = isMobile && tag.length > MAX_TAG_CHARS
+      ? `${tag.slice(0, MAX_TAG_CHARS)}...`
+      : tag;
+
+    if (isMobile && tag.length > MAX_TAG_CHARS) {
+      return (
+        <TooltipProvider key={index}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929]">
+                {displayTag}
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{tag}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
+    }
+
+    return (
+      <span 
+        key={index} 
+        className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929]"
+      >
+        {tag}
+      </span>
+    );
+  };
 
   const renderTestimonialContent = () => (
     <>
@@ -148,14 +189,7 @@ export const TestimonialCard = ({
       {shouldShowTags && testimonial.tags.length > 0 && (
         <div className="mt-4 flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:gap-0">
           <div className="flex flex-wrap gap-2">
-            {testimonial.tags.map((tag, index) => (
-              <span 
-                key={index} 
-                className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929]"
-              >
-                {tag}
-              </span>
-            ))}
+            {testimonial.tags.map((tag, index) => renderTag(tag, index))}
           </div>
           <div className="text-sm text-[#292929]">{formattedDate}</div>
         </div>
@@ -236,14 +270,7 @@ export const TestimonialCard = ({
             {shouldShowTags && testimonial.tags.length > 0 && (
               <div className="mt-4 flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:gap-0">
                 <div className="flex flex-wrap gap-2">
-                  {testimonial.tags.map((tag, index) => (
-                    <span 
-                      key={index} 
-                      className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929]"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                  {testimonial.tags.map((tag, index) => renderTag(tag, index))}
                 </div>
                 <div className="text-sm text-[#292929]">{formattedDate}</div>
               </div>
