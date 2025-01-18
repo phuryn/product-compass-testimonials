@@ -102,11 +102,12 @@ export const TestimonialCard = ({
     : testimonial.text;
 
   const renderTag = (tag: string, index: number) => {
-    const displayTag = tag.length > MAX_TAG_CHARS
+    const shouldTruncate = window.innerWidth < 1024 && tag.length > MAX_TAG_CHARS;
+    const displayTag = shouldTruncate
       ? `${tag.slice(0, MAX_TAG_CHARS)}...`
       : tag;
 
-    if (tag.length > MAX_TAG_CHARS) {
+    if (shouldTruncate) {
       return (
         <TooltipProvider key={index}>
           <Tooltip>
