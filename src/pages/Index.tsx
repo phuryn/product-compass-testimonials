@@ -19,7 +19,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AVAILABLE_TAGS } from "@/constants/testimonials";
 
 const TESTIMONIALS_PER_PAGE = 10;
 
@@ -30,6 +29,20 @@ const Index = () => {
   const queryClient = useQueryClient();
   const { data: branding } = useBranding();
   const showTagsOnIndex = branding?.show_tags_on_index === "true";
+
+  // Fetch tags from the database
+  const { data: tags = [] } = useQuery({
+    queryKey: ["tags"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("tags")
+        .select("name")
+        .order("name");
+
+      if (error) throw error;
+      return data;
+    },
+  });
 
   const {
     data,
@@ -142,9 +155,9 @@ const Index = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All categories</SelectItem>
-                {AVAILABLE_TAGS.map((tag) => (
-                  <SelectItem key={tag} value={tag}>
-                    {tag}
+                {tags.map((tag) => (
+                  <SelectItem key={tag.name} value={tag.name}>
+                    {tag.name}
                   </SelectItem>
                 ))}
               </SelectContent>
