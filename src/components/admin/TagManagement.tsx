@@ -14,6 +14,12 @@ import {
 import { Trash2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
+type Tag = {
+  id: string;
+  name: string;
+  created_at: string;
+};
+
 export const TagManagement = () => {
   const [newTag, setNewTag] = useState("");
   const { toast } = useToast();
@@ -27,7 +33,7 @@ export const TagManagement = () => {
         .select("*")
         .order("name");
       if (error) throw error;
-      return data;
+      return data as Tag[];
     },
   });
 
