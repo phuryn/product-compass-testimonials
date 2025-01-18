@@ -95,7 +95,7 @@ export const TestimonialContent = ({
           value={text}
           onChange={(e) => handleTextChange(e.target.value)}
           placeholder="Share your experience..."
-          className="min-h-[150px]"
+          className="min-h-[150px] w-full resize-none"
           required
           maxLength={MAX_CHARS}
         />
