@@ -23,10 +23,9 @@ export const TruncatedTag = ({ tag, index }: TruncatedTagProps) => {
         const isOverflowing = element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
         if (isOverflowing && window.innerWidth < 1024) {
           const computeDisplayTag = (text: string): string => {
-            // Add padding by truncating earlier and adding more space for the ellipsis
-            element.textContent = text + '   ...';
+            element.textContent = text + '...';
             if (element.scrollHeight <= element.clientHeight && element.scrollWidth <= element.clientWidth) {
-              return text + '   ...';
+              return text + '...';
             }
             return computeDisplayTag(text.slice(0, -1));
           };
@@ -54,7 +53,7 @@ export const TruncatedTag = ({ tag, index }: TruncatedTagProps) => {
           <TooltipTrigger asChild>
             <span 
               ref={tagRef}
-              className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929] whitespace-nowrap overflow-hidden"
+              className="rounded-full bg-gray-100 px-6 py-1 text-sm text-[#292929] whitespace-nowrap overflow-hidden"
             >
               {displayTag}
             </span>
@@ -70,7 +69,7 @@ export const TruncatedTag = ({ tag, index }: TruncatedTagProps) => {
   return (
     <span 
       ref={tagRef}
-      className="rounded-full bg-gray-100 px-3 py-1 text-sm text-[#292929] whitespace-nowrap overflow-hidden"
+      className="rounded-full bg-gray-100 px-6 py-1 text-sm text-[#292929] whitespace-nowrap overflow-hidden"
     >
       {displayTag}
     </span>
