@@ -11,13 +11,19 @@ import { triggerConfetti } from "@/utils/confetti";
 import { Toaster } from "@/components/ui/toaster";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { TestimonialForm } from "@/components/TestimonialForm";
+import { Badge } from "@/components/ui/badge";
+import { X } from "lucide-react";
+import { useBranding } from "@/hooks/useBranding";
 
 const TESTIMONIALS_PER_PAGE = 10;
 
 const Index = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { data: branding } = useBranding();
+  const showTagsOnIndex = branding?.show_tags_on_index === "true";
 
   console.log("Rendering Index component");
 
@@ -28,28 +34,34 @@ const Index = () => {
     isLoading,
     error
   } = useInfiniteQuery({
-    queryKey: ["testimonials", "public"],
+    queryKey: ["testimonials", "public", selectedTag],
     queryFn: async ({ pageParam }) => {
       console.log("Fetching testimonials page:", pageParam);
       const from = Number(pageParam) * TESTIMONIALS_PER_PAGE;
       const to = from + TESTIMONIALS_PER_PAGE - 1;
 
-      const { data, error } = await supabase
+      let query = supabase
         .from("testimonials")
         .select("*")
         .eq('approved', true)
         .range(from, to)
         .order('date', { ascending: false });
 
+      if (selectedTag) {
+        query = query.contains('tags', [selectedTag]);
+      }
+
+      const { data: testimonials, error } = await query;
+
       if (error) {
         console.error("Error fetching testimonials:", error);
         throw error;
       }
       
-      console.log("Fetched testimonials:", data);
+      console.log("Fetched testimonials:", testimonials);
       return {
-        testimonials: data?.map(convertDbTestimonialToTestimonial) || [],
-        nextPage: data?.length === TESTIMONIALS_PER_PAGE ? Number(pageParam) + 1 : undefined
+        testimonials: testimonials?.map(convertDbTestimonialToTestimonial) || [],
+        nextPage: testimonials?.length === TESTIMONIALS_PER_PAGE ? Number(pageParam) + 1 : undefined
       };
     },
     initialPageParam: 0,
@@ -106,6 +118,14 @@ const Index = () => {
     },
   });
 
+  const handleTagClick = (tag: string) => {
+    if (selectedTag === tag) {
+      setSelectedTag(null);
+    } else {
+      setSelectedTag(tag);
+    }
+  };
+
   if (error) {
     console.error("Query error:", error);
     return <div className="text-center p-4">Error loading testimonials. Please try again later.</div>;
@@ -127,10 +147,24 @@ const Index = () => {
           setIsFormOpen={setIsFormOpen}
           onSubmitTestimonial={(data) => submitTestimonialMutation.mutate(data)}
         />
+        {showTagsOnIndex && selectedTag && (
+          <div className="mb-6">
+            <Badge 
+              variant="secondary" 
+              className="cursor-pointer flex items-center gap-1"
+              onClick={() => setSelectedTag(null)}
+            >
+              {selectedTag}
+              <X className="h-3 w-3" />
+            </Badge>
+          </div>
+        )}
         <TestimonialList 
           testimonials={allTestimonials}
           hasNextPage={hasNextPage}
           fetchNextPage={fetchNextPage}
+          onTagClick={showTagsOnIndex ? handleTagClick : undefined}
+          selectedTag={selectedTag}
         />
       </div>
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>

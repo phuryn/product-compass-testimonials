@@ -33,6 +33,8 @@ interface TestimonialCardProps {
   onApprove?: (id: string) => void;
   onEdit?: (id: string) => void;
   isEmbedded?: boolean;
+  onTagClick?: (tag: string) => void;
+  selectedTag?: string | null;
 }
 
 const MAX_VISIBLE_CHARS = 320;
@@ -43,13 +45,14 @@ export const TestimonialCard = ({
   onApprove,
   onEdit,
   isEmbedded = window.location.pathname === "/embed",
+  onTagClick,
+  selectedTag,
 }: TestimonialCardProps) => {
   const [imageLoadError, setImageLoadError] = useState(false);
   const { data: branding } = useBranding();
   const primaryColor = branding?.primary_color || '#2e75a9';
   const showTagsOnIndex = branding?.show_tags_on_index === "true";
-  const shouldShowTags = isAdmin || isEmbedded || showTagsOnIndex;
-
+  
   const formattedDate = new Date(testimonial.date).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
@@ -92,6 +95,28 @@ export const TestimonialCard = ({
   const displayText = isTextLong && !isEmbedded
     ? `${testimonial.text.slice(0, MAX_VISIBLE_CHARS)}...`
     : testimonial.text;
+
+  const renderTags = () => {
+    if (showTagsOnIndex && testimonial.tags.length > 0) {
+      return (
+        <div className="mt-4 flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 lg:gap-0">
+          <div className="flex flex-wrap gap-2">
+            {testimonial.tags.map((tag, index) => (
+              <TruncatedTag 
+                key={index} 
+                tag={tag} 
+                index={index} 
+                onClick={onTagClick}
+                isSelected={tag === selectedTag}
+              />
+            ))}
+          </div>
+          <div className="text-sm text-[#292929]">{formattedDate}</div>
+        </div>
+      );
+    }
+    return <div className="mt-4 text-sm text-[#292929]">{formattedDate}</div>;
+  };
 
   const renderTestimonialContent = () => (
     <>
@@ -146,19 +171,7 @@ export const TestimonialCard = ({
 
       <p className="mt-4 text-[#292929]">{testimonial.text}</p>
 
-      {shouldShowTags && testimonial.tags.length > 0 && (
-        <div className="mt-4 flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 lg:gap-0">
-          <div className="flex flex-wrap gap-2">
-            {testimonial.tags.map((tag, index) => (
-              <TruncatedTag key={index} tag={tag} index={index} />
-            ))}
-          </div>
-          <div className="text-sm text-[#292929]">{formattedDate}</div>
-        </div>
-      )}
-      {!shouldShowTags && (
-        <div className="mt-4 text-sm text-[#292929]">{formattedDate}</div>
-      )}
+      {renderTags()}
     </>
   );
 
@@ -229,19 +242,7 @@ export const TestimonialCard = ({
               </DialogContent>
             </Dialog>
 
-            {shouldShowTags && testimonial.tags.length > 0 && (
-              <div className="mt-4 flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 lg:gap-0">
-                <div className="flex flex-wrap gap-2">
-                  {testimonial.tags.map((tag, index) => (
-                    <TruncatedTag key={index} tag={tag} index={index} />
-                  ))}
-                </div>
-                <div className="text-sm text-[#292929]">{formattedDate}</div>
-              </div>
-            )}
-            {!shouldShowTags && (
-              <div className="mt-4 text-sm text-[#292929]">{formattedDate}</div>
-            )}
+            {renderTags()}
           </>
         ) : (
           renderTestimonialContent()
