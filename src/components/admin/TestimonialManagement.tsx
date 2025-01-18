@@ -195,8 +195,7 @@ export const TestimonialManagement = () => {
         open={!!editingTestimonial}
         onOpenChange={() => setEditingTestimonial(null)}
       >
-        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
-          <DialogTitle>Edit Testimonial</DialogTitle>
+        <DialogContent className="sm:max-w-[600px] w-[95vw] max-h-[90vh] overflow-y-auto p-4 sm:p-6">
           {editingTestimonial && (
             <TestimonialForm
               initialData={editingTestimonial}

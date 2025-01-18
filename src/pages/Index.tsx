@@ -9,6 +9,8 @@ import { Footer } from "@/components/layout/Footer";
 import { Navigation } from "@/components/layout/Navigation";
 import { triggerConfetti } from "@/utils/confetti";
 import { Toaster } from "@/components/ui/toaster";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { TestimonialForm } from "@/components/TestimonialForm";
 
 const TESTIMONIALS_PER_PAGE = 10;
 
@@ -131,6 +133,14 @@ const Index = () => {
           fetchNextPage={fetchNextPage}
         />
       </div>
+      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+        <DialogContent className="sm:max-w-[600px] w-[95vw] max-h-[90vh] overflow-y-auto p-4 sm:p-6">
+          <TestimonialForm
+            onSubmit={(data) => submitTestimonialMutation.mutate(data)}
+            onCancel={() => setIsFormOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
       <Footer />
       <Toaster />
     </div>
