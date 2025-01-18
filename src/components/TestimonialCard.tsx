@@ -42,7 +42,7 @@ interface TestimonialCardProps {
 }
 
 const MAX_VISIBLE_CHARS = 320;
-const MAX_TAG_CHARS = 30;
+const MAX_TAG_CHARS = 32;
 
 export const TestimonialCard = ({
   testimonial,
@@ -187,7 +187,7 @@ export const TestimonialCard = ({
       <p className="mt-4 text-[#292929]">{testimonial.text}</p>
 
       {shouldShowTags && testimonial.tags.length > 0 && (
-        <div className="mt-4 flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:gap-0">
+        <div className="mt-4 flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 lg:gap-0">
           <div className="flex flex-wrap gap-2">
             {testimonial.tags.map((tag, index) => renderTag(tag, index))}
           </div>
@@ -268,7 +268,7 @@ export const TestimonialCard = ({
             </Dialog>
 
             {shouldShowTags && testimonial.tags.length > 0 && (
-              <div className="mt-4 flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:gap-0">
+              <div className="mt-4 flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 lg:gap-0">
                 <div className="flex flex-wrap gap-2">
                   {testimonial.tags.map((tag, index) => renderTag(tag, index))}
                 </div>
