@@ -53,7 +53,7 @@ export const TruncatedTag = ({ tag, index }: TruncatedTagProps) => {
           <TooltipTrigger asChild>
             <span 
               ref={tagRef}
-              className="rounded-full bg-gray-100 px-6 py-1 text-sm text-[#292929] whitespace-nowrap overflow-hidden"
+              className="rounded-full bg-gray-100 pl-3 pr-6 py-1 text-sm text-[#292929] whitespace-nowrap overflow-hidden"
             >
               {displayTag}
             </span>
@@ -69,7 +69,7 @@ export const TruncatedTag = ({ tag, index }: TruncatedTagProps) => {
   return (
     <span 
       ref={tagRef}
-      className="rounded-full bg-gray-100 px-6 py-1 text-sm text-[#292929] whitespace-nowrap overflow-hidden"
+      className="rounded-full bg-gray-100 pl-3 pr-6 py-1 text-sm text-[#292929] whitespace-nowrap overflow-hidden"
     >
       {displayTag}
     </span>
