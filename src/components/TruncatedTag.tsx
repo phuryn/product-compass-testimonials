@@ -23,11 +23,13 @@ export const TruncatedTag = ({ tag, index, onClick, isSelected }: TruncatedTagPr
     const checkOverflow = () => {
       const element = tagRef.current;
       if (element) {
-        const isOverflowing = element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+        // Add a small buffer (2px) to prevent premature truncation
+        const isOverflowing = element.scrollWidth > (element.clientWidth + 2);
         if (isOverflowing) {
           const computeDisplayTag = (text: string): string => {
             element.textContent = text + '...';
-            if (element.scrollHeight <= element.clientHeight && element.scrollWidth <= element.clientWidth) {
+            // Add a small buffer (2px) to prevent premature truncation
+            if (element.scrollWidth <= (element.clientWidth + 2)) {
               return text + '...';
             }
             return computeDisplayTag(text.slice(0, -1));
