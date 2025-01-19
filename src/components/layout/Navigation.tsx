@@ -9,14 +9,14 @@ import { useBranding } from "@/hooks/useBranding";
 import { useToast } from "@/hooks/use-toast";
 
 export const Navigation = () => {
-  const { user, signOut } = useAuth();
+  const { user, signOut, loading } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { data: branding } = useBranding();
   const primaryColor = branding?.primary_color || '#2e75a9';
 
-  const { data: userRole, isLoading } = useQuery({
+  const { data: userRole, isLoading: isRoleLoading } = useQuery({
     queryKey: ["userRole", user?.id],
     queryFn: async () => {
       if (!user) return null;
@@ -44,8 +44,8 @@ export const Navigation = () => {
     }
   };
 
-  // Hide navigation for non-authenticated users or while loading
-  if (!user || isLoading) {
+  // Hide navigation while loading auth state or if user is not authenticated
+  if (loading || !user || isRoleLoading) {
     return null;
   }
 
