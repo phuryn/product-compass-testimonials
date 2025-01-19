@@ -9,7 +9,7 @@ import { useBranding } from "@/hooks/useBranding";
 import { useToast } from "@/hooks/use-toast";
 
 export const Navigation = () => {
-  const { user, signOut, loading } = useAuth();
+  const { user, signOut } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -33,7 +33,6 @@ export const Navigation = () => {
   const handleSignOut = async () => {
     try {
       await signOut();
-      navigate('/');
     } catch (error: any) {
       console.error('Error signing out:', error);
       toast({
@@ -44,8 +43,8 @@ export const Navigation = () => {
     }
   };
 
-  // Hide navigation while loading auth state or if user is not authenticated
-  if (loading || !user || isRoleLoading) {
+  // Hide navigation on login and embed pages, or if there's no authenticated user
+  if (!user || location.pathname === '/login' || location.pathname === '/embed' || isRoleLoading) {
     return null;
   }
 
