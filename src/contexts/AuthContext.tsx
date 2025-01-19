@@ -41,7 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (event === 'SIGNED_OUT') {
         setUser(null);
-        navigate('/login');
+        navigate('/');
       } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         setUser(session?.user ?? null);
       }
@@ -82,8 +82,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
       
-      // Navigate after successful sign out
-      navigate('/login');
+      // Navigate to index after successful sign out
+      navigate('/');
     } catch (error: any) {
       console.error('Sign out error:', error);
       toast({
